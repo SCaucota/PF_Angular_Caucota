@@ -1,5 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
+import { MatDialog } from '@angular/material/dialog';
+import { AbmAlumnosComponent } from '../../abm-alumnos/abm-alumnos.component';
 
 @Component({
   selector: 'app-navbar',
@@ -12,5 +14,15 @@ export class NavbarComponent {
 
   onMenuToggle() {
     this.drawer.toggle();
+  }
+
+  constructor(private matDialog: MatDialog) {}
+
+  openDialog(): void {
+    this.matDialog.open(AbmAlumnosComponent).afterClosed().subscribe({
+      next: (value) => {
+        
+      }
+    })
   }
 }

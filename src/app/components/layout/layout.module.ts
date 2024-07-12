@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NavbarModule } from './navbar/navbar.module';
 
 import { LayoutRoutingModule } from './layout-routing.module';
 import { LayoutComponent } from './layout.component';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatButtonModule} from '@angular/material/button';
 
 @NgModule({
   declarations: [LayoutComponent],
@@ -11,7 +12,8 @@ import { LayoutComponent } from './layout.component';
   imports: [
     CommonModule,
     LayoutRoutingModule,
-    NavbarModule
+    MatSidenavModule,
+    MatButtonModule
   ]
 })
 export class LayoutModule { }

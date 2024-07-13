@@ -4,8 +4,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { TituloDirective } from './shared/directives/titulo.directive';
-import { NombreCompletoPipe } from './shared/Pipes/nombre-completo.pipe';
 import { LayoutModule } from './components/layout/layout.module';
 
 import esAR from '@angular/common/locales/es-AR';
@@ -14,9 +12,7 @@ registerLocaleData(esAR);
 
 @NgModule({
   declarations: [
-    AppComponent,
-    TituloDirective,
-    NombreCompletoPipe
+    AppComponent
   ],
   imports: [
     BrowserModule,

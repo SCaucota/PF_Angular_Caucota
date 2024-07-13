@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { Component, Input, EventEmitter } from '@angular/core';
+import { AlumnosDialogComponent } from '../alumnos-dialog/alumnos-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { Alumno } from '../../models/alumno';
 
 @Component({
   selector: 'app-abm-alumnos',
@@ -9,36 +10,20 @@ import { MatDialogRef } from '@angular/material/dialog';
 })
 export class AbmAlumnosComponent {
 
-  alumnoForm: FormGroup;
-  nombrePattern = /^[a-zA-Z\s]+$/;
+  @Input() alumnos: Alumno[] = [];
+ 
+  constructor(private matDialog: MatDialog) {}
 
-  constructor(private formBuilder: FormBuilder, private matDialogRef: MatDialogRef<AbmAlumnosComponent>) {
-    this.alumnoForm = this.formBuilder.group({
-      nombre: ['',
-        {
-          validators: [
-            Validators.required,
-            Validators.minLength(3),
-            Validators.pattern(this.nombrePattern),
-          ]
-        }
-      ],
-      apellido: ['',
-        {
-          validators: [
-            Validators.required,
-            Validators.minLength(2),
-            Validators.pattern(this.nombrePattern)
-          ]
-        }
+  openDialog(): void {
+    const dialogRef = this.matDialog.open(AlumnosDialogComponent)
 
-      ]
+    dialogRef.componentInstance.onSubmitAlumnoEvent.subscribe((alumno: Alumno) => {
+      this.ondSubmitAlumno(alumno);
     })
   }
 
-  onSubmit(): void {
-    console.log("Funciona la subida de datos")
-
-    this.matDialogRef.close(this.alumnoForm.value)
+  ondSubmitAlumno(alumno: Alumno): void {
+    this.alumnos.push(alumno)
+    console.log(this.alumnos)
   }
 }

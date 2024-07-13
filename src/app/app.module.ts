@@ -22,7 +22,7 @@ registerLocaleData(esAR);
     BrowserModule,
     AppRoutingModule,
     LayoutModule
-],
+  ],
   providers: [
     {provide: LOCALE_ID, useValue: 'es-AR'},
     provideAnimationsAsync()

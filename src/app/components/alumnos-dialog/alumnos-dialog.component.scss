@@ -1,0 +1,12 @@
+.form-agregar-alumno{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 1rem;
+}
+
+.buttons-container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

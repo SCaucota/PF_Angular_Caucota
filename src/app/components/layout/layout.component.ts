@@ -7,4 +7,8 @@ import { Component } from '@angular/core';
 })
 export class LayoutComponent {
   showAlumnos = false;
+
+  toogleAlumnos() {
+    this.showAlumnos = !this.showAlumnos;
+  }
 }

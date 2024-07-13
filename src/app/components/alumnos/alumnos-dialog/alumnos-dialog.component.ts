@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, Output, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Alumno } from '../../models/alumno';
+import { Alumno } from '../../../models/alumno';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { sinUnicamenteEspaciosValidator,  sinEspaciosInicioValidator} from '../../utils/custom.validators';
+import { sinUnicamenteEspaciosValidator,  sinEspaciosInicioValidator} from '../../../utils/custom.validators';
 
 @Component({
   selector: 'app-alumnos-dialog',
@@ -81,7 +81,6 @@ export class AlumnosDialogComponent {
     if(this.alumnoForm.invalid){
       alert('Formulario invalido')
     }else{
-      console.log(this.alumnoForm.value)
       this.matDialogRef.close(this.alumnoForm.value);
       this.onSubmitAlumnoEvent.emit(this.alumnoForm.value)
     }

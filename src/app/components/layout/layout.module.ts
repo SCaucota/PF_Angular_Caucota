@@ -7,11 +7,13 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatButtonModule} from '@angular/material/button';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatIconModule} from '@angular/material/icon';
-import { ListaAlumnosModule } from '../lista-alumnos/lista-alumnos.module';
+import { ListaAlumnosModule } from '../alumnos/lista-alumnos/lista-alumnos.module';
 import { MatListModule } from '@angular/material/list';
+import { SidenavbarComponent } from './sidenavbar/sidenavbar.component';
+import { ToolbarComponent } from './toolbar/toolbar.component';
 
 @NgModule({
-  declarations: [LayoutComponent],
+  declarations: [LayoutComponent, SidenavbarComponent, ToolbarComponent],
   exports: [LayoutComponent],
   imports: [
     CommonModule,

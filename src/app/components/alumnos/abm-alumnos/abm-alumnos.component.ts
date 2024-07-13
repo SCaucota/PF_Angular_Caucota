@@ -1,7 +1,7 @@
 import { Component, Input, EventEmitter, Output } from '@angular/core';
 import { AlumnosDialogComponent } from '../alumnos-dialog/alumnos-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
-import { Alumno } from '../../models/alumno';
+import { Alumno } from '../../../models/alumno';
 import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 
 
@@ -31,10 +31,9 @@ export class AbmAlumnosComponent {
     const newId = (maxId + 1).toString();
 
     const { id, ...rest } = alumno;
-    const newAlumno: Alumno = { id: newId, ...rest };
+    const newAlumno: Alumno = { id: newId, nombre: rest.nombre.toUpperCase(), apellido: rest.apellido.toUpperCase() };
 
     this.listaAlumnos = [...this.listaAlumnos, newAlumno];
-
 
     this.alumnosUpdateLista();
   }
@@ -53,7 +52,7 @@ export class AbmAlumnosComponent {
     this.matDialog.open(AlumnosDialogComponent, {data: editingAlumno}).afterClosed().subscribe({
       next: (value) => {
         if(!!value){
-          this.listaAlumnos = this.listaAlumnos.map((element) => element.id === editingAlumno.id ? {id: editingAlumno.id, ...value}: element)
+          this.listaAlumnos = this.listaAlumnos.map((element) => element.id === editingAlumno.id ? {id: editingAlumno.id, nombre: value.nombre.toUpperCase(), apellido: value.apellido.toUpperCase()}: element)
           this.alumnosUpdateLista();
         }
       }

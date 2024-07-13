@@ -1,25 +1,17 @@
-<mat-drawer-container class="example-container" autosize>
-    <mat-drawer #drawer class="example-sidenav" mode="side">
-      <mat-nav-list>
-        <a mat-list-item (click)="showAlumnos = !showAlumnos">Alumnos</a>
-      </mat-nav-list>
-    </mat-drawer>
-
-    <mat-toolbar>
-      <button (click)="drawer.toggle()" mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
-        <mat-icon>menu</mat-icon>
-      </button>
-      <span>Administracion Estudiantes</span>
-      <span class="example-spacer"></span>
-      <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
-        <mat-icon>favorite</mat-icon>
-      </button>
-      <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
-        <mat-icon>share</mat-icon>
-      </button>
-    </mat-toolbar>
-
-    <app-lista-alumnos *ngIf="showAlumnos"></app-lista-alumnos>
-  
+<mat-drawer-container class="container">
+  <mat-drawer class="sidenav" #drawer mode="side" opened="false">
+    <app-sidenavbar (toggleAlumnos)="toogleAlumnos()"></app-sidenavbar>
+  </mat-drawer>
+  <mat-drawer-content >
+    <app-toolbar [drawer]="drawer"></app-toolbar>
+    <div class="container-lista">
+      <app-lista-alumnos class="container-alumnos" *ngIf="showAlumnos"></app-lista-alumnos>
+    </div>
+    <div class="titulo-app" *ngIf="!showAlumnos">
+      <strong>Bienvenido a</strong>
+      <h1>AdminApp</h1>
+      <p>Despliega el menú y navega por nuestras opciones</p>
+    </div>
+  </mat-drawer-content>
 </mat-drawer-container>
-  
+

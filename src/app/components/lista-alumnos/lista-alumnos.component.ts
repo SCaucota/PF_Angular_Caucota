@@ -30,7 +30,18 @@ export class ListaAlumnosComponent implements AfterViewInit{
 
   updateList(array: Alumno[]) {
     this.dataSource = array
-    console.log(this.dataSource)
+  }
+
+  deleteAlumno(id: string):void {
+    if(this.abmAlumnosComponent) {
+      this.abmAlumnosComponent.deleteAlumno(id);
+    }
+  }
+
+  updateAlumno(alumno: Alumno):void {
+    if(this.abmAlumnosComponent) {
+      this.abmAlumnosComponent.updateAlumno(alumno);
+    }
   }
 
 }

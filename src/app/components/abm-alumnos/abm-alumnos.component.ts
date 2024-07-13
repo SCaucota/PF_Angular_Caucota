@@ -4,11 +4,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { Alumno } from '../../models/alumno';
 
 
-/* const ELEMENT_DATA: Alumno[] = [
-  { id: '1', nombre: 'Juan', apellido: 'Pérez' },
-  { id: '2', nombre: 'María', apellido: 'Gómez' },
-]; */
-
 @Component({
   selector: 'app-abm-alumnos',
   templateUrl: './abm-alumnos.component.html',
@@ -20,29 +15,48 @@ export class AbmAlumnosComponent {
 
   @Output() arrayAlumnos = new EventEmitter<Alumno[]>();
 
+ /*  dialogoAddAlumno: boolean = true; */
 
   constructor(private matDialog: MatDialog) {}
 
   openDialog(): void {
-    const dialogRef = this.matDialog.open(AlumnosDialogComponent)
+    const dialogRef = this.matDialog.open(AlumnosDialogComponent);
 
     dialogRef.componentInstance.onSubmitAlumnoEvent.subscribe((alumno: Alumno) => {
       this.ondSubmitAlumno(alumno);
-    })
+    });
   }
 
   ondSubmitAlumno(alumno: Alumno): void {
-    const maxId = Math.max(...this.listaAlumnos.map(a => +a.id))
+    const maxId = Math.max(...this.listaAlumnos.map(a => +a.id));
     const newId = (maxId + 1).toString();
 
-    const {id, ...rest}: Alumno = alumno;
-    const newAlumno: Alumno = {id: newId, ...rest}
+    const { id, ...rest } = alumno;
+    const newAlumno: Alumno = { id: newId, ...rest };
 
-    this.listaAlumnos = [...this.listaAlumnos, newAlumno]
-    this.alumnosUpdate();
+    this.listaAlumnos = [...this.listaAlumnos, newAlumno];
+
+
+    this.alumnosUpdateLista();
   }
 
-  alumnosUpdate(): void {
+  deleteAlumno(id: string): void {
+    this.listaAlumnos = this.listaAlumnos.filter(alumno => alumno.id !== id);
+    this.alumnosUpdateLista();
+  }
+
+  updateAlumno(editingAlumno: Alumno): void{
+    this.matDialog.open(AlumnosDialogComponent, {data: editingAlumno}).afterClosed().subscribe({
+      next: (value) => {
+        if(!!value){
+          this.listaAlumnos = this.listaAlumnos.map((element) => element.id === editingAlumno.id ? {id: editingAlumno.id, ...value}: element)
+          this.alumnosUpdateLista();
+        }
+      }
+    })
+  }
+
+  alumnosUpdateLista(): void {
     this.arrayAlumnos.emit(this.listaAlumnos);
   }
 }

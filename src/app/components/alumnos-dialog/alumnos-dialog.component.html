@@ -1,4 +1,6 @@
-<h2 mat-dialog-title>Agregar Alumno</h2>
+<h2 mat-dialog-title>{{
+    editingAlumno ? 'Editando' + editingAlumno.nombre : 'Agregando Alumno'
+}}</h2>
 
 <form class="form-agregar-alumno" [formGroup]="alumnoForm">
   <mat-form-field appearance="fill">
@@ -15,5 +17,7 @@
 
 <mat-dialog-actions class="buttons-container">
     <button mat-flat-button mat-dialog-close>Close</button>
-    <button (click)="onSubmitAlumno()" mat-flat-button>Guardar</button>
+    <button (click)="onSubmitAlumno()" mat-flat-button>
+        {{ dialogAddAlumno ? 'Agregar' : 'Guardar' }}
+    </button>
 </mat-dialog-actions>

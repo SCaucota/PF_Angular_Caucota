@@ -43,5 +43,5 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
   
-  <app-abm-alumnos><app-abm-alumnos>
+  <app-abm-alumnos [listaAlumnos]="dataSource" (arrayAlumnos)="updateList($event)" ><app-abm-alumnos>
   

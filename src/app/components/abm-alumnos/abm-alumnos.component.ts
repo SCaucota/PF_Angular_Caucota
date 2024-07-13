@@ -1,7 +1,13 @@
-import { Component, Input, EventEmitter } from '@angular/core';
+import { Component, Input, EventEmitter, Output } from '@angular/core';
 import { AlumnosDialogComponent } from '../alumnos-dialog/alumnos-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { Alumno } from '../../models/alumno';
+
+
+/* const ELEMENT_DATA: Alumno[] = [
+  { id: '1', nombre: 'Juan', apellido: 'Pérez' },
+  { id: '2', nombre: 'María', apellido: 'Gómez' },
+]; */
 
 @Component({
   selector: 'app-abm-alumnos',
@@ -10,8 +16,11 @@ import { Alumno } from '../../models/alumno';
 })
 export class AbmAlumnosComponent {
 
-  @Input() alumnos: Alumno[] = [];
- 
+  @Input() listaAlumnos: Alumno[] = []
+
+  @Output() arrayAlumnos = new EventEmitter<Alumno[]>();
+
+
   constructor(private matDialog: MatDialog) {}
 
   openDialog(): void {
@@ -23,7 +32,17 @@ export class AbmAlumnosComponent {
   }
 
   ondSubmitAlumno(alumno: Alumno): void {
-    this.alumnos.push(alumno)
-    console.log(this.alumnos)
+    const maxId = Math.max(...this.listaAlumnos.map(a => +a.id))
+    const newId = (maxId + 1).toString();
+
+    const {id, ...rest}: Alumno = alumno;
+    const newAlumno: Alumno = {id: newId, ...rest}
+
+    this.listaAlumnos = [...this.listaAlumnos, newAlumno]
+    this.alumnosUpdate();
+  }
+
+  alumnosUpdate(): void {
+    this.arrayAlumnos.emit(this.listaAlumnos);
   }
 }

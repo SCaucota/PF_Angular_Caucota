@@ -9,8 +9,8 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatIconModule} from '@angular/material/icon';
 import { ListaAlumnosModule } from '../alumnos/lista-alumnos/lista-alumnos.module';
 import { MatListModule } from '@angular/material/list';
-import { SidenavbarComponent } from './sidenavbar/sidenavbar.component';
-import { ToolbarComponent } from './toolbar/toolbar.component';
+import { SidenavbarComponent } from './components/sidenavbar/sidenavbar.component';
+import { ToolbarComponent } from './components/toolbar/toolbar.component';
 
 @NgModule({
   declarations: [LayoutComponent, SidenavbarComponent, ToolbarComponent],

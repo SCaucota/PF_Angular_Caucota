@@ -1,5 +1,5 @@
 <h2 appTitulo mat-dialog-title>{{
-    editingAlumno ? 'Editando ' + editingAlumno.nombre : 'Agregando Alumno'
+    editingAlumno ? 'Editando ' + (editingAlumno | nombreCompleto) : 'Agregando Alumno'
 }}</h2>
 
 <form (ngSubmit)="onSubmitAlumno()" class="form-agregar-alumno" [formGroup]="alumnoForm">

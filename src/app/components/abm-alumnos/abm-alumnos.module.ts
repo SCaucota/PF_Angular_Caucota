@@ -6,6 +6,7 @@ import { AbmAlumnosComponent } from './abm-alumnos.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { AlumnosDialogModule } from '../alumnos-dialog/alumnos-dialog.module';
+import { DeleteDialogModule } from '../delete-dialog/delete-dialog.module';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { AlumnosDialogModule } from '../alumnos-dialog/alumnos-dialog.module';
     AbmAlumnosRoutingModule,
     MatButtonModule,
     MatIconModule,
-    AlumnosDialogModule
+    AlumnosDialogModule,
+    DeleteDialogModule
   ]
 })
 export class AbmAlumnosModule { }

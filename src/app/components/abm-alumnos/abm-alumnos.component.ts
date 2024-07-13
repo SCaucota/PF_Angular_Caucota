@@ -2,6 +2,7 @@ import { Component, Input, EventEmitter, Output } from '@angular/core';
 import { AlumnosDialogComponent } from '../alumnos-dialog/alumnos-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { Alumno } from '../../models/alumno';
+import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 
 
 @Component({
@@ -39,8 +40,13 @@ export class AbmAlumnosComponent {
   }
 
   deleteAlumno(id: string): void {
-    this.listaAlumnos = this.listaAlumnos.filter(alumno => alumno.id !== id);
-    this.alumnosUpdateLista();
+    const alumno = this.listaAlumnos.find(alumno => alumno.id === id);
+    const dialogRef = this.matDialog.open(DeleteDialogComponent, {data: alumno});
+    
+    dialogRef.componentInstance.deleteAlumnoEvent.subscribe((alumno: Alumno) => {
+      this.listaAlumnos = this.listaAlumnos.filter(alumno => alumno.id !== id);
+      this.alumnosUpdateLista();
+    })
   }
 
   updateAlumno(editingAlumno: Alumno): void{

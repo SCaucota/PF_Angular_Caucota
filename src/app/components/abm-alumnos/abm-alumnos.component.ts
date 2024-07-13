@@ -15,8 +15,6 @@ export class AbmAlumnosComponent {
 
   @Output() arrayAlumnos = new EventEmitter<Alumno[]>();
 
- /*  dialogoAddAlumno: boolean = true; */
-
   constructor(private matDialog: MatDialog) {}
 
   openDialog(): void {

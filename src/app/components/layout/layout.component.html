@@ -1,8 +1,8 @@
 <mat-drawer-container class="example-container" autosize>
     <mat-drawer #drawer class="example-sidenav" mode="side">
-      <button (click)="showAlumnos = !showAlumnos" mat-raised-button>
-        Alumnos
-      </button>
+      <mat-nav-list>
+        <a mat-list-item (click)="showAlumnos = !showAlumnos">Alumnos</a>
+      </mat-nav-list>
     </mat-drawer>
 
     <mat-toolbar>

@@ -1,8 +1,12 @@
 .form-agregar-alumno{
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 3.5rem;
     margin: 1rem;
+}
+
+.form-apellido{
+    margin-bottom: 1rem;
 }
 
 .buttons-container{

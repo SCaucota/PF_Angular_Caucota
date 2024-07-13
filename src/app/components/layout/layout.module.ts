@@ -8,6 +8,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatIconModule} from '@angular/material/icon';
 import { ListaAlumnosModule } from '../lista-alumnos/lista-alumnos.module';
+import { MatListModule } from '@angular/material/list';
 
 @NgModule({
   declarations: [LayoutComponent],
@@ -19,6 +20,7 @@ import { ListaAlumnosModule } from '../lista-alumnos/lista-alumnos.module';
     MatButtonModule,
     MatToolbarModule,
     MatIconModule,
+    MatListModule,
     ListaAlumnosModule
   ]
 })

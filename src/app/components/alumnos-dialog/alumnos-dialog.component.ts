@@ -1,7 +1,8 @@
 import { Component, EventEmitter, Input, Output, Inject } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Alumno } from '../../models/alumno';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { sinUnicamenteEspaciosValidator,  sinEspaciosInicioValidator} from '../../utils/custom.validators';
 
 @Component({
   selector: 'app-alumnos-dialog',
@@ -13,8 +14,9 @@ export class AlumnosDialogComponent {
   alumnoForm: FormGroup;
 
   @Input() alumno!: Alumno
-  @Input() dialogAddAlumno!: boolean
   @Output() onSubmitAlumnoEvent: EventEmitter<any> = new EventEmitter();
+
+  nombreValidatorPattern = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
 
   constructor(
     private fb: FormBuilder,
@@ -22,21 +24,66 @@ export class AlumnosDialogComponent {
     @Inject(MAT_DIALOG_DATA) public editingAlumno?: Alumno
   ) {
     this.alumnoForm = this.fb.group({
-      nombre: '',
-      apellido: ''
+      nombre: ['',
+        {
+          validators: [
+            Validators.required,
+            Validators.minLength(3),
+            Validators.pattern(this.nombreValidatorPattern),
+            sinUnicamenteEspaciosValidator,
+            sinEspaciosInicioValidator
+          ],
+        }
+      ],
+      apellido: ['',
+        {
+          validators: [
+            Validators.required,
+            Validators.minLength(3),
+            Validators.pattern(this.nombreValidatorPattern),
+            sinUnicamenteEspaciosValidator,
+            sinEspaciosInicioValidator
+          ]
+        }
+      ]
     })
-
-    console.log('Se está editando: ', editingAlumno);
 
     if(this.editingAlumno){
       this.alumnoForm.patchValue(this.editingAlumno)
     }
   }
 
+  get nombreControl() {
+    return this.alumnoForm.get('nombre')
+  }
+
+  get nombreControlInvalid() {
+    return (
+      this.nombreControl?.invalid &&
+      (this.nombreControl?.touched ||
+      this.nombreControl?.dirty)
+    )
+  }
+
+  get apellidoControl() {
+    return this.alumnoForm.get('apellido')
+  }
+
+  get apellidoControlInvalid() {
+    return (
+      this.apellidoControl?.invalid &&
+      (this.apellidoControl?.touched ||
+      this.apellidoControl?.dirty)
+    )
+  }
+
   onSubmitAlumno(): void {
-    console.log(this.alumnoForm.value)
-    this.matDialogRef.close(this.alumnoForm.value);
-    this.onSubmitAlumnoEvent.emit(this.alumnoForm.value)
-    
+    if(this.alumnoForm.invalid){
+      alert('Formulario invalido')
+    }else{
+      console.log(this.alumnoForm.value)
+      this.matDialogRef.close(this.alumnoForm.value);
+      this.onSubmitAlumnoEvent.emit(this.alumnoForm.value)
+    }
   }
 }

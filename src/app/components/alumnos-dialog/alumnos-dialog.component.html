@@ -1,23 +1,76 @@
 <h2 appTitulo mat-dialog-title>{{
-    editingAlumno ? 'Editando' + editingAlumno.nombre : 'Agregando Alumno'
+    editingAlumno ? 'Editando ' + editingAlumno.nombre : 'Agregando Alumno'
 }}</h2>
 
-<form class="form-agregar-alumno" [formGroup]="alumnoForm">
-  <mat-form-field appearance="fill">
-      <mat-label>Nombre</mat-label>
-      <input formControlName="nombre" matInput placeholder="Placeholder">
-      <mat-hint>Hint</mat-hint>
-  </mat-form-field>
-  <mat-form-field appearance="fill">
-    <mat-label>Apellido</mat-label>
-    <input formControlName="apellido" matInput placeholder="Placeholder">
-    <mat-hint>Hint</mat-hint>
-</mat-form-field>
-</form>
+<form (ngSubmit)="onSubmitAlumno()" class="form-agregar-alumno" [formGroup]="alumnoForm">
+    <mat-form-field appearance="fill">
+        <mat-label>Nombre</mat-label>
+        <input
+            type="text"
+            formControlName="nombre" 
+            matInput
+            placeholder="Nombre"
+            [ngClass]="{
+                'is-invalid': nombreControlInvalid,
+                'is-valid': !nombreControlInvalid
+            }"
+        >
 
-<mat-dialog-actions class="buttons-container">
-    <button mat-flat-button mat-dialog-close>Close</button>
-    <button (click)="onSubmitAlumno()" mat-flat-button>
-        {{ dialogAddAlumno ? 'Agregar' : 'Guardar' }}
-    </button>
-</mat-dialog-actions>
+        <mat-error *ngIf="nombreControl?.invalid && nombreControl?.touched">
+            <div *ngIf="nombreControl?.hasError('required')">
+                El nombre es <strong>requerido</strong>
+            </div>
+            <div *ngIf="nombreControl?.hasError('minlength')">
+                Mínimo de 3 caracteres
+            </div>
+            <div *ngIf="nombreControl?.hasError('pattern')">
+                Ingrese únicamente letras
+            </div>
+            <div *ngIf="nombreControl?.hasError('sinUnicamenteEspacios')">
+                No ingresar únicamente espacios
+            </div>
+            <div *ngIf="nombreControl?.hasError('sinEspaciosInicio')">
+                No ingresar espacios al inicio
+            </div>
+        </mat-error>
+
+    </mat-form-field>
+    <mat-form-field class="form-apellido" appearance="fill">
+        <mat-label>Apellido</mat-label>
+        <input 
+            formControlName="apellido"
+            matInput
+            placeholder="Placeholder"
+            [ngClass]="{
+                'is-invalid': apellidoControlInvalid,
+                'is-valid': !apellidoControlInvalid
+            }"
+        >
+        
+        <mat-error *ngIf="apellidoControl?.invalid && apellidoControl?.touched">
+            <div *ngIf="apellidoControl?.hasError('required')">
+                El apellido es <strong>requerido</strong>
+            </div>
+            <div *ngIf="apellidoControl?.hasError('minlength')">
+                Mínimo de 3 caracteres
+            </div>
+            <div *ngIf="apellidoControl?.hasError('pattern')">
+                Ingrese únicamente letras
+            </div>
+            <div *ngIf="apellidoControl?.hasError('sinUnicamenteEspacios')">
+                No ingresar únicamente espacios
+            </div>
+            <div *ngIf="apellidoControl?.hasError('sinEspaciosInicio')">
+                No ingresar espacios al inicio
+            </div>
+        </mat-error>
+
+    </mat-form-field>
+
+    <mat-dialog-actions class="buttons-container">
+        <button mat-flat-button mat-dialog-close>Close</button>
+        <button type="submit" mat-flat-button>
+            {{ editingAlumno ? 'Editar' : 'Guardar' }}
+        </button>
+    </mat-dialog-actions>
+</form>

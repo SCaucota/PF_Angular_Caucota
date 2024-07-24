@@ -1,18 +1,18 @@
 import { AbstractControl } from "@angular/forms";
 
-export function sinUnicamenteEspaciosValidator(control: AbstractControl) {
+export function noOnlySpacesValidator(control: AbstractControl) {
     if(control.value && control.value.trim().length === 0) {
         return{
-            sinUnicamenteEspacios: true
+            noOnlySpaces: true
         }
     }
     return null
 }
 
-export function sinEspaciosInicioValidator(control: AbstractControl) {
+export function noLeadingSpacesValidator(control: AbstractControl) {
     if(control.value && control.value.trimLeft().length !== control.value.length){
         return{
-            sinEspaciosInicio: true
+            noLeadingSpaces: true
         }
     }
     return null

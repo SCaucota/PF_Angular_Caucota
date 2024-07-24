@@ -1,0 +1,76 @@
+<h2 appTitle mat-dialog-title>{{
+    editingStudent ? 'Editando ' + (editingStudent | fullname) : 'Agregando Alumno'
+}}</h2>
+
+<form (ngSubmit)="onSubmitStudent()" class="form-add-student" [formGroup]="studentForm">
+    <mat-form-field appearance="fill">
+        <mat-label>Nombre</mat-label>
+        <input
+            type="text"
+            formControlName="name" 
+            matInput
+            placeholder="Nombre"
+            [ngClass]="{
+                'is-invalid': nameControlInvalid,
+                'is-valid': !nameControlInvalid
+            }"
+        >
+
+        <mat-error *ngIf="nameControl?.invalid && nameControl?.touched">
+            <div *ngIf="nameControl?.hasError('required')">
+                El nombre es <strong>requerido</strong>
+            </div>
+            <div *ngIf="nameControl?.hasError('minlength')">
+                Mínimo de 3 caracteres
+            </div>
+            <div *ngIf="nameControl?.hasError('pattern')">
+                Ingrese únicamente letras
+            </div>
+            <div *ngIf="nameControl?.hasError('noOnlySpaces')">
+                No ingresar únicamente espacios
+            </div>
+            <div *ngIf="nameControl?.hasError('noLeadingSpaces')">
+                No ingresar espacios al inicio
+            </div>
+        </mat-error>
+
+    </mat-form-field>
+    <mat-form-field class="form-surname" appearance="fill">
+        <mat-label>Apellido</mat-label>
+        <input 
+            formControlName="surname"
+            matInput
+            placeholder="Placeholder"
+            [ngClass]="{
+                'is-invalid': surnameControlInvalid,
+                'is-valid': !surnameControlInvalid
+            }"
+        >
+        
+        <mat-error *ngIf="surnameControl?.invalid && surnameControl?.touched">
+            <div *ngIf="surnameControl?.hasError('required')">
+                El apellido es <strong>requerido</strong>
+            </div>
+            <div *ngIf="surnameControl?.hasError('minlength')">
+                Mínimo de 3 caracteres
+            </div>
+            <div *ngIf="surnameControl?.hasError('pattern')">
+                Ingrese únicamente letras
+            </div>
+            <div *ngIf="surnameControl?.hasError('noOnlySpaces')">
+                No ingresar únicamente espacios
+            </div>
+            <div *ngIf="surnameControl?.hasError('noLeadingSpaces')">
+                No ingresar espacios al inicio
+            </div>
+        </mat-error>
+
+    </mat-form-field>
+
+    <mat-dialog-actions class="buttons-container">
+        <button mat-flat-button mat-dialog-close>Cancelar</button>
+        <button type="submit" mat-flat-button>
+            {{ editingStudent ? 'Editar' : 'Guardar' }}
+        </button>
+    </mat-dialog-actions>
+</form>

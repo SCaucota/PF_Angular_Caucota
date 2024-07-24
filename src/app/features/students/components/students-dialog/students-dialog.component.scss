@@ -1,0 +1,16 @@
+.form-add-student{
+    display: flex;
+    flex-direction: column;
+    gap: 3.5rem;
+    margin: 1rem;
+}
+
+.form-surname{
+    margin-bottom: 1rem;
+}
+
+.buttons-container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

@@ -1,17 +1,17 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { TituloDirective } from './directives/titulo.directive';
-import { NombreCompletoPipe } from './Pipes/nombre-completo.pipe';
+import { FullnamePipe } from './pipes/fullname.pipe';
+import { TitleDirective } from './directives/title.directive';
 
 @NgModule({
   declarations: [
-    TituloDirective,
-    NombreCompletoPipe,
+    FullnamePipe,
+    TitleDirective
   ],
   exports: [
-    TituloDirective,
-    NombreCompletoPipe
+    TitleDirective,
+    FullnamePipe
   ],
   imports: [
     CommonModule

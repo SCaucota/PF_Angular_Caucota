@@ -4,10 +4,10 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { LayoutModule } from './components/layout/layout.module';
 
 import esAR from '@angular/common/locales/es-AR';
 import { registerLocaleData } from '@angular/common';
+import { LayoutModule } from './features/layout/layout.module';
 registerLocaleData(esAR);
 
 @NgModule({

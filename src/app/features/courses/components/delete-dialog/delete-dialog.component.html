@@ -1,0 +1,8 @@
+<h2 mat-dialog-title appTitle>Eliminar Curso</h2>
+<mat-dialog-content>
+  ¿Seguro que desea eliminar el curso: {{course.name}}?
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>Cancelar</button>
+  <button mat-button mat-dialog-close (click)="deleteCourse()" cdkFocusInitial>Eliminar</button>
+</mat-dialog-actions>

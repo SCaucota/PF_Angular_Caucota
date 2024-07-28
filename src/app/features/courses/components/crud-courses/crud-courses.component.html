@@ -1,0 +1,56 @@
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+    <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef> Id </th>
+        <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef> Nombre </th>
+        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef> Descripción </th>
+        <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="startDate">
+        <th mat-header-cell *matHeaderCellDef>Fecha de inicio</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.startDate | date : "dd/MM/YYYY" }}
+        </td>
+      </ng-container>
+    
+      <ng-container matColumnDef="endDate">
+        <th mat-header-cell *matHeaderCellDef>Fecha de finalización</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.endDate | date : "dd/MM/YYYY" }}
+        </td>
+      </ng-container>
+
+    <ng-container matColumnDef="time">
+        <th mat-header-cell *matHeaderCellDef> Horario </th>
+        <td mat-cell *matCellDef="let element"> {{element.time}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Acciones</th>
+        <td mat-cell *matCellDef="let element">
+            <button mat-icon-button color="primary" (click)="editCourse(element)">
+                <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="deleteCourse(element.id)">
+                <mat-icon>delete</mat-icon>
+            </button>
+        </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+
+<button class="boton-add-alumno" (click)="openDialog()" mat-flat-button color="primary">
+    Curso
+    <mat-icon>add</mat-icon>
+</button>

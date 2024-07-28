@@ -8,6 +8,7 @@ import { SidenavbarComponent } from './components/sidenavbar/sidenavbar.componen
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { LayoutComponent } from './layout.component';
 import { StudentsModule } from '../students/students.module';
+import { CoursesModule } from '../courses/courses.module';
 import { SharedModule } from '../../shared/shared.module';
 
 @NgModule({
@@ -25,7 +26,8 @@ import { SharedModule } from '../../shared/shared.module';
     MatSidenavModule,
     MatToolbarModule,
     StudentsModule,
-    SharedModule
+    CoursesModule,
+    SharedModule,
   ]
 })
 export class LayoutModule { }

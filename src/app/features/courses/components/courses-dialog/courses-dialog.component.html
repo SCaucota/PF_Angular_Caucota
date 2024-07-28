@@ -1,0 +1,131 @@
+<h2 appTitle mat-dialog-title>{{
+    editingCourse ? 'Editando ' + (editingCourse) : 'Agregando Alumno'
+}}</h2>
+
+<form (ngSubmit)="onSubmitCourse()" class="form-add-student" [formGroup]="courseForm">
+    <mat-form-field appearance="fill">
+        <mat-label>Nombre del curso</mat-label>
+        <input
+            type="text"
+            formControlName="name" 
+            matInput
+            placeholder="Nombre"
+            [ngClass]="{
+                'is-invalid': nameControlInvalid,
+                'is-valid': !nameControlInvalid
+            }"
+        >
+
+        <mat-error *ngIf="nameControl?.invalid && nameControl?.touched">
+            <div *ngIf="nameControl?.hasError('required')">
+                El nombre es <strong>requerido</strong>
+            </div>
+            <div *ngIf="nameControl?.hasError('minlength')">
+                Mínimo de 3 caracteres
+            </div>
+            <div *ngIf="nameControl?.hasError('noOnlySpaces')">
+                No ingresar únicamente espacios
+            </div>
+            <div *ngIf="nameControl?.hasError('noLeadingSpaces')">
+                No ingresar espacios al inicio
+            </div>
+        </mat-error>
+    </mat-form-field>
+    <mat-form-field class="form-description" appearance="fill">
+        <mat-label>Descripción</mat-label>
+        <input 
+            formControlName="description"
+            matInput
+            placeholder="Placeholder"
+            [ngClass]="{
+                'is-invalid': descriptionControlInvalid,
+                'is-valid': !descriptionControlInvalid
+            }"
+        >
+        
+        <mat-error *ngIf="descriptionControl?.invalid && descriptionControl?.touched">
+            <div *ngIf="descriptionControl?.hasError('required')">
+                El descripción es <strong>requerida</strong>
+            </div>
+            <div *ngIf="descriptionControl?.hasError('maxLength')">
+                La descripción debe ser corta
+            </div>
+            <div *ngIf="descriptionControl?.hasError('noOnlySpaces')">
+                No ingresar únicamente espacios
+            </div>
+            <div *ngIf="descriptionControl?.hasError('noLeadingSpaces')">
+                No ingresar espacios al inicio
+            </div>
+        </mat-error>
+    </mat-form-field>
+    <mat-form-field class="form-date" appearance="fill">
+        <mat-label>Fecha</mat-label>
+        <mat-date-range-input [rangePicker]="picker">
+            <input
+                matStartDate
+                formControlName="startDate"
+                placeholder="Fecha inicio"
+                [ngClass]="{
+                    'is-invalid': startDateControlInvalid,
+                    'is-valid': !startDateControlInvalid
+                }"
+            >
+            <input
+                matEndDate
+                formControlName="endDate"
+                placeholder="Fecha fin"
+                [ngClass]="{
+                    'is-invalid': endDateControlInvalid,
+                    'is-valid': !endDateControlInvalid
+                }"
+            >
+        </mat-date-range-input>
+        <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle
+            matIconSuffix
+            [for]="picker"
+        ></mat-datepicker-toggle>
+        <mat-date-range-picker #picker></mat-date-range-picker>
+        
+        <mat-error *ngIf="startDateControl?.invalid && startDateControl?.touched">
+            <div *ngIf="startDateControl?.hasError('required')">
+                La fecha de inicio es <strong>requerida</strong>
+            </div>
+        </mat-error>
+
+        <mat-error *ngIf="endDateControl?.invalid && endDateControl?.touched">
+            <div *ngIf="endDateControl?.hasError('required')">
+                La fecha de finalización es <strong>requerida</strong>
+            </div>
+        </mat-error>
+    </mat-form-field>
+    <mat-form-field class="form-time" appearance="fill">
+        <mat-label>Horario</mat-label>
+        <mat-select 
+            formControlName="time"
+            matInput
+            placeholder="Placeholder"
+            [ngClass]="{
+                'is-invalid': timeControlInvalid,
+                'is-valid': !timeControlInvalid
+            }"
+        >
+            @for (time of times; track time) {
+                <mat-option value="{{time.viewValue}}">{{time.viewValue}}</mat-option>
+            }
+        </mat-select>
+        
+        <mat-error *ngIf="timeControl?.invalid && timeControl?.touched">
+            <div *ngIf="timeControl?.hasError('required')">
+                La hora de inicio es <strong>requerida</strong>
+            </div>
+        </mat-error>
+    </mat-form-field>
+
+    <mat-dialog-actions class="buttons-container">
+        <button mat-flat-button mat-dialog-close>Cancelar</button>
+        <button [disabled]="courseForm.invalid" type="submit" mat-flat-button>
+            {{ editingCourse ? 'Editar' : 'Guardar' }}
+        </button>
+    </mat-dialog-actions>
+</form>

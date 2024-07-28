@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { find, map, Observable, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Student } from '../../../features/students/models/student';
 
 @Injectable({
@@ -18,7 +18,7 @@ export class StudentsService {
     { id: '9', name: 'DAVID', surname: 'NÚÑEZ' },
     { id: '10', name: 'LAURA', surname: 'RAMÍREZ' },
   ]
-
+  
   getStudents(): Observable<Student[]> {
     return of([...this.STUDENTS_DATABASE])
   }

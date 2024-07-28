@@ -14,11 +14,13 @@ import { MatTableModule } from '@angular/material/table';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { DeleteDialogComponent } from './components/delete-dialog/delete-dialog/delete-dialog.component';
 
 @NgModule({
   declarations: [
     FullnamePipe,
-    TitleDirective
+    TitleDirective,
+    DeleteDialogComponent
   ],
   exports: [
     TitleDirective,
@@ -36,7 +38,18 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatNativeDateModule
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    MatButtonModule,
+    MatIconModule,
+    MatListModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    ReactiveFormsModule,
+    MatTableModule,
+    MatSelectModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ]
 })
 export class SharedModule { }

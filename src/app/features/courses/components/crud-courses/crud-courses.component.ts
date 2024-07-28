@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CoursesService } from '../../../../core/services/courses/courses.service';
 import { CoursesDialogComponent } from '../courses-dialog/courses-dialog.component';
-import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
+import { DeleteDialogComponent } from '../../../../shared/components/delete-dialog/delete-dialog/delete-dialog.component';
 import { Course } from '../../models/course';
 
 @Component({
@@ -46,9 +46,15 @@ export class CrudCoursesComponent implements OnInit{
 
   deleteCourse(id: string): void {
     const course = this.coursesService.getCourseById(id)
-    const dialogRef = this.matDialog.open(DeleteDialogComponent, {data: course})
+    const dialogRef = this.matDialog.open(DeleteDialogComponent, {
+      data: {
+        title:'Eliminar Curso',
+        entityName: 'el curso',
+        item: course
+      }
+    })
 
-    dialogRef.componentInstance.deleteCourseEvent.subscribe((course: Course) => {
+    dialogRef.componentInstance.confirmDeleteEvent.subscribe((course: Course) => {
       this.coursesService.deleteCourse(id);
       this.loadCourses()
     })

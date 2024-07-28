@@ -20,7 +20,6 @@ export class CoursesService {
   ]
 
   getCourses(): Observable<Course[]> {
-    console.log(this.COURSES_DATABASE)
     return of(this.COURSES_DATABASE);
   }
 

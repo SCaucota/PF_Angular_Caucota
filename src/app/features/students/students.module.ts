@@ -6,11 +6,10 @@ import { StudentsComponent } from './students.component';
 import { SharedModule } from '../../shared/shared.module';
 import { StudentsDialogComponent } from './components/students-dialog/students-dialog.component';
 import { CrudStudentsComponent } from './components/crud-students/crud-students.component';
-import { DeleteDialogComponent } from './components/delete-dialog/delete-dialog.component';
 
 
 @NgModule({
-  declarations: [StudentsComponent, StudentsDialogComponent, CrudStudentsComponent, DeleteDialogComponent],
+  declarations: [StudentsComponent, StudentsDialogComponent, CrudStudentsComponent],
   exports: [
     StudentsComponent
   ],

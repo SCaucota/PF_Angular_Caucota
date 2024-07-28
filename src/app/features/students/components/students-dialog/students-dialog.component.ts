@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Student } from '../../models/student';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { noOnlySpacesValidator, noLeadingSpacesValidator } from '../../../../utils/custom.validators';
+import { noOnlySpacesValidator, noLeadingSpacesValidator } from '../../../../shared/utils/custom.validators';
 
 @Component({
   selector: 'app-students-dialog',

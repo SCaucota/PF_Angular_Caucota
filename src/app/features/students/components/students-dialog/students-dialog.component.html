@@ -69,7 +69,7 @@
 
     <mat-dialog-actions class="buttons-container">
         <button mat-flat-button mat-dialog-close>Cancelar</button>
-        <button type="submit" mat-flat-button>
+        <button [disabled]="studentForm.invalid" type="submit" mat-flat-button>
             {{ editingStudent ? 'Editar' : 'Guardar' }}
         </button>
     </mat-dialog-actions>

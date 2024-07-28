@@ -1,21 +1,34 @@
-import { Component, Input, EventEmitter, Output } from '@angular/core';
+import { Component, Input, EventEmitter, Output, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Student } from '../../models/student';
 import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 import { StudentsDialogComponent } from '../students-dialog/students-dialog.component';
+import { StudentsService } from '../../../../core/services/students/students.service';
 
 @Component({
   selector: 'app-crud-students',
   templateUrl: './crud-students.component.html',
   styleUrl: './crud-students.component.scss'
 })
-export class CrudStudentsComponent {
+export class CrudStudentsComponent implements OnInit{
 
-  @Input() listStudents: Student[] = [];
+  constructor(private matDialog: MatDialog, private studentsService: StudentsService) { }
 
-  @Output() arrayStudents = new EventEmitter<Student[]>();
+  displayedColumns: string[] = ['id', 'name', 'surname', 'actions'];
 
-  constructor(private matDialog: MatDialog) { }
+  dataSource: Student[] = []
+
+  loadStudents() {
+    this.studentsService.getStudents().subscribe({
+      next: (studentsFormDb) => {
+        this.dataSource = studentsFormDb
+      }
+    })
+  }
+
+  ngOnInit(): void {
+   this.loadStudents()
+  }
 
   openDialog(): void {
     const dialogRef = this.matDialog.open(StudentsDialogComponent);
@@ -26,39 +39,29 @@ export class CrudStudentsComponent {
   }
 
   onSubmitStudent(student: Student): void{
-    const maxId = Math.max(...this.listStudents.map(a => +a.id));
-    const newId = (maxId + 1).toString();
-
-    const { id, ...rest } = student;
-    const newAlumno: Student = { id: newId, name: rest.name.toUpperCase(), surname: rest.surname.toUpperCase() };
-
-    this.listStudents = [...this.listStudents, newAlumno];
-
-    this.studentsUpdateList();
+    this.studentsService.addStudent(student);
+    this.loadStudents()
   }
 
   deleteStudent(id: string): void {
-    const student = this.listStudents.find(student => student.id === id);
+    const student = this.studentsService.getStudentById(id)
     const dialogRef = this.matDialog.open(DeleteDialogComponent, {data: student});
     
     dialogRef.componentInstance.deleteStudentEvent.subscribe((student: Student) => {
-      this.listStudents = this.listStudents.filter(student => student.id !== id);
-      this.studentsUpdateList();
+      this.studentsService.deleteStudent(id);
+      this.loadStudents()
     })
   }
 
-  updateStudent(editingStudent: Student): void{
+  editStudent(editingStudent: Student): void{
     this.matDialog.open(StudentsDialogComponent, {data: editingStudent}).afterClosed().subscribe({
       next: (value) => {
         if(!!value){
-          this.listStudents = this.listStudents.map((element) => element.id === editingStudent.id ? {id: editingStudent.id, name: value.name.toUpperCase(), surname: value.surname.toUpperCase()}: element)
-          this.studentsUpdateList();
+          this.studentsService.editStudent( editingStudent.id, value);        
+          this.loadStudents();
         }
       }
     })
   }
 
-  studentsUpdateList(): void{
-    this.arrayStudents.emit(this.listStudents);
-  }
 }

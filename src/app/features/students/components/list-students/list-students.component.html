@@ -1,21 +1,15 @@
-<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+<!-- <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
-    <!--- Note that these columns can be defined in any order.
-          The actual rendered columns are set as a property on the row definition" -->
-  
-    <!-- Id Column -->
     <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef> Id </th>
       <td mat-cell *matCellDef="let element"> {{element.id}} </td>
     </ng-container>
-  
-    <!-- Nombre Column -->
+
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef> Nombre </th>
       <td mat-cell *matCellDef="let element"> {{element.name}} </td>
     </ng-container>
-  
-    <!-- Apellido Column -->
+
     <ng-container matColumnDef="surname">
       <th mat-header-cell *matHeaderCellDef> Apellido </th>
       <td mat-cell *matCellDef="let element"> {{element.surname}} </td>
@@ -38,3 +32,4 @@
   </table>
 
   <app-crud-students  [listStudents]="dataSource" (arrayStudents)="updateList($event)"></app-crud-students>
+ -->

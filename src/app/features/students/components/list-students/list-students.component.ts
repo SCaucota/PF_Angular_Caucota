@@ -1,6 +1,7 @@
-import { Component, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, OnInit } from '@angular/core';
 import { Student } from '../../models/student';
 import { CrudStudentsComponent } from '../crud-students/crud-students.component';
+import { StudentsService } from '../../../../core/services/students/students.service';
 
 const ELEMENT_DATA: Student[] = [
   { id: '1', name: 'JUAN', surname: 'PÉREZ' },
@@ -20,21 +21,31 @@ const ELEMENT_DATA: Student[] = [
   templateUrl: './list-students.component.html',
   styleUrl: './list-students.component.scss'
 })
-export class ListStudentsComponent {
+export class ListStudentsComponent implements OnInit{
   
   @ViewChild(CrudStudentsComponent) crudStudentsComponent?: CrudStudentsComponent;
 
   displayedColumns: string[] = ['id', 'name', 'surname', 'actions'];
 
-  dataSource = ELEMENT_DATA;
+  constructor(private studentsService: StudentsService) { }
 
-  ngAfterViewInit(): void {
+  dataSource: Student[] = []
+
+  ngOnInit(): void {
+    this.studentsService.getStudents().subscribe({
+      next: (studentsFormDb) => {
+        this.dataSource = studentsFormDb
+      }
+    })
+  }
+
+  /* ngAfterViewInit(): void {
     if (this.crudStudentsComponent) {
       this.crudStudentsComponent.arrayStudents.subscribe((updatedStudents: Student[]) => {
         this.updateList(updatedStudents);
       });
     }
-  }
+  } */
 
   updateList(array: Student[]) {
     this.dataSource = array
@@ -48,7 +59,7 @@ export class ListStudentsComponent {
 
   updateStudent(student: Student):void {
     if(this.crudStudentsComponent) {
-      this.crudStudentsComponent.updateStudent(student);
+      this.crudStudentsComponent.editStudent(student);
     }
   }
 

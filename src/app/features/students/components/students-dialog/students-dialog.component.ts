@@ -77,11 +77,7 @@ export class StudentsDialogComponent {
   }
 
   onSubmitStudent(): void {
-    if(this.studentForm.invalid){
-      alert('Formulario invalido')
-    }else{
-      this.matDialogRef.close(this.studentForm.value);
-      this.onSubmitStudentEvent.emit(this.studentForm.value)
-    }
+    this.matDialogRef.close(this.studentForm.value);
+    this.onSubmitStudentEvent.emit(this.studentForm.value)
   }
 }

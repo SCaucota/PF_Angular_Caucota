@@ -34,8 +34,8 @@ export class CoursesService {
 
     this.COURSES_DATABASE.push({
       id: newId,
-      name: course.name,
-      description: course.description,
+      name: course.name.toUpperCase(),
+      description: course.description.toLowerCase(),
       startDate: course.startDate,
       endDate: course.endDate,
       time: course.time

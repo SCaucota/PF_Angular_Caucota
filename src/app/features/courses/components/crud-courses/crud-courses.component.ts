@@ -21,7 +21,7 @@ export class CrudCoursesComponent implements OnInit{
   loadCourses() {
     this.coursesService.getCourses().subscribe({
       next: (coursesFormDb) => {
-        this.dataSource = coursesFormDb
+        this.dataSource = [...coursesFormDb]
       }
     })
   }

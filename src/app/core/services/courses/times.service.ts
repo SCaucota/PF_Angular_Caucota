@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { Time } from '../../../features/courses/models/time';
+import { Time } from '../../../features/dashboard/courses/models/time';
 
 @Injectable({
   providedIn: 'root'

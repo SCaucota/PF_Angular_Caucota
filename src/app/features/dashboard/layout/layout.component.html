@@ -1,0 +1,18 @@
+<mat-drawer-container class="container">
+    <mat-drawer class="sidenav" #drawer mode="side" opened="false">
+      <app-sidenavbar></app-sidenavbar>
+    </mat-drawer>
+    <mat-drawer-content >
+      <app-toolbar [drawer]="drawer"></app-toolbar>
+      <div class="container-lista">
+        <router-outlet></router-outlet>
+      </div>
+      <div class="titulo-app" *ngIf="showInicio">
+        <strong>Bienvenido a</strong>
+        <h1>AdminApp</h1>
+        <p>Despliega el menú y navega por nuestras opciones</p>
+      </div>
+    </mat-drawer-content>
+</mat-drawer-container>
+  
+  

@@ -7,7 +7,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 
 import esAR from '@angular/common/locales/es-AR';
 import { registerLocaleData } from '@angular/common';
-import { LayoutModule } from './features/layout/layout.module';
+import { DashboardModule } from './features/dashboard/dashboard.module';
 registerLocaleData(esAR);
 
 @NgModule({
@@ -17,7 +17,7 @@ registerLocaleData(esAR);
   imports: [
     BrowserModule,
     AppRoutingModule,
-    LayoutModule
+    DashboardModule
   ],
   providers: [
     {provide: LOCALE_ID, useValue: 'es-AR'},

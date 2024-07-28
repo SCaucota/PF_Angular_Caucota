@@ -39,8 +39,7 @@ export class CrudCoursesComponent implements OnInit{
   }
 
   onSubmitCourse(course: Course): void {
-    const curso = this.coursesService.addCourse(course);
-    console.log(curso)
+    this.coursesService.addCourse(course);
     this.loadCourses();
   }
 

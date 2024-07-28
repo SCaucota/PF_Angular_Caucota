@@ -1,5 +1,5 @@
 <h2 appTitle mat-dialog-title>{{
-    editingCourse ? 'Editando ' + (editingCourse) : 'Agregando Alumno'
+    editingCourse ? 'Editando ' + (editingCourse) : 'Agregando Curso'
 }}</h2>
 
 <form (ngSubmit)="onSubmitCourse()" class="form-add-student" [formGroup]="courseForm">
@@ -21,7 +21,7 @@
                 El nombre es <strong>requerido</strong>
             </div>
             <div *ngIf="nameControl?.hasError('minlength')">
-                Mínimo de 3 caracteres
+                Mínimo de 2 caracteres
             </div>
             <div *ngIf="nameControl?.hasError('noOnlySpaces')">
                 No ingresar únicamente espacios

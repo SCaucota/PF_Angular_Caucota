@@ -7,22 +7,23 @@ import { Lesson } from '../../../features/lessons/models/lesson';
 })
 export class LessonsService {
   private LESSONS_DATABASE: Lesson[] = [
-    { id: '1', name: 'Modules', date: new Date('2024-10-06'), courseTitle: 'Angular' },
-    { id: '2', name: 'Hooks', date: new Date('2024-11-05'), courseTitle: 'React' },
-    { id: '3', name: 'Express.js Basics', date: new Date('2024-09-20'), courseTitle: 'Node.js' },
-    { id: '4', name: 'OOP Basics', date: new Date('2024-09-10'), courseTitle: 'Java' },
-    { id: '5', name: 'Swift Basics', date: new Date('2024-12-05'), courseTitle: 'Swift' },
-    { id: '6', name: 'Routing in Rails', date: new Date('2024-09-25'), courseTitle: 'Ruby on Rails' },
-    { id: '7', name: 'Components', date: new Date('2024-10-13'), courseTitle: 'Angular' },
-    { id: '8', name: 'State Management', date: new Date('2024-11-12'), courseTitle: 'React' },
-    { id: '9', name: 'Database Integration', date: new Date('2024-10-02'), courseTitle: 'Node.js' },
-    { id: '10', name: 'Web Frameworks', date: new Date('2024-09-05'), courseTitle: 'Python' },
-    { id: '11', name: 'Advanced OOP', date: new Date('2024-10-01'), courseTitle: 'Java' },
-    { id: '12', name: 'ASP.NET Core', date: new Date('2024-11-01'), courseTitle: 'C#' },
-    { id: '13', name: 'Vue Router', date: new Date('2024-11-20'), courseTitle: 'Vue.js' },
-    { id: '14', name: 'Active Record', date: new Date('2024-10-10'), courseTitle: 'Ruby on Rails' },
-    { id: '15', name: 'Django Templates', date: new Date('2025-01-05'), courseTitle: 'Django' }
+    { id: '1', name: 'MODULES', date: new Date('2024-10-06'), courseTitle: 'ANGULAR', status: true },
+    { id: '2', name: 'HOOKS', date: new Date('2024-11-05'), courseTitle: 'REACT', status: true },
+    { id: '3', name: 'EXPRESS.JS BASICS', date: new Date('2024-09-20'), courseTitle: 'NODE.JS', status: false },
+    { id: '4', name: 'OOP BASICS', date: new Date('2024-09-10'), courseTitle: 'JAVA', status: true },
+    { id: '5', name: 'SWIFT BASICS', date: new Date('2024-12-05'), courseTitle: 'SWIFT', status: false },
+    { id: '6', name: 'ROUTING IN RAILS', date: new Date('2024-09-25'), courseTitle: 'RUBY ON RAILS', status: true },
+    { id: '7', name: 'COMPONENTS', date: new Date('2024-10-13'), courseTitle: 'ANGULAR', status: true },
+    { id: '8', name: 'STATE MANAGEMENT', date: new Date('2024-11-12'), courseTitle: 'REACT', status: true },
+    { id: '9', name: 'DATABASE INTEGRATION', date: new Date('2024-10-02'), courseTitle: 'NODE.JS', status: true },
+    { id: '10', name: 'WEB FRAMEWORKS', date: new Date('2024-09-05'), courseTitle: 'PYTHON', status: true },
+    { id: '11', name: 'ADVANCED OOP', date: new Date('2024-10-01'), courseTitle: 'JAVA', status: false },
+    { id: '12', name: 'ASP.NET CORE', date: new Date('2024-11-01'), courseTitle: 'C#', status: true },
+    { id: '13', name: 'VUE ROUTER', date: new Date('2024-11-20'), courseTitle: 'VUE.JS', status: true },
+    { id: '14', name: 'ACTIVE RECORD', date: new Date('2024-10-10'), courseTitle: 'RUBY ON RAILS', status: true },
+    { id: '15', name: 'DJANGO TEMPLATES', date: new Date('2025-01-05'), courseTitle: 'DJANGO', status: true }
   ];
+  
 
   getLessons(): Observable<Lesson[]> {
     return of(this.LESSONS_DATABASE);
@@ -40,7 +41,8 @@ export class LessonsService {
       id: newId,
       name: lesson.name.toUpperCase(),
       date: lesson.date,
-      courseTitle: lesson.courseTitle.toUpperCase()
+      courseTitle: lesson.courseTitle.toUpperCase(),
+      status: lesson.status
     });
     return lesson
   }

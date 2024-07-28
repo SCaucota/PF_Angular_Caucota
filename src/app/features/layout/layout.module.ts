@@ -10,6 +10,7 @@ import { LayoutComponent } from './layout.component';
 import { StudentsModule } from '../students/students.module';
 import { CoursesModule } from '../courses/courses.module';
 import { SharedModule } from '../../shared/shared.module';
+import { LessonsModule } from '../lessons/lessons.module';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { SharedModule } from '../../shared/shared.module';
     MatToolbarModule,
     StudentsModule,
     CoursesModule,
+    LessonsModule,
     SharedModule,
   ]
 })

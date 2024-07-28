@@ -2,5 +2,6 @@ export interface Lesson {
     id: string,
     name: string,
     date: Date,
-    courseTitle: string
+    courseTitle: string,
+    status: boolean
 }

@@ -1,0 +1,32 @@
+mat-dialog-content{
+    width: 400px
+}
+
+strong{
+    font-size: 20px;
+}
+
+p{
+    font-size: 18px;
+}
+
+.titledata-data{
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    gap: 1rem;
+    justify-content: space-between;
+}
+
+.cursos-students{
+    font-size: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.cursos-students li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

@@ -95,7 +95,6 @@ export class CrudCoursesComponent implements OnInit{
     const dialogRef = this.matDialog.open(DetailDialogComponent, {
       data: {
         title: 'Detalles del curso',
-        entity: 'Curso',
         item: course,
         subitem: students
       }

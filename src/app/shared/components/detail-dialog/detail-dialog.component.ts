@@ -13,7 +13,7 @@ export class DetailDialogComponent implements OnInit{
 
   constructor(
     private matDialogRef: MatDialogRef<DetailDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: {title: string, entity: string, item: any, subitem: any}
+    @Inject(MAT_DIALOG_DATA) public data: {title: string, item: any, subitem: any}
   ){ }
 
   ngOnInit(): void {
@@ -24,10 +24,6 @@ export class DetailDialogComponent implements OnInit{
 
   get title(): string {
     return this.data.title
-  }
-
-  get entity(): any {
-    return this.data.entity
   }
 
   get item(): any {

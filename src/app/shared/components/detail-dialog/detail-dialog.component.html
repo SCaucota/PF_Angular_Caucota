@@ -1,20 +1,27 @@
 <h2 mat-dialog-title>{{ title }}</h2>
 <mat-dialog-content>
-  {{ entity }} {{item.name || item.id}}: 
+    <div class="titledata-data">
+        <strong>ID: </strong>
+        <p>{{item.id}}</p>
+    </div>
+    <hr>
     <div>
-        <strong>ID: </strong> {{item.id}}
-        <strong 
+        <div
             *ngIf="handleStudents(item) && 
             !handleInscription(item) &&
             !handleLessons(item) "
-        >
-            Nombre Completo: {{ item | fullname }}
-            Cursos:
-                <ul *ngIf="!isEmpty">
+            >
+            <div class="titledata-data">
+                <strong>Nombre Completo: </strong>
+                <p> {{ item | fullname }}</p>
+            </div>
+            <hr>
+            <strong>Cursos: </strong>
+                <ul class="cursos-students" *ngIf="!isEmpty">
                     <li *ngFor="let course of subitem">
                         {{course.id}} - {{ course.name }}
                         <button 
-                            mat-button
+                            mat-flat-button
                             mat-dialog-close 
                             (click)="confirmUnregistration(item.id, course.id)"
                             cdkFocusInitial
@@ -22,20 +29,36 @@
                     </li>
                 </ul>
                 <p *ngIf="isEmpty">No se encuentra aún inscripto a ningún curso</p>
-        </strong>
-        <strong 
+        </div>
+        <div 
             *ngIf="!handleStudents(item) && !handleLessons(item) && !handleInscription(item)"
         >
-            Nombre: {{ item.name }}
-            Descripción: {{ item.description }}
-            Duración: {{item.startDate | date: 'dd/MM/yyyy'}} - {{item.endDate | date: 'dd/MM/yyyy'}}
-            Horario: {{ item.time }}
-            Estudiantes:
-                <ul *ngIf="!isEmpty">
+            <div class="titledata-data">
+                <strong>Nombre: </strong>
+                <p>{{ item.name }}</p>
+            </div>
+            <hr>
+            <div class="titledata-data">
+                <strong>Descripción: </strong>
+                <p>{{ item.description }}</p>
+            </div>
+            <hr>
+            <div class="titledata-data">
+                <strong>Duración: </strong>
+                <p>{{item.startDate | date: 'dd/MM/yyyy'}} - {{item.endDate | date: 'dd/MM/yyyy'}}</p>
+            </div>
+            <hr>
+            <div class="titledata-data">
+                <strong>Horario: </strong>
+                <p>{{ item.time }}</p>
+            </div>
+            <hr>
+            <strong>Estudiantes: </strong>
+                <ul class="cursos-students" *ngIf="!isEmpty">
                     <li *ngFor="let student of subitem">
                         {{student.id}} - {{student.name}} {{student.surname}}
                         <button 
-                            mat-button
+                            mat-flat-button
                             mat-dialog-close 
                             (click)="confirmUnregistration(item.id, student.id)"
                             cdkFocusInitial
@@ -44,25 +67,54 @@
                 </ul>
 
                 <p *ngIf="isEmpty">No hay estudiantes inscriptos</p>
-        </strong>
-        <strong *ngIf="handleInscription(item)">
-            Id Estudiante: 
-                <span *ngIf="subitem.student; else studentDeleted">
+        </div>
+        <div *ngIf="handleInscription(item)">
+            <div class="titledata-data">
+                <strong>Id Estudiante: </strong>
+                <p *ngIf="subitem.student; else studentDeleted">
                     {{item.studentId}} - {{subitem.student | fullname}}
-                </span>
+                </p>
                 <ng-template #studentDeleted>
                     Estudiante eliminado
                 </ng-template>
-            Id Curso: {{item.courseId}} - {{subitem.course ? subitem.course.name : 'Curso eliminado'}}
-            Fecha: {{item.date | date: 'dd/MM/yyyy'}}
-            Estado: {{item.status ? 'Activo' : 'Cancelado'}}
-        </strong>
-        <strong *ngIf="handleLessons(item)">
-            Nombre: {{item.name}}
-            Fecha: {{item.date | date: 'dd/MM/yyyy'}}
-            Curso: {{item.courseTitle}}
-            Estado: {{item.status ? 'Activo' : 'Cancelado'}}
-        </strong>
+            </div>
+            <hr>
+            <div class="titledata-data">
+                <strong>Id Curso: </strong>
+                <p>{{item.courseId}} - {{subitem.course ? subitem.course.name : 'Curso eliminado'}}</p>
+            </div>
+            <hr>
+            <div class="titledata-data">
+                <strong>Fecha: </strong>
+                <p>{{item.date | date: 'dd/MM/yyyy'}}</p>
+            </div>
+            <hr>
+            <div class="titledata-data">
+                <strong>Estado: </strong>
+                <p>{{item.status ? 'Activo' : 'Cancelado'}}</p>
+            </div>
+        </div>
+        <div *ngIf="handleLessons(item)">
+            <div class="titledata-data">
+                <strong>Nombre: </strong>
+                <p>{{item.name}}</p>
+            </div>
+            <hr>
+            <div class="titledata-data">
+                <strong>Fecha: </strong>
+                <p>{{item.date | date: 'dd/MM/yyyy'}}</p>
+            </div>
+            <hr>
+            <div class="titledata-data">
+                <strong>Curso: </strong>
+                <p>{{item.courseTitle}}</p>
+            </div>
+            <hr>
+            <div class="titledata-data">
+                <strong>Estado: </strong>
+                <p>{{item.status ? 'Activo' : 'Cancelado'}}</p>
+            </div>
+        </div>
     </div>
 </mat-dialog-content>
 <mat-dialog-actions>

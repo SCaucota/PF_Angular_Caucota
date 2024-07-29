@@ -75,7 +75,6 @@ export class CrudLessonsComponent implements OnInit{
     this.matDialog.open(DetailDialogComponent, {
       data: {
         title: 'Detalles de la Clase',
-        entity: 'Clase',
         item: lesson,
         subitem: []
       }

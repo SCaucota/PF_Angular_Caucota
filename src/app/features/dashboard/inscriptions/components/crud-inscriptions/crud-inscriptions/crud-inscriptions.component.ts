@@ -109,7 +109,6 @@ export class CrudInscriptionsComponent {
     this.matDialog.open(DetailDialogComponent, {
       data: {
         title: 'Detalles de la inscripción',
-        entity: 'Inscripción',
         item: inscription,
         subitem: subdata
       }

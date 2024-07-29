@@ -1,4 +1,4 @@
-import { AbstractControl } from "@angular/forms";
+import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 export function noOnlySpacesValidator(control: AbstractControl) {
     if(control.value && control.value.trim().length === 0) {

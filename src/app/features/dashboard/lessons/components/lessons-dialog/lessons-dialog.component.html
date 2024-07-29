@@ -2,7 +2,7 @@
     editingLesson ? 'Editando ' + (editingLesson.name) : 'Agregando Clase'
 }}</h2>
 
-<form (ngSubmit)="onSubmitLesson()" class="form-add-student" [formGroup]="lessonForm">
+<form (ngSubmit)="onSubmitLesson()" class="form-add-lessons" [formGroup]="lessonForm">
     <mat-form-field appearance="fill">
         <mat-label>Nombre de la clase</mat-label>
         <input
@@ -50,7 +50,7 @@
         
         <mat-error *ngIf="coursesTitleControl?.invalid && coursesTitleControl?.touched">
             <div *ngIf="coursesTitleControl?.hasError('required')">
-                El curso es <strong>requerida</strong>
+                El curso es <strong>requerido</strong>
             </div>
         </mat-error>
     </mat-form-field>

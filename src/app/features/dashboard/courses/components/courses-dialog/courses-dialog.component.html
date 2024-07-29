@@ -2,7 +2,7 @@
     editingCourse ? 'Editando ' + (editingCourse.name) : 'Agregando Curso'
 }}</h2>
 
-<form (ngSubmit)="onSubmitCourse()" class="form-add-student" [formGroup]="courseForm">
+<form (ngSubmit)="onSubmitCourse()" class="form-add-courses" [formGroup]="courseForm">
     <mat-form-field appearance="fill">
         <mat-label>Nombre del curso</mat-label>
         <input

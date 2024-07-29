@@ -13,7 +13,6 @@ import { noLeadingSpacesValidator, noOnlySpacesValidator } from '../../../../../
 })
 export class LessonsDialogComponent implements OnInit{
   lessonForm: FormGroup;
-
   courses: Course[] = [];
   minDate: Date | null = null;
   maxDate: Date | null = null;
@@ -63,8 +62,8 @@ export class LessonsDialogComponent implements OnInit{
   onCourseTitleChange(courseTitle: string): void {
     const selectedCourse = this.courses.find(course => course.name === courseTitle);
     if (selectedCourse) {
-      this.minDate = new Date(selectedCourse.startDate); // Asumiendo que 'startDate' es una propiedad del curso
-      this.maxDate = new Date(selectedCourse.endDate);   // Asumiendo que 'endDate' es una propiedad del curso
+      this.minDate = new Date(selectedCourse.startDate);
+      this.maxDate = new Date(selectedCourse.endDate);
     } else {
       this.minDate = null;
       this.maxDate = null;
@@ -96,7 +95,7 @@ export class LessonsDialogComponent implements OnInit{
   }
 
   get coursesTitleControl() {
-    return this.lessonForm.get("coursesTitle")
+    return this.lessonForm.get("courseTitle")
   }
 
   get coursesTitleControlInvalid() {

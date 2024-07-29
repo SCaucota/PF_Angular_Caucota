@@ -91,6 +91,15 @@ export class CrudInscriptionsComponent {
 
             this.coursesService.addStudentToCourse(updatedInscription.studentId, updatedInscription.courseId);
             this.studentsService.addCourseToStudent(updatedInscription.courseId, updatedInscription.studentId);
+          } else if (originalInscription.status !== updatedInscription.status) {
+            if(updatedInscription.status === true) {
+              this.coursesService.addStudentToCourse(updatedInscription.studentId, updatedInscription.courseId);
+              this.studentsService.addCourseToStudent(updatedInscription.courseId, updatedInscription.studentId);
+            }
+            else {
+              this.coursesService.deleteStudentFromCourse(originalInscription.studentId);
+              this.studentsService.unregisterStudent(originalInscription.courseId);
+            }
           }
 
           this.loadInscription();

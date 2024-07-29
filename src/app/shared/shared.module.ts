@@ -14,13 +14,14 @@ import { MatTableModule } from '@angular/material/table';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import { DeleteDialogComponent } from './components/delete-dialog/delete-dialog/delete-dialog.component';
+import { DeleteDialogComponent } from './components/delete-dialog/delete-dialog.component';
+
 
 @NgModule({
   declarations: [
     FullnamePipe,
     TitleDirective,
-    DeleteDialogComponent
+    DeleteDialogComponent,
   ],
   exports: [
     TitleDirective,

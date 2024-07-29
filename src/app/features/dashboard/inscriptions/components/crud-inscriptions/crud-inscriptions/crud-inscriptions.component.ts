@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { InscriptionsService } from '../../../../../../core/services/inscriptions/inscriptions.service';
 import { Inscription } from '../../../models/inscription';
-import { DeleteDialogComponent } from '../../../../../../shared/components/delete-dialog/delete-dialog/delete-dialog.component';
+import { DeleteDialogComponent } from '../../../../../../shared/components/delete-dialog/delete-dialog.component';
 import { InscriptionsDialogComponent } from '../../inscriptions-dialog/inscriptions-dialog/inscriptions-dialog.component';
 
 @Component({

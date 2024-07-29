@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CoursesService } from '../../../../../core/services/courses/courses.service';
 import { CoursesDialogComponent } from '../courses-dialog/courses-dialog.component';
-import { DeleteDialogComponent } from '../../../../../shared/components/delete-dialog/delete-dialog/delete-dialog.component';
+import { DeleteDialogComponent } from '../../../../../shared/components/delete-dialog/delete-dialog.component';
 import { Course } from '../../models/course';
 
 @Component({

@@ -1,7 +1,7 @@
 import { Component, Input, EventEmitter, Output, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Student } from '../../models/student';
-import { DeleteDialogComponent } from '../../../../../shared/components/delete-dialog/delete-dialog/delete-dialog.component';
+import { DeleteDialogComponent } from '../../../../../shared/components/delete-dialog/delete-dialog.component';
 import { StudentsDialogComponent } from '../students-dialog/students-dialog.component';
 import { StudentsService } from '../../../../../core/services/students/students.service';
 import { isEntityName } from 'typescript';
@@ -15,7 +15,7 @@ export class CrudStudentsComponent implements OnInit{
 
   constructor(private matDialog: MatDialog, private studentsService: StudentsService) { }
 
-  displayedColumns: string[] = ['id', 'name', 'surname', 'actions'];
+  displayedColumns: string[] = ['id', 'name', 'surname', 'actions', 'detail'];
 
   dataSource: Student[] = []
 

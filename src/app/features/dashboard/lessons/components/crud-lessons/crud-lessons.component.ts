@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { LessonsService } from '../../../../../core/services/lessons/lessons.service';
 import { Lesson } from '../../models/lesson';
 import { LessonsDialogComponent } from '../lessons-dialog/lessons-dialog.component';
-import { DeleteDialogComponent } from '../../../../../shared/components/delete-dialog/delete-dialog/delete-dialog.component';
+import { DeleteDialogComponent } from '../../../../../shared/components/delete-dialog/delete-dialog.component';
 
 @Component({
   selector: 'app-crud-lessons',

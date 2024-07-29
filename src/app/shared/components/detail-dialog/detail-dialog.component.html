@@ -3,7 +3,7 @@
   {{ entity }} {{item.name || item.id}}: 
     <div>
         <strong>ID: </strong> {{item.id}}
-        <strong *ngIf="handleStudents(item)">
+        <strong *ngIf="handleStudents(item) && !handleInscription(item)">
             Nombre Completo: {{ item | fullname }}
             Cursos:
                 <ul>
@@ -18,7 +18,7 @@
                     </li>
                 </ul>
         </strong>
-        <strong *ngIf="!handleStudents(item)">
+        <strong *ngIf="!handleStudents(item) && !handleInscription(item)">
             Nombre: {{ item.name }}
             Descripción: {{ item.description }}
             Duración: {{item.startDate | date: 'dd/MM/yyyy'}} - {{item.endDate | date: 'dd/MM/yyyy'}}
@@ -37,6 +37,12 @@
                 </ul>
 
                 <p *ngIf="studentsEmpty">No hay estudiantes estudiantes inscriptos</p>
+        </strong>
+        <strong *ngIf="handleInscription(item)">
+            Id Estudiante: {{item.studentId}} - {{subitem.student | fullname}}
+            Id Curso: {{item.courseId}} - {{subitem.course.name}}
+            Fecha: {{item.date | date: 'dd/MM/yyyy'}}
+            Estado: {{item.status ? 'Activo' : 'Cancelado'}}
         </strong>
     </div>
 </mat-dialog-content>

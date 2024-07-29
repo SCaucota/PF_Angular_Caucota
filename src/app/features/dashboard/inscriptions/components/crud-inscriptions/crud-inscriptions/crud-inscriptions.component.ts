@@ -4,6 +4,9 @@ import { InscriptionsService } from '../../../../../../core/services/inscription
 import { Inscription } from '../../../models/inscription';
 import { DeleteDialogComponent } from '../../../../../../shared/components/delete-dialog/delete-dialog.component';
 import { InscriptionsDialogComponent } from '../../inscriptions-dialog/inscriptions-dialog/inscriptions-dialog.component';
+import { DetailDialogComponent } from '../../../../../../shared/components/detail-dialog/detail-dialog.component';
+import { StudentsService } from '../../../../../../core/services/students/students.service';
+import { CoursesService } from '../../../../../../core/services/courses/courses.service';
 
 @Component({
   selector: 'app-crud-inscriptions',
@@ -11,9 +14,14 @@ import { InscriptionsDialogComponent } from '../../inscriptions-dialog/inscripti
   styleUrl: './crud-inscriptions.component.scss'
 })
 export class CrudInscriptionsComponent {
-  constructor(private matDialog: MatDialog, private inscriptionsService: InscriptionsService) { }
+  constructor(
+    private matDialog: MatDialog,
+    private inscriptionsService: InscriptionsService,
+    private studentsService: StudentsService,
+    private coursesService: CoursesService
+  ) { }
 
-  displayedColumns: string[] = ['id', 'studentId', 'courseId', 'date', 'status', 'actions'];
+  displayedColumns: string[] = ['id', 'studentId', 'courseId', 'date', 'status', 'actions', 'detail'];
 
   dataSource: Inscription[] = [];
 
@@ -65,6 +73,23 @@ export class CrudInscriptionsComponent {
           this.inscriptionsService.editInscription(editingInscription.id, value);
           this.loadInscription();
         }
+      }
+    })
+  }
+
+  openDetail(id: string): void {
+    const inscription = this.inscriptionsService.getInscriptionById(id);
+    const studentid = inscription?.studentId
+    const student = studentid ? this.studentsService.getStudentById(studentid) : null
+    const courseid = inscription?.courseId;
+    const course = courseid ? this.coursesService.getCourseById(courseid) : null
+    const subdata = {student: student, course: course}
+    this.matDialog.open(DetailDialogComponent, {
+      data: {
+        title: 'Detalles de la inscripción',
+        entity: 'Inscripción',
+        item: inscription,
+        subitem: subdata
       }
     })
   }

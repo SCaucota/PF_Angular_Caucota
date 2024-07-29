@@ -17,6 +17,7 @@ export class DetailDialogComponent implements OnInit{
   ){ }
 
   ngOnInit(): void {
+    console.log(this.data.subitem)
     this.data.subitem.length === 0 ?
       this.studentsEmpty = true : this.studentsEmpty = false
   }
@@ -41,8 +42,16 @@ export class DetailDialogComponent implements OnInit{
     return item && item.courses
   }
 
+  handleInscription(item: any) {
+    return item
+  }
+
   confirmUnregistration(courseId: string, studentId: string): void {
     this.confirmUnregistrationEvent.emit({courseId, studentId})
     this.matDialogRef.close();
+  }
+
+  closeDetail(): void{
+    this.matDialogRef.close()
   }
 }

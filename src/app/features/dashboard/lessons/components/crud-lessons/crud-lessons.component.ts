@@ -4,6 +4,7 @@ import { LessonsService } from '../../../../../core/services/lessons/lessons.ser
 import { Lesson } from '../../models/lesson';
 import { LessonsDialogComponent } from '../lessons-dialog/lessons-dialog.component';
 import { DeleteDialogComponent } from '../../../../../shared/components/delete-dialog/delete-dialog.component';
+import { DetailDialogComponent } from '../../../../../shared/components/detail-dialog/detail-dialog.component';
 
 @Component({
   selector: 'app-crud-lessons',
@@ -13,7 +14,7 @@ import { DeleteDialogComponent } from '../../../../../shared/components/delete-d
 export class CrudLessonsComponent implements OnInit{
   constructor(private matDialog: MatDialog, private lessonsService: LessonsService) { }
 
-  displayedColumns: string[] = ['id', 'name', 'date', 'courseTitle', 'status', 'actions'];
+  displayedColumns: string[] = ['id', 'name', 'date', 'courseTitle', 'status', 'actions', 'detail'];
 
   dataSource: Lesson[] = [];
 
@@ -65,6 +66,18 @@ export class CrudLessonsComponent implements OnInit{
           this.lessonsService.editLesson(editingLesson.id, value);
           this.loadLessons();
         }
+      }
+    })
+  }
+
+  openDetail(id: string): void {
+    const lesson = this.lessonsService.getLessonById(id)
+    this.matDialog.open(DetailDialogComponent, {
+      data: {
+        title: 'Detalles de la Clase',
+        entity: 'Clase',
+        item: lesson,
+        subitem: []
       }
     })
   }

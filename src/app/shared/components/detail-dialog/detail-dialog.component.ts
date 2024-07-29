@@ -41,9 +41,12 @@ export class DetailDialogComponent implements OnInit{
   handleStudents(item: any){
     return item && item.courses
   }
-
   handleInscription(item: any) {
-    return item
+    return item && item.studentId
+  }
+
+  handleLessons(item:any) {
+    return item && item.courseTitle
   }
 
   confirmUnregistration(courseId: string, studentId: string): void {

@@ -1,5 +1,5 @@
 <mat-nav-list class="list" role="list">
-    <a mat-list-item role="listitem" routerLink="students" >Alumnos</a>
-    <a mat-list-item role="listitem" routerLink="courses" >Cursos</a>
-    <a mat-list-item role="listitem" routerLink="lessons" >Clases</a>
+    <a mat-list-item role="listitem" routerLink="students" routerLinkActive #studentsLink="routerLinkActive" [activated]="studentsLink.isActive">Alumnos</a>
+    <a mat-list-item role="listitem" routerLink="courses" routerLinkActive #coursesLink="routerLinkActive" [activated]="coursesLink.isActive">Cursos</a>
+    <a mat-list-item role="listitem" routerLink="lessons" routerLinkActive #lessonsLink="routerLinkActive" [activated]="lessonsLink.isActive">Clases</a>
 </mat-nav-list>

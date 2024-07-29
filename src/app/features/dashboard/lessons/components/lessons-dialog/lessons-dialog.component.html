@@ -1,13 +1,13 @@
 <h2 appTitle mat-dialog-title>{{
-    editingLesson ? 'Editando ' + (editingLesson) : 'Agregando Clase'
+    editingLesson ? 'Editando ' + (editingLesson.name) : 'Agregando Clase'
 }}</h2>
 
 <form (ngSubmit)="onSubmitLesson()" class="form-add-student" [formGroup]="lessonForm">
     <mat-form-field appearance="fill">
         <mat-label>Nombre de la clase</mat-label>
         <input
-            type="text"
-            formControlName="name" 
+        type="text"
+        formControlName="name" 
             matInput
             placeholder="Nombre"
             [ngClass]="{
@@ -31,6 +31,29 @@
             </div>
         </mat-error>
     </mat-form-field>
+    <mat-form-field class="form-courseTitle" appearance="fill">
+        <mat-label>Curso</mat-label>
+        <mat-select 
+            formControlName="courseTitle"
+            matInput
+            placeholder="Placeholder"
+            [ngClass]="{
+                'is-invalid': coursesTitleControlInvalid,
+                'is-valid': !coursesTitleControlInvalid
+            }"
+            (selectionChange)="onCourseTitleChange($event.value)"
+        >
+            @for (course of courses; track course) {
+                <mat-option value="{{course.name}}">{{course.name}}</mat-option>
+            }
+        </mat-select>
+        
+        <mat-error *ngIf="coursesTitleControl?.invalid && coursesTitleControl?.touched">
+            <div *ngIf="coursesTitleControl?.hasError('required')">
+                El curso es <strong>requerida</strong>
+            </div>
+        </mat-error>
+    </mat-form-field>
     <mat-form-field class="form-date" appearance="fill">
         <mat-label>Fecha</mat-label>
         <input
@@ -42,8 +65,10 @@
                 'is-invalid': dateControlInvalid,
                 'is-valid': !dateControlInvalid
             }"
+            [min]="minDate"
+            [max]="maxDate"
         >
-        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-hint>DD/MM/YYYY</mat-hint>
         <mat-datepicker-toggle
             matIconSuffix
             [for]="picker"
@@ -57,28 +82,6 @@
         </mat-error>
     </mat-form-field>
     
-    <mat-form-field class="form-courseTitle" appearance="fill">
-        <mat-label>Curso</mat-label>
-        <mat-select 
-            formControlName="courseTitle"
-            matInput
-            placeholder="Placeholder"
-            [ngClass]="{
-                'is-invalid': coursesTitleControlInvalid,
-                'is-valid': !coursesTitleControlInvalid
-            }"
-        >
-            @for (course of courses; track course) {
-                <mat-option value="{{course.name}}">{{course.name}}</mat-option>
-            }
-        </mat-select>
-        
-        <mat-error *ngIf="coursesTitleControl?.invalid && coursesTitleControl?.touched">
-            <div *ngIf="coursesTitleControl?.hasError('required')">
-                El curso es <strong>requerida</strong>
-            </div>
-        </mat-error>
-    </mat-form-field>
     <mat-form-field class="form-status" appearance="fill">
         <mat-label>Estado</mat-label>
         <mat-select 

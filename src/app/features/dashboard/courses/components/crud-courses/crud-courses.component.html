@@ -18,14 +18,14 @@
     <ng-container matColumnDef="startDate">
         <th mat-header-cell *matHeaderCellDef>Fecha de inicio</th>
         <td mat-cell *matCellDef="let element">
-          {{ element.startDate | date : "dd/MM/YYYY" }}
+          {{ element.startDate | date : "dd-MM-yyyy" }}
         </td>
       </ng-container>
     
       <ng-container matColumnDef="endDate">
         <th mat-header-cell *matHeaderCellDef>Fecha de finalización</th>
         <td mat-cell *matCellDef="let element">
-          {{ element.endDate | date : "dd/MM/YYYY" }}
+          {{ element.endDate | date : "dd-MM-YYYY" }}
         </td>
       </ng-container>
 
@@ -50,7 +50,7 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
 
-<button class="boton-add-alumno" (click)="openDialog()" mat-flat-button color="primary">
+<button class="button-add-course" (click)="openDialog()" mat-flat-button color="primary">
     Curso
     <mat-icon>add</mat-icon>
 </button>

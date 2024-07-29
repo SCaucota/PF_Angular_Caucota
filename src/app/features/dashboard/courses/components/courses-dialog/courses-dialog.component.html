@@ -1,5 +1,5 @@
 <h2 appTitle mat-dialog-title>{{
-    editingCourse ? 'Editando ' + (editingCourse) : 'Agregando Curso'
+    editingCourse ? 'Editando ' + (editingCourse.name) : 'Agregando Curso'
 }}</h2>
 
 <form (ngSubmit)="onSubmitCourse()" class="form-add-student" [formGroup]="courseForm">

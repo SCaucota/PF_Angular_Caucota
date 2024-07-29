@@ -15,6 +15,8 @@ export class LessonsDialogComponent implements OnInit{
   lessonForm: FormGroup;
 
   courses: Course[] = [];
+  minDate: Date | null = null;
+  maxDate: Date | null = null;
 
   @Input() lesson!: Lesson;
   @Output() onSubmitLessonEvent: EventEmitter<any> = new EventEmitter();
@@ -56,6 +58,17 @@ export class LessonsDialogComponent implements OnInit{
 
   ngOnInit(): void {
     this.loadCourses();
+  }
+
+  onCourseTitleChange(courseTitle: string): void {
+    const selectedCourse = this.courses.find(course => course.name === courseTitle);
+    if (selectedCourse) {
+      this.minDate = new Date(selectedCourse.startDate); // Asumiendo que 'startDate' es una propiedad del curso
+      this.maxDate = new Date(selectedCourse.endDate);   // Asumiendo que 'endDate' es una propiedad del curso
+    } else {
+      this.minDate = null;
+      this.maxDate = null;
+    }
   }
 
   get nameControl() {

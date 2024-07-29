@@ -79,6 +79,9 @@
             <div *ngIf="dateControl?.hasError('required')">
                 La fecha es <strong>requerida</strong>
             </div>
+            <div *ngIf="dateControl?.hasError('dateRange')">
+                La fecha debe estar entre {{ minDate | date:'dd/MM/yyyy' }} y {{ maxDate | date:'dd/MM/yyyy' }}
+            </div>
         </mat-error>
     </mat-form-field>
     

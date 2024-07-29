@@ -17,3 +17,18 @@ export function noLeadingSpacesValidator(control: AbstractControl) {
     }
     return null
 }
+
+export function dateRangeValidator(minDate: Date | null, maxDate: Date | null): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const value = control.value;
+      if (!value) {
+        return null;
+      }
+  
+      const date = new Date(value);
+      if (minDate && maxDate && (date < minDate || date > maxDate)) {
+        return { dateRange: true };
+      }
+      return null;
+    };
+}

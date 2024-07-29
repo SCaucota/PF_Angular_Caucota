@@ -4,7 +4,7 @@ import { Lesson } from '../../models/lesson';
 import { Course } from '../../../courses/models/course';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CoursesService } from '../../../../../core/services/courses/courses.service';
-import { noLeadingSpacesValidator, noOnlySpacesValidator } from '../../../../../shared/utils/custom.validators';
+import { noLeadingSpacesValidator, noOnlySpacesValidator, dateRangeValidator } from '../../../../../shared/utils/custom.validators';
 
 @Component({
   selector: 'app-lessons-dialog',
@@ -64,10 +64,13 @@ export class LessonsDialogComponent implements OnInit{
     if (selectedCourse) {
       this.minDate = new Date(selectedCourse.startDate);
       this.maxDate = new Date(selectedCourse.endDate);
+      this.dateControl?.setValidators([Validators.required, dateRangeValidator(this.minDate, this.maxDate)]);
     } else {
       this.minDate = null;
       this.maxDate = null;
+      this.dateControl?.setValidators([Validators.required]);
     }
+    this.dateControl?.updateValueAndValidity();
   }
 
   get nameControl() {

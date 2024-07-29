@@ -64,19 +64,39 @@ export class CrudInscriptionsComponent {
 
     dialogRef.componentInstance.confirmDeleteEvent.subscribe((inscription: Inscription) => {
       this.inscriptionsService.deleteInscription(id);
+      this.coursesService.deleteStudentFromCourse(inscription.studentId);
+      this.studentsService.unregisterStudent(inscription.courseId)
       this.loadInscription()
     })
   }
 
   editInscription(editingInscription: Inscription): void {
+    const originalInscription = { ...editingInscription };
+
     this.matDialog.open(InscriptionsDialogComponent, {data: editingInscription}).afterClosed().subscribe({
-      next: (value) => {
-        if(!!value){
-          this.inscriptionsService.editInscription(editingInscription.id, value);
+      next: (updatedInscription) => {
+        if (updatedInscription) {
+          this.inscriptionsService.editInscription(editingInscription.id, updatedInscription);
+
+          if (originalInscription.studentId !== updatedInscription.studentId) {
+            console.log(originalInscription.courseId)
+            this.coursesService.deleteStudentFromCourse(originalInscription.studentId);
+            this.studentsService.unregisterStudent(originalInscription.courseId);
+
+            this.coursesService.addStudentToCourse(updatedInscription.studentId, updatedInscription.courseId);
+            this.studentsService.addCourseToStudent(updatedInscription.courseId, updatedInscription.studentId);
+          } else if (originalInscription.courseId !== updatedInscription.courseId) {
+            this.coursesService.deleteStudentFromCourse(originalInscription.studentId);
+            this.studentsService.unregisterStudent(originalInscription.courseId);
+
+            this.coursesService.addStudentToCourse(updatedInscription.studentId, updatedInscription.courseId);
+            this.studentsService.addCourseToStudent(updatedInscription.courseId, updatedInscription.studentId);
+          }
+
           this.loadInscription();
         }
       }
-    })
+    });
   }
 
   openDetail(id: string): void {

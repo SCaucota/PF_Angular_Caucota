@@ -119,7 +119,7 @@ export class CoursesService {
       startDate: new Date(course.startDate),
       endDate: new Date(course.endDate),
       time: course.time,
-      students: course.students
+      students: []
     });
     return course
   }
@@ -143,10 +143,14 @@ export class CoursesService {
   }
 
   deleteStudentFromCourse(studentId: string) {
-    this.COURSES_DATABASE =  this.COURSES_DATABASE.map((course) => {
+    this.COURSES_DATABASE = this.COURSES_DATABASE.map((course) => {
+      const updatedStudents = course.students.includes(studentId)
+        ? course.students.filter((student) => student !== studentId)
+        : course.students.map((student) => student === studentId ? `${studentId}Eliminado` : student);
+      
       return {
         ...course,
-        students: course.students.filter((student) => student !== studentId)
+        students: updatedStudents,
       };
     });
   }

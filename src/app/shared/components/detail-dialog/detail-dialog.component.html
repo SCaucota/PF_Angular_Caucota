@@ -10,7 +10,7 @@
         >
             Nombre Completo: {{ item | fullname }}
             Cursos:
-                <ul>
+                <ul *ngIf="!isEmpty">
                     <li *ngFor="let course of subitem">
                         {{course.id}} - {{ course.name }}
                         <button 
@@ -21,6 +21,7 @@
                         >Desinscribirse</button>
                     </li>
                 </ul>
+                <p *ngIf="isEmpty">No se encuentra aún inscripto a ningún curso</p>
         </strong>
         <strong 
             *ngIf="!handleStudents(item) && !handleLessons(item) && !handleInscription(item)"
@@ -42,11 +43,17 @@
                     </li>
                 </ul>
 
-                <p *ngIf="isEmpty">No hay estudiantes estudiantes inscriptos</p>
+                <p *ngIf="isEmpty">No hay estudiantes inscriptos</p>
         </strong>
         <strong *ngIf="handleInscription(item)">
-            Id Estudiante: {{item.studentId}} - {{subitem.student | fullname}}
-            Id Curso: {{item.courseId}} - {{subitem.course.name}}
+            Id Estudiante: 
+                <span *ngIf="subitem.student; else studentDeleted">
+                    {{item.studentId}} - {{subitem.student | fullname}}
+                </span>
+                <ng-template #studentDeleted>
+                    Estudiante eliminado
+                </ng-template>
+            Id Curso: {{item.courseId}} - {{subitem.course ? subitem.course.name : 'Curso eliminado'}}
             Fecha: {{item.date | date: 'dd/MM/yyyy'}}
             Estado: {{item.status ? 'Activo' : 'Cancelado'}}
         </strong>

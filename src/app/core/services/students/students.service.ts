@@ -35,7 +35,7 @@ export class StudentsService {
       id: newId,
       name: student.name.toUpperCase(),
       surname: student.surname.toUpperCase(),
-      courses: student.courses
+      courses: []
     });
     return student
   }
@@ -44,9 +44,10 @@ export class StudentsService {
     this.STUDENTS_DATABASE = this.STUDENTS_DATABASE.filter(student => student.id !== id)
   }
 
-  editStudent(id: string, editingStudent: Student) {
+  editStudent(id: string, courses: any, editingStudent: Student) {
+    console.log(editingStudent)
     this.STUDENTS_DATABASE = this.STUDENTS_DATABASE.map((student) =>
-      student.id === id ? {...editingStudent, id} : student
+      student.id === id ? {...editingStudent, id, courses} : student
     )
     return editingStudent
   }

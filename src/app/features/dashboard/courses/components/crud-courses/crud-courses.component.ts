@@ -47,20 +47,30 @@ export class CrudCoursesComponent implements OnInit{
   }
 
   deleteCourse(id: string): void {
-    const course = this.coursesService.getCourseById(id)
+    const course = this.coursesService.getCourseById(id);
+  
+    if (course?.students && course.students.length > 0) {
+      course.students.forEach((studentId: string) => {
+        this.coursesService.deleteStudentFromCourse(studentId);
+        this.studentsService.unregisterStudent(id);
+        this.inscriptionService.cancelInscription(studentId, id);
+      });
+    }
+
     const dialogRef = this.matDialog.open(DeleteDialogComponent, {
       data: {
-        title:'Eliminar Curso',
+        title: 'Eliminar Curso',
         entityName: 'el curso',
         item: course
       }
-    })
-
-    dialogRef.componentInstance.confirmDeleteEvent.subscribe((course: Course) => {
+    });
+  
+    dialogRef.componentInstance.confirmDeleteEvent.subscribe(() => {
       this.coursesService.deleteCourse(id);
-      this.loadCourses()
-    })
+      this.loadCourses();
+    });
   }
+  
 
   editCourse(editingCourse: Course): void {
     this.matDialog.open(CoursesDialogComponent, {data: editingCourse}).afterClosed().subscribe({
@@ -75,9 +85,13 @@ export class CrudCoursesComponent implements OnInit{
 
   openDetail(id: string): void {
     const course = this.coursesService.getCourseById(id);
-    const students = course?.students.map((studentId: string) => {
-      return this.studentsService.getStudentById(studentId)
-    });
+    let students: any[] = []
+    if(course?.students && course?.students.length !== 0){
+      students = course?.students.map((studentId: string) => {
+        return this.studentsService.getStudentById(studentId) || null
+      });
+    }
+    
     const dialogRef = this.matDialog.open(DetailDialogComponent, {
       data: {
         title: 'Detalles del curso',

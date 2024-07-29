@@ -4,6 +4,7 @@ import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { CoursesComponent } from './features/dashboard/courses/courses.component';
 import { StudentsComponent } from './features/dashboard/students/students.component';
 import { LessonsComponent } from './features/dashboard/lessons/lessons.component';
+import { InscriptionsComponent } from './features/dashboard/inscriptions/inscriptions.component';
 
 const routes: Routes = [
   {
@@ -27,6 +28,10 @@ const routes: Routes = [
       {
         path: 'lessons',
         component: LessonsComponent
+      },
+      {
+        path: 'inscriptions',
+        component: InscriptionsComponent
       }
     ]
   }

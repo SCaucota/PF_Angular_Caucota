@@ -8,6 +8,7 @@ import { CoursesModule } from './courses/courses.module';
 import { LessonsModule } from './lessons/lessons.module';
 import { LayoutModule } from "./layout/layout.module";
 import { CoreModule } from '../../core/core.module';
+import { InscriptionsModule } from './inscriptions/inscriptions.module';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { CoreModule } from '../../core/core.module';
     StudentsModule,
     CoursesModule,
     LessonsModule,
+    InscriptionsModule,
     LayoutModule,
     CoreModule
 ]

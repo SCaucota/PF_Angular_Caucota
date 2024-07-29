@@ -4,6 +4,7 @@ import { CoursesService } from './services/courses/courses.service';
 import { TimesService } from './services/courses/times.service';
 import { LessonsService } from './services/lessons/lessons.service';
 import { StudentsService } from './services/students/students.service';
+import { InscriptionsService } from './services/inscriptions/inscriptions.service';
 
 
 
@@ -16,7 +17,8 @@ import { StudentsService } from './services/students/students.service';
     CoursesService,
     TimesService,
     LessonsService,
-    StudentsService
+    StudentsService,
+    InscriptionsService
   ]
 })
 export class CoreModule { }

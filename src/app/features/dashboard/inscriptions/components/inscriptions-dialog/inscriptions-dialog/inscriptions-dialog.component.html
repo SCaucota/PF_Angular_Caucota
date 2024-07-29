@@ -1,0 +1,104 @@
+<h2 appTitle mat-dialog-title>{{
+    editingInscription ? 'Editando ' + (editingInscription.id) : 'Agregando Inscripción'
+}}</h2>
+
+<form (ngSubmit)="onSubmitInscription()" class="form-add-inscription" [formGroup]="inscriptionForm">
+    <mat-form-field class="form-student" appearance="fill">
+        <mat-label>Id de Estudiante</mat-label>
+        <mat-select 
+            formControlName="studentId"
+            matInput
+            placeholder="Id Estudiante"
+            [ngClass]="{
+                'is-invalid': studentControlInvalid,
+                'is-valid': !studentControlInvalid
+            }"
+        >
+            @for (student of students; track student) {
+                <mat-option value="{{student.id}}">{{student.id + ' - ' + student.name + ' ' + student.surname}}</mat-option>
+            }
+        </mat-select>
+        
+        <mat-error *ngIf="studentControl?.invalid && studentControl?.touched">
+            <div *ngIf="studentControl?.hasError('required')">
+                El Id de estudiante es <strong>requerido</strong>
+            </div>
+        </mat-error>
+    </mat-form-field>
+    <mat-form-field class="form-course" appearance="fill">
+        <mat-label>Id del Curso</mat-label>
+        <mat-select 
+            formControlName="courseId"
+            matInput
+            placeholder="Id Curso"
+            [ngClass]="{
+                'is-invalid': courseControlInvalid,
+                'is-valid': !courseControlInvalid
+            }"
+        >
+            @for (course of courses; track course) {
+                <mat-option value="{{course.id}}">{{course.id + ' - ' + course.name}}</mat-option>
+            }
+        </mat-select>
+        
+        <mat-error *ngIf="courseControl?.invalid && courseControl?.touched">
+            <div *ngIf="courseControl?.hasError('required')">
+                El Id de curso es <strong>requerido</strong>
+            </div>
+        </mat-error>
+    </mat-form-field>
+    <mat-form-field class="form-date" appearance="fill">
+        <mat-label>Fecha</mat-label>
+        <input
+            matInput
+            [matDatepicker]="picker"
+            formControlName="date"
+            placeholder="Fecha"
+            [ngClass]="{
+                'is-invalid': dateControlInvalid,
+                'is-valid': !dateControlInvalid
+            }"
+        >
+        <mat-hint>DD/MM/YYYY</mat-hint>
+        <mat-datepicker-toggle
+            matIconSuffix
+            [for]="picker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+
+        <mat-error *ngIf="dateControl?.invalid && dateControl?.touched">
+            <div *ngIf="dateControl?.hasError('required')">
+                La fecha es <strong>requerida</strong>
+            </div>
+        </mat-error>
+    </mat-form-field>
+    
+    <mat-form-field class="form-status" appearance="fill">
+        <mat-label>Estado</mat-label>
+        <mat-select 
+            formControlName="status"
+            matInput
+            placeholder="Placeholder"
+            [ngClass]="{
+                'is-invalid': statusControlInvalid,
+                'is-valid': !statusControlInvalid
+            }"
+        >
+            <mat-option [value]="true">Activa</mat-option>
+            <mat-option [value]="false">Cancelar</mat-option>
+        </mat-select>
+        
+        <mat-error *ngIf="statusControl?.invalid && statusControl?.touched">
+            <div *ngIf="statusControl?.hasError('required')">
+                El estado es <strong>requerida</strong>
+            </div>
+        </mat-error>
+    </mat-form-field>
+
+    <mat-dialog-actions class="buttons-container">
+        <button mat-flat-button mat-dialog-close>Cancelar</button>
+        <button [disabled]="inscriptionForm.invalid" type="submit" mat-flat-button>
+            {{ editingInscription ? 'Editar' : 'Guardar' }}
+        </button>
+    </mat-dialog-actions>
+</form>

@@ -30,7 +30,7 @@
             Duración: {{item.startDate | date: 'dd/MM/yyyy'}} - {{item.endDate | date: 'dd/MM/yyyy'}}
             Horario: {{ item.time }}
             Estudiantes:
-                <ul *ngIf="!studentsEmpty">
+                <ul *ngIf="!isEmpty">
                     <li *ngFor="let student of subitem">
                         {{student.id}} - {{student.name}} {{student.surname}}
                         <button 
@@ -42,7 +42,7 @@
                     </li>
                 </ul>
 
-                <p *ngIf="studentsEmpty">No hay estudiantes estudiantes inscriptos</p>
+                <p *ngIf="isEmpty">No hay estudiantes estudiantes inscriptos</p>
         </strong>
         <strong *ngIf="handleInscription(item)">
             Id Estudiante: {{item.studentId}} - {{subitem.student | fullname}}

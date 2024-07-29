@@ -59,4 +59,9 @@ export class StudentsService {
       }
     })
   }
+
+  addCourseToStudent(courseId: string, studentId: string) {
+    const student = this.STUDENTS_DATABASE.find(student => student.id === studentId)
+    student?.courses.push(courseId)
+  }
 }

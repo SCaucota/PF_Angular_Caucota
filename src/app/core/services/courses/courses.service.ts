@@ -150,4 +150,9 @@ export class CoursesService {
       };
     });
   }
+
+  addStudentToCourse(studentId: string, courseId: string) {
+    const course = this.COURSES_DATABASE.find(course => course.id === courseId);
+    course?.students.push(studentId)
+  }
 }

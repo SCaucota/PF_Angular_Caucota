@@ -46,7 +46,9 @@ export class CrudInscriptionsComponent {
   }
 
   onSubmitInscription(inscription: Inscription): void {
-    this.inscriptionsService.addInscription(inscription);
+    const newInscription = this.inscriptionsService.addInscription(inscription);
+    this.coursesService.addStudentToCourse(newInscription.studentId, newInscription.courseId)
+    this.studentsService.addCourseToStudent(newInscription.courseId, newInscription.studentId)
     this.loadInscription();
   }
 

@@ -9,7 +9,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 export class DetailDialogComponent implements OnInit{
   @Output() confirmUnregistrationEvent = new EventEmitter();
 
-  studentsEmpty = false
+  isEmpty = false
 
   constructor(
     private matDialogRef: MatDialogRef<DetailDialogComponent>,
@@ -19,7 +19,7 @@ export class DetailDialogComponent implements OnInit{
   ngOnInit(): void {
     console.log(this.data.subitem)
     this.data.subitem.length === 0 ?
-      this.studentsEmpty = true : this.studentsEmpty = false
+      this.isEmpty = true : this.isEmpty = false
   }
 
   get title(): string {

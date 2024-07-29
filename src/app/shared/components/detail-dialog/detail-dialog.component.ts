@@ -41,10 +41,6 @@ export class DetailDialogComponent implements OnInit{
     return item && item.courses
   }
 
-  handleCourses(item: any){
-    return item && item.students
-  }
-
   confirmUnregistration(courseId: string, studentId: string): void {
     this.confirmUnregistrationEvent.emit({courseId, studentId})
     this.matDialogRef.close();

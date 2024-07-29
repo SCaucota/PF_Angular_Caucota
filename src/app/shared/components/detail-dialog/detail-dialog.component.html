@@ -7,14 +7,14 @@
             Nombre Completo: {{ item | fullname }}
             Cursos:
                 <ul>
-                    <li *ngFor="let course of item.courses">
+                    <li *ngFor="let course of subitem">
                         {{course.id}} - {{ course.name }}
-                        <!-- <button 
+                        <button 
                             mat-button
                             mat-dialog-close 
-                            (click)="confirmUnregistration(course.id)"
+                            (click)="confirmUnregistration(item.id, course.id)"
                             cdkFocusInitial
-                        >Desinscribirse</button> -->
+                        >Desinscribirse</button>
                     </li>
                 </ul>
         </strong>

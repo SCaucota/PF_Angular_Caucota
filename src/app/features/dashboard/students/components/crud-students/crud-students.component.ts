@@ -4,7 +4,9 @@ import { Student } from '../../models/student';
 import { DeleteDialogComponent } from '../../../../../shared/components/delete-dialog/delete-dialog.component';
 import { StudentsDialogComponent } from '../students-dialog/students-dialog.component';
 import { StudentsService } from '../../../../../core/services/students/students.service';
-import { isEntityName } from 'typescript';
+import { CoursesService } from '../../../../../core/services/courses/courses.service';
+import { DetailDialogComponent } from '../../../../../shared/components/detail-dialog/detail-dialog.component';
+import { InscriptionsService } from '../../../../../core/services/inscriptions/inscriptions.service';
 
 @Component({
   selector: 'app-crud-students',
@@ -13,7 +15,12 @@ import { isEntityName } from 'typescript';
 })
 export class CrudStudentsComponent implements OnInit{
 
-  constructor(private matDialog: MatDialog, private studentsService: StudentsService) { }
+  constructor(
+    private matDialog: MatDialog,
+    private studentsService: StudentsService,
+    private coursesService: CoursesService,
+    private inscriptionsService: InscriptionsService
+  ) { }
 
   displayedColumns: string[] = ['id', 'name', 'surname', 'actions', 'detail'];
 
@@ -68,6 +75,28 @@ export class CrudStudentsComponent implements OnInit{
           this.loadStudents();
         }
       }
+    })
+  }
+
+  openDetail(id: string): void{
+    const student = this.studentsService.getStudentById(id)
+    const courses = student?.courses.map((courseId: string) => {
+      return this.coursesService.getCourseById(courseId)
+    });
+    const dialogRef = this.matDialog.open(DetailDialogComponent, {
+      data: {
+        title: 'Detalles del Alumno',
+        entity: 'Alumno',
+        item: student,
+        subitem: courses
+      }
+    });
+
+    dialogRef.componentInstance.confirmUnregistrationEvent.subscribe(({studentId, courseId}) => {
+      this.studentsService.unregisterStudent(courseId);
+      this.coursesService.deleteStudentFromCourse(studentId);
+      this.inscriptionsService.cancelInscription(studentId, courseId)
+      this.loadStudents();
     })
   }
 

@@ -1,1 +1,45 @@
-<p>detail-dialog works!</p>
+<h2 mat-dialog-title>{{ title }}</h2>
+<mat-dialog-content>
+  {{ entity }} {{item.name || item.id}}: 
+    <div>
+        <strong>ID: </strong> {{item.id}}
+        <strong *ngIf="handleStudents(item)">
+            Nombre Completo: {{ item | fullname }}
+            Cursos:
+                <ul>
+                    <li *ngFor="let course of item.courses">
+                        {{course.id}} - {{ course.name }}
+                        <!-- <button 
+                            mat-button
+                            mat-dialog-close 
+                            (click)="confirmUnregistration(course.id)"
+                            cdkFocusInitial
+                        >Desinscribirse</button> -->
+                    </li>
+                </ul>
+        </strong>
+        <strong *ngIf="!handleStudents(item)">
+            Nombre: {{ item.name }}
+            Descripción: {{ item.description }}
+            Duración: {{item.startDate | date: 'dd/MM/yyyy'}} - {{item.endDate | date: 'dd/MM/yyyy'}}
+            Horario: {{ item.time }}
+            Estudiantes:
+                <ul *ngIf="!studentsEmpty">
+                    <li *ngFor="let student of subitem">
+                        {{student.id}} - {{student.name}} {{student.surname}}
+                        <button 
+                            mat-button
+                            mat-dialog-close 
+                            (click)="confirmUnregistration(item.id, student.id)"
+                            cdkFocusInitial
+                        >Eliminar</button>
+                    </li>
+                </ul>
+
+                <p *ngIf="studentsEmpty">No hay estudiantes estudiantes inscriptos</p>
+        </strong>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-button mat-dialog-close>Cerrar</button>
+</mat-dialog-actions>

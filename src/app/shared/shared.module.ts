@@ -15,6 +15,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { DeleteDialogComponent } from './components/delete-dialog/delete-dialog.component';
+import { DetailDialogComponent } from './components/detail-dialog/detail-dialog.component';
 
 
 @NgModule({
@@ -22,6 +23,7 @@ import { DeleteDialogComponent } from './components/delete-dialog/delete-dialog.
     FullnamePipe,
     TitleDirective,
     DeleteDialogComponent,
+    DetailDialogComponent
   ],
   exports: [
     TitleDirective,

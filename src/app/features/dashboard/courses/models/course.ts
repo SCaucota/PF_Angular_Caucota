@@ -4,5 +4,6 @@ export interface Course {
     description: string,
     startDate: Date,
     endDate: Date,
-    time: string
+    time: string,
+    students: string[]
 }

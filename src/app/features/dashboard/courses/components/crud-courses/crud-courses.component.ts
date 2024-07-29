@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CoursesService } from '../../../../../core/services/courses/courses.service';
+import { StudentsService } from '../../../../../core/services/students/students.service';
 import { CoursesDialogComponent } from '../courses-dialog/courses-dialog.component';
 import { DeleteDialogComponent } from '../../../../../shared/components/delete-dialog/delete-dialog.component';
 import { Course } from '../../models/course';
+import { DetailDialogComponent } from '../../../../../shared/components/detail-dialog/detail-dialog.component';
+import { InscriptionsService } from '../../../../../core/services/inscriptions/inscriptions.service';
 
 @Component({
   selector: 'app-crud-courses',
@@ -12,9 +15,9 @@ import { Course } from '../../models/course';
 })
 export class CrudCoursesComponent implements OnInit{
 
-  constructor(private matDialog: MatDialog, private coursesService: CoursesService) { }
+  constructor(private matDialog: MatDialog, private coursesService: CoursesService, private studentsService: StudentsService, private inscriptionService: InscriptionsService) { }
 
-  displayedColumns: string[] = ['id', 'name', 'description', 'startDate', 'endDate', 'time', 'actions'];
+  displayedColumns: string[] = ['id', 'name', 'description', 'startDate', 'endDate', 'time', 'detail', 'actions'];
 
   dataSource: Course[] = [];
 
@@ -67,6 +70,28 @@ export class CrudCoursesComponent implements OnInit{
           this.loadCourses();
         }
       }
+    })
+  }
+
+  openDetail(id: string): void {
+    const course = this.coursesService.getCourseById(id);
+    const students = course?.students.map((studentId: string) => {
+      return this.studentsService.getStudentById(studentId)
+    });
+    const dialogRef = this.matDialog.open(DetailDialogComponent, {
+      data: {
+        title: 'Detalles del curso',
+        entity: 'Curso',
+        item: course,
+        subitem: students
+      }
+    })
+
+    dialogRef.componentInstance.confirmUnregistrationEvent.subscribe(({courseId, studentId}) => {
+      this.coursesService.deleteStudentFromCourse(studentId);
+      this.studentsService.unregisterStudent(courseId);
+      this.inscriptionService.cancelInscription(studentId, courseId)
+      this.loadCourses();
     })
   }
 }

@@ -56,4 +56,10 @@ export class InscriptionsService {
     )
     return editingInscription
   }
+
+  cancelInscription(studentId: string, courseId: string) {
+    this.INSCRIPTIONS_DATABASE = this.INSCRIPTIONS_DATABASE.map((inscription) =>
+      (inscription.studentId === studentId && inscription.courseId === courseId) ? {...inscription, status: false} : inscription
+  )
+  }
 }

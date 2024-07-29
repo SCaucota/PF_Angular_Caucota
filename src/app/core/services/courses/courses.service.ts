@@ -13,7 +13,8 @@ export class CoursesService {
       description: 'curso inicial de Angular',
       startDate: new Date('2024-10-05'),
       endDate: new Date('2024-12-08'),
-      time: "08:30 - 10:30"
+      time: "08:30 - 10:30",
+      students: ['1']
     },
     {
       id:   '2',
@@ -21,7 +22,8 @@ export class CoursesService {
       description: 'curso avanzado de React',
       startDate: new Date('2024-11-01'),
       endDate: new Date('2025-01-15'),
-      time: "16:00 - 18:00"
+      time: "16:00 - 18:00",
+      students: ['1','2']
     },
     {
       id:   '3',
@@ -29,7 +31,8 @@ export class CoursesService {
       description: 'desarrollo backend con Node.js',
       startDate: new Date('2024-09-15'),
       endDate: new Date('2024-11-20'),
-      time: "20:30 - 22:30"
+      time: "20:30 - 22:30",
+      students: ['2','3']
     },
     {
       id:   '4',
@@ -37,7 +40,8 @@ export class CoursesService {
       description: 'introducción a Python para desarrollo web',
       startDate: new Date('2024-08-10'),
       endDate: new Date('2024-10-25'),
-      time: "19:00 - 21:00"
+      time: "19:00 - 21:00",
+      students: ['3', '4']
     },
     {
       id:   '5',
@@ -45,7 +49,8 @@ export class CoursesService {
       description: 'fundamentos de Java para programación orientada a objetos',
       startDate: new Date('2024-09-01'),
       endDate: new Date('2024-12-01'),
-      time: "08:00 - 10:00"
+      time: "08:00 - 10:00",
+      students: ['4', '5']
     },
     {
       id:   '6',
@@ -53,7 +58,8 @@ export class CoursesService {
       description: 'desarrollo de aplicaciones con C# y .NET',
       startDate: new Date('2024-10-15'),
       endDate: new Date('2024-12-15'),
-      time: "17:00 - 19:00"
+      time: "17:00 - 19:00",
+      students: ['5', '6']
     },
     {
       id:   '7',
@@ -61,7 +67,8 @@ export class CoursesService {
       description: 'desarrollo frontend con Vue.js',
       startDate: new Date('2024-11-05'),
       endDate: new Date('2025-01-10'),
-      time: "20:30 - 22:30"
+      time: "20:30 - 22:30",
+      students: ['7']
     },
     {
       id:   '8',
@@ -69,7 +76,8 @@ export class CoursesService {
       description: 'desarrollo de aplicaciones iOS con Swift',
       startDate: new Date('2024-12-01'),
       endDate: new Date('2025-03-01'),
-      time: "10:00 - 12:00"
+      time: "10:00 - 12:00",
+      students: ['8']
     },
     {
       id:   '9',
@@ -77,7 +85,8 @@ export class CoursesService {
       description: 'desarrollo web con Ruby on Rails',
       startDate: new Date('2024-09-20'),
       endDate: new Date('2024-11-30'),
-      time: "10:00 - 12:00"
+      time: "10:00 - 12:00",
+      students: ['9']
     },
     {
       id:   '10',
@@ -85,7 +94,8 @@ export class CoursesService {
       description: 'desarrollo web con Django y Python',
       startDate: new Date('2024-12-05'),
       endDate: new Date('2025-03-10'),
-      time: "17:30 - 19:30"
+      time: "17:30 - 19:30",
+      students: ['10']
     }
   ];
   
@@ -108,7 +118,8 @@ export class CoursesService {
       description: course.description.toLowerCase(),
       startDate: new Date(course.startDate),
       endDate: new Date(course.endDate),
-      time: course.time
+      time: course.time,
+      students: course.students
     });
     return course
   }
@@ -129,5 +140,14 @@ export class CoursesService {
       : course
     )
     return editingCourse
+  }
+
+  deleteStudentFromCourse(studentId: string) {
+    this.COURSES_DATABASE =  this.COURSES_DATABASE.map((course) => {
+      return {
+        ...course,
+        students: course.students.filter((student) => student !== studentId)
+      };
+    });
   }
 }

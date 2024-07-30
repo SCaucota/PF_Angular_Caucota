@@ -4,8 +4,18 @@ import { CoursesComponent } from './courses/courses.component';
 import { StudentsComponent } from './students/students.component';
 import { LessonsComponent } from './lessons/lessons.component';
 import { InscriptionsComponent } from './inscriptions/inscriptions.component';
+import { HomeComponent } from './home/home.component';
 
 const routes: Routes = [
+  {
+    path: '',
+    redirectTo: '/dashboard/home',
+    pathMatch: 'full'
+  },
+  {
+    path: 'home',
+    component: HomeComponent
+  },
   {
     path: 'courses',
     component: CoursesComponent
@@ -21,6 +31,10 @@ const routes: Routes = [
   {
     path: 'inscriptions',
     component: InscriptionsComponent
+  },
+  {
+    path: '**',
+    redirectTo: '/dashboard'
   }
 ];
 

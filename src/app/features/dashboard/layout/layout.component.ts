@@ -6,23 +6,6 @@ import { NavigationEnd, Route, Router } from '@angular/router';
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.scss'
 })
-export class LayoutComponent implements OnInit{
-  showInicio = true;
-
-  constructor(private router: Router) {}
-
-  ngOnInit() {
-    this.checkRoute(this.router.url);
-
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        this.checkRoute(event.urlAfterRedirects);
-      }
-    });
-  }
-
-  checkRoute(url: string) {
-    this.showInicio = url === '/dashboard';
-  }
+export class LayoutComponent{
 
 }

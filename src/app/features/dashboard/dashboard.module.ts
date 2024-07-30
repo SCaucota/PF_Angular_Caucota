@@ -9,23 +9,27 @@ import { LessonsModule } from './lessons/lessons.module';
 import { LayoutModule } from "./layout/layout.module";
 import { CoreModule } from '../../core/core.module';
 import { InscriptionsModule } from './inscriptions/inscriptions.module';
+import { SharedModule } from '../../shared/shared.module';
+import { HomeComponent } from './home/home.component';
 
 @NgModule({
   declarations: [
     DashboardComponent,
+    HomeComponent,
   ],
   exports: [
     DashboardComponent,
   ],
   imports: [
     CommonModule,
-    DashboardRoutingModule,
+    DashboardRoutingModule,/* 
     StudentsModule,
     CoursesModule,
     LessonsModule,
-    InscriptionsModule,
+    InscriptionsModule, */
     LayoutModule,
-    CoreModule
+    CoreModule,
+    SharedModule
 ]
 })
 export class DashboardModule { }

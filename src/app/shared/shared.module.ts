@@ -16,6 +16,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { DeleteDialogComponent } from './components/delete-dialog/delete-dialog.component';
 import { DetailDialogComponent } from './components/detail-dialog/detail-dialog.component';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 
 @NgModule({
@@ -38,7 +40,9 @@ import { DetailDialogComponent } from './components/detail-dialog/detail-dialog.
     MatTableModule,
     MatSelectModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatSidenavModule,
+    MatToolbarModule
   ],
   imports: [
     CommonModule,

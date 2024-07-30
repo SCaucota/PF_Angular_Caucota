@@ -22,10 +22,8 @@ import { SharedModule } from '../../../shared/shared.module';
   imports: [
     CommonModule,
     LayoutRoutingModule,
-    MatSidenavModule,
-    MatToolbarModule,
     StudentsModule,
-    SharedModule,
+    SharedModule
   ]
 })
 export class LayoutModule { }

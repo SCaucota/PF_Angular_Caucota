@@ -142,17 +142,12 @@ export class CoursesService {
     return editingCourse
   }
 
-  deleteStudentFromCourse(studentId: string) {
-    this.COURSES_DATABASE = this.COURSES_DATABASE.map((course) => {
-      const updatedStudents = course.students.includes(studentId)
-        ? course.students.filter((student) => student !== studentId)
-        : course.students.map((student) => student === studentId ? `${studentId}Eliminado` : student);
-      
-      return {
-        ...course,
-        students: updatedStudents,
-      };
-    });
+  deleteStudentFromCourse(courseId: string, studentId: string) {
+    const course = this.COURSES_DATABASE.find(course => course.id === courseId);
+    if(course) {
+      const students = course.students.filter(student => student !== studentId)
+      course.students = students
+    }
   }
 
   addStudentToCourse(studentId: string, courseId: string) {

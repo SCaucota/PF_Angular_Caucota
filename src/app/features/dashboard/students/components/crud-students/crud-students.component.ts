@@ -56,9 +56,9 @@ export class CrudStudentsComponent implements OnInit{
 
     if(student?.courses && student.courses.length > 0){
       student.courses.forEach((courseId: string) => {
-        this.coursesService.deleteStudentFromCourse(id);
-        this.studentsService.unregisterStudent(courseId);
-        this.inscriptionsService.cancelInscription(id, courseId)
+        this.coursesService.deleteStudentFromCourse(courseId, id);
+        this.studentsService.unregisterStudent(courseId, id);
+        this.inscriptionsService.cancelInscription(courseId, id)
       })
     }
 
@@ -88,7 +88,7 @@ export class CrudStudentsComponent implements OnInit{
   }
 
   openDetail(id: string): void{
-    const student = this.studentsService.getStudentById(id)
+    const student = this.studentsService.getStudentById(id);
     const courses = student?.courses.map((courseId: string) => {
       return this.coursesService.getCourseById(courseId)
     });
@@ -100,10 +100,10 @@ export class CrudStudentsComponent implements OnInit{
       }
     });
 
-    dialogRef.componentInstance.confirmUnregistrationEvent.subscribe(({studentId, courseId}) => {
-      this.studentsService.unregisterStudent(courseId);
-      this.coursesService.deleteStudentFromCourse(studentId);
-      this.inscriptionsService.cancelInscription(studentId, courseId)
+    dialogRef.componentInstance.confirmUnregistrationEvent.subscribe(({courseId, studentId}) => {
+      this.studentsService.unregisterStudent(courseId, studentId);
+      this.coursesService.deleteStudentFromCourse(courseId, studentId);
+      this.inscriptionsService.cancelInscription(courseId, studentId)
       this.loadStudents();
     })
   }

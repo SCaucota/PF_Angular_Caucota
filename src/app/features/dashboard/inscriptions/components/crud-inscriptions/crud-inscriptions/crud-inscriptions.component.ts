@@ -64,8 +64,8 @@ export class CrudInscriptionsComponent {
 
     dialogRef.componentInstance.confirmDeleteEvent.subscribe((inscription: Inscription) => {
       this.inscriptionsService.deleteInscription(id);
-      this.coursesService.deleteStudentFromCourse(inscription.studentId);
-      this.studentsService.unregisterStudent(inscription.courseId)
+      this.coursesService.deleteStudentFromCourse(inscription.courseId, inscription.studentId);
+      this.studentsService.unregisterStudent(inscription.courseId, inscription.studentId)
       this.loadInscription()
     })
   }
@@ -79,14 +79,14 @@ export class CrudInscriptionsComponent {
           this.inscriptionsService.editInscription(editingInscription.id, updatedInscription);
 
           if (originalInscription.studentId !== updatedInscription.studentId) {
-            this.coursesService.deleteStudentFromCourse(originalInscription.studentId);
-            this.studentsService.unregisterStudent(originalInscription.courseId);
+            this.coursesService.deleteStudentFromCourse(originalInscription.courseId, originalInscription.studentId);
+            this.studentsService.unregisterStudent(originalInscription.courseId, originalInscription.studentId);
 
             this.coursesService.addStudentToCourse(updatedInscription.studentId, updatedInscription.courseId);
             this.studentsService.addCourseToStudent(updatedInscription.courseId, updatedInscription.studentId);
           } else if (originalInscription.courseId !== updatedInscription.courseId) {
-            this.coursesService.deleteStudentFromCourse(originalInscription.studentId);
-            this.studentsService.unregisterStudent(originalInscription.courseId);
+            this.coursesService.deleteStudentFromCourse(originalInscription.courseId, originalInscription.studentId);
+            this.studentsService.unregisterStudent(originalInscription.courseId, originalInscription.studentId);
 
             this.coursesService.addStudentToCourse(updatedInscription.studentId, updatedInscription.courseId);
             this.studentsService.addCourseToStudent(updatedInscription.courseId, updatedInscription.studentId);
@@ -96,8 +96,8 @@ export class CrudInscriptionsComponent {
               this.studentsService.addCourseToStudent(updatedInscription.courseId, updatedInscription.studentId);
             }
             else {
-              this.coursesService.deleteStudentFromCourse(originalInscription.studentId);
-              this.studentsService.unregisterStudent(originalInscription.courseId);
+              this.coursesService.deleteStudentFromCourse(originalInscription.courseId, originalInscription.studentId);
+              this.studentsService.unregisterStudent(originalInscription.courseId, originalInscription.studentId);
             }
           }
 

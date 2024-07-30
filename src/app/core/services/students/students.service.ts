@@ -51,13 +51,13 @@ export class StudentsService {
     return editingStudent
   }
 
-  unregisterStudent(courseId: string) {
-    this.STUDENTS_DATABASE = this.STUDENTS_DATABASE.map((student) =>{
-      return {
-        ...student,
-        courses: student.courses.filter((course) => course !== courseId),
-      }
-    })
+  unregisterStudent(courseId: string, studentId: string) {
+    console.log(courseId, studentId)
+    const student = this.STUDENTS_DATABASE.find(student => student.id === studentId);
+    if(student) {
+      const courses = student?.courses.filter((course) => course !== courseId);
+      student.courses = courses
+    }
   }
 
   addCourseToStudent(courseId: string, studentId: string) {

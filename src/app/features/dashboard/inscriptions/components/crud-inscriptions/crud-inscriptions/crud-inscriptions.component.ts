@@ -79,7 +79,6 @@ export class CrudInscriptionsComponent {
           this.inscriptionsService.editInscription(editingInscription.id, updatedInscription);
 
           if (originalInscription.studentId !== updatedInscription.studentId) {
-            console.log(originalInscription.courseId)
             this.coursesService.deleteStudentFromCourse(originalInscription.studentId);
             this.studentsService.unregisterStudent(originalInscription.courseId);
 

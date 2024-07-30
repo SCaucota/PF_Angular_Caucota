@@ -32,7 +32,6 @@ export class DeleteDialogComponent {
 
   confirmDelete(): void {
     this.matDialogRef.close();
-    console.log(this.data.item)
     this.confirmDeleteEvent.emit(this.data.item)
   }
 }

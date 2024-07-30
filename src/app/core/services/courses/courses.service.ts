@@ -11,7 +11,7 @@ export class CoursesService {
       id:   '1',
       name: 'ANGULAR',
       description: 'curso inicial de Angular',
-      startDate: new Date('2024-10-05'),
+      startDate: new Date('2024-11-05'),
       endDate: new Date('2024-12-08'),
       time: "08:30 - 10:30",
       students: ['1']

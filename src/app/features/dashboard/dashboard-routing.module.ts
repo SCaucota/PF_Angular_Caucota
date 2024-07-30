@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { DashboardComponent } from './dashboard.component';
 import { CoursesComponent } from './courses/courses.component';
 import { StudentsComponent } from './students/students.component';
 import { LessonsComponent } from './lessons/lessons.component';
+import { InscriptionsComponent } from './inscriptions/inscriptions.component';
 
-const routes: Routes = [/* 
+const routes: Routes = [
   {
     path: 'courses',
     component: CoursesComponent
@@ -17,8 +17,11 @@ const routes: Routes = [/*
   {
     path: 'lessons',
     component: LessonsComponent
-  } */
-
+  },
+  {
+    path: 'inscriptions',
+    component: InscriptionsComponent
+  }
 ];
 
 @NgModule({

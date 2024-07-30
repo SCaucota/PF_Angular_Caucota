@@ -45,7 +45,6 @@ export class StudentsService {
   }
 
   editStudent(id: string, courses: any, editingStudent: Student) {
-    console.log(editingStudent)
     this.STUDENTS_DATABASE = this.STUDENTS_DATABASE.map((student) =>
       student.id === id ? {...editingStudent, id, courses} : student
     )

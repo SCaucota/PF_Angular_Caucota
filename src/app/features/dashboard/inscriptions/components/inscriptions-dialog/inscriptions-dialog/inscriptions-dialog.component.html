@@ -8,7 +8,6 @@
         <mat-select 
             formControlName="studentId"
             matInput
-            placeholder="Id Estudiante"
             [ngClass]="{
                 'is-invalid': studentControlInvalid,
                 'is-valid': !studentControlInvalid
@@ -30,7 +29,6 @@
         <mat-select 
             formControlName="courseId"
             matInput
-            placeholder="Id Curso"
             [ngClass]="{
                 'is-invalid': courseControlInvalid,
                 'is-valid': !courseControlInvalid
@@ -53,7 +51,6 @@
             matInput
             [matDatepicker]="picker"
             formControlName="date"
-            placeholder="Fecha"
             [ngClass]="{
                 'is-invalid': dateControlInvalid,
                 'is-valid': !dateControlInvalid
@@ -78,7 +75,6 @@
         <mat-select 
             formControlName="status"
             matInput
-            placeholder="Placeholder"
             [ngClass]="{
                 'is-invalid': statusControlInvalid,
                 'is-valid': !statusControlInvalid

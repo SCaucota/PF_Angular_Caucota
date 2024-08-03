@@ -9,7 +9,6 @@
         type="text"
         formControlName="name" 
             matInput
-            placeholder="Nombre"
             [ngClass]="{
                 'is-invalid': nameControlInvalid,
                 'is-valid': !nameControlInvalid
@@ -36,7 +35,6 @@
         <mat-select 
             formControlName="courseTitle"
             matInput
-            placeholder="Placeholder"
             [ngClass]="{
                 'is-invalid': coursesTitleControlInvalid,
                 'is-valid': !coursesTitleControlInvalid
@@ -60,7 +58,6 @@
             matInput
             [matDatepicker]="picker"
             formControlName="date"
-            placeholder="Fecha"
             [ngClass]="{
                 'is-invalid': dateControlInvalid,
                 'is-valid': !dateControlInvalid
@@ -90,7 +87,6 @@
         <mat-select 
             formControlName="status"
             matInput
-            placeholder="Placeholder"
             [ngClass]="{
                 'is-invalid': statusControlInvalid,
                 'is-valid': !statusControlInvalid

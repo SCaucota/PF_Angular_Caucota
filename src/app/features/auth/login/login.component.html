@@ -1,1 +1,26 @@
-<p>login works!</p>
+<div class="login-container">
+    <div class="div-login">
+        <h1>Iniciar Sesión</h1>
+        <form class="fields-container">
+            <mat-form-field>
+                <mat-label>Email</mat-label>
+                <input matInput>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Contaseña</mat-label>
+                <input matInput>
+            </mat-form-field>
+            <mat-form-field>
+                  <mat-label>Rol</mat-label>
+                  <mat-select>
+                    <mat-option value="one">ADMIN</mat-option>
+                    <mat-option value="two">USER</mat-option>
+                  </mat-select>
+            </mat-form-field>
+            <button
+                mat-flat-button
+                routerLink="/dashboard/home"
+            >Iniciar Sesión</button>
+        </form>
+    </div>
+</div>

@@ -5,11 +5,11 @@ import { AuthComponent } from './features/auth/auth.component';
 import { authGuard } from './core/guards/auth.guard';
 
 const routes: Routes = [
-  /* {
+  {
     path: '',
     redirectTo: '/auth/login',
     pathMatch: 'full'
-  }, */
+  },
   {
     path: 'dashboard',
     /* canActivate: [authGuard], */

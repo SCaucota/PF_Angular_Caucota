@@ -43,12 +43,14 @@ export class InscriptionsDialogComponent {
     this.coursesService.getCourses().subscribe({
       next: (coursesFomrDb) => {
         this.courses = coursesFomrDb
-      }
+      },
+      error: (err) => console.log("Error al cargar los cursos en Insciprción: ", err)
     })
     this.studentsService.getStudents().subscribe({
       next: (studentsFormDb) => {
         this.students = studentsFormDb
-      }
+      },
+      error: (err) => console.log("Error al cargar estudiantes en Insciprión: ", err)
     })
   }
 

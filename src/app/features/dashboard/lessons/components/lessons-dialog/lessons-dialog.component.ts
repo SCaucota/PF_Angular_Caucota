@@ -51,7 +51,8 @@ export class LessonsDialogComponent implements OnInit{
     this.coursesService.getCourses().subscribe({
       next: (coursesFomrDb) => {
         this.courses = coursesFomrDb
-      }
+      },
+      error: (err) => console.log("Error al cargar los cursos en Lesson: ", err)
     })
   }
 

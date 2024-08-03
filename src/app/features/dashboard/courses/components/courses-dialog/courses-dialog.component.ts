@@ -60,7 +60,8 @@ export class CoursesDialogComponent implements OnInit{
     this.timesService.getTimes().subscribe({
       next: (timesFormDb) => {
         this.times = timesFormDb
-      }
+      },
+      error: (err) => console.log("Error al cargar los horarios: ", err)
     })
   }
 

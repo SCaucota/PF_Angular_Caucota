@@ -25,7 +25,8 @@ export class CrudCoursesComponent implements OnInit{
     this.coursesService.getCourses().subscribe({
       next: (coursesFormDb) => {
         this.dataSource = [...coursesFormDb]
-      }
+      },
+      error: (err) => console.log("Error al cargar los cursos: ", err)
     })
   }
 
@@ -37,7 +38,7 @@ export class CrudCoursesComponent implements OnInit{
     const dialogRef = this.matDialog.open(CoursesDialogComponent);
 
     dialogRef.componentInstance.onSubmitCourseEvent.subscribe((course: Course) => {
-      this.onSubmitCourse(course);
+      this.onSubmitCourse(course)
     })
   }
 
@@ -79,7 +80,8 @@ export class CrudCoursesComponent implements OnInit{
           this.coursesService.editCourse(editingCourse.id, value);
           this.loadCourses();
         }
-      }
+      },
+      error: (err) => console.log("Error al editar el curso: ", err)
     })
   }
 

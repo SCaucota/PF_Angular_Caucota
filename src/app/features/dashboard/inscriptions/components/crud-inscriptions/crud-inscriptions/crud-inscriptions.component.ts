@@ -29,7 +29,8 @@ export class CrudInscriptionsComponent {
     this.inscriptionsService.getInscriptions().subscribe({
       next: (inscriptionFormDb) => {
         this.dataSource = [...inscriptionFormDb]
-      }
+      },
+      error: (err) => console.log("Error al cargar las inscripciones: ", err)
     })
   }
 
@@ -103,7 +104,8 @@ export class CrudInscriptionsComponent {
 
           this.loadInscription();
         }
-      }
+      },
+      error: (err) => console.log("Error al editar la Inscripción: ", err)
     });
   }
 

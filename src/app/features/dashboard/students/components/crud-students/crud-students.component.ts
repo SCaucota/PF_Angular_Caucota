@@ -30,7 +30,8 @@ export class CrudStudentsComponent implements OnInit{
     this.studentsService.getStudents().subscribe({
       next: (studentsFormDb) => {
         this.dataSource = studentsFormDb
-      }
+      },
+      error: (err) => console.log("Error al cargar los estudiantes: ", err)
     })
   }
 
@@ -83,7 +84,8 @@ export class CrudStudentsComponent implements OnInit{
           this.studentsService.editStudent( editingStudent.id, editingStudent.courses,value);        
           this.loadStudents();
         }
-      }
+      },
+      error: (err) => console.log("Error al editar el estudiante: ", err)
     })
   }
 

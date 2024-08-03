@@ -22,7 +22,8 @@ export class CrudLessonsComponent implements OnInit{
     this.lessonsService.getLessons().subscribe({
       next: (lessonsFormDb) => {
         this.dataSource = [...lessonsFormDb]
-      }
+      },
+      error: (err) => console.log("Error al cargar las clases: ", err)
     })
   }
 
@@ -66,7 +67,8 @@ export class CrudLessonsComponent implements OnInit{
           this.lessonsService.editLesson(editingLesson.id, value);
           this.loadLessons();
         }
-      }
+      },
+      error: (err) => console.log("Error al editar la clase: ", err)
     })
   }
 

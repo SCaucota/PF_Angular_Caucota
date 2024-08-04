@@ -10,12 +10,11 @@ export class AuthService {
   
   login() {
     localStorage.setItem('token', 'asjdflkjsaeflkjsakfsefl');
-    this.router.navigate(['/dashboard/home']);
+    this.router.navigate(['dashboard', 'home']);
   }
 
   logout() {
     localStorage.removeItem('token');
-    this.router.navigate(['/auth/login'])
+    this.router.navigate(['auth', 'login'])
   }
-
 }

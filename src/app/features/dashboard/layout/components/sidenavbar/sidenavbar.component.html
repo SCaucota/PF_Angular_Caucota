@@ -31,5 +31,5 @@
         #inscriptionsLink="routerLinkActive"
         [activated]="inscriptionsLink.isActive"
     >Inscripciones</a>
-    <button routerLink="/auth/login" mat-flat-button>Cerrar Sesión</button>
+    <button (click)="logout()" mat-flat-button>Cerrar Sesión</button>
 </mat-nav-list>

@@ -1,5 +1,14 @@
 <mat-nav-list class="list" role="list">
     <a 
+        *ngIf="(authUser$ | async)?.role === 'ADMIN'"
+        mat-list-item
+        role="listitem"
+        routerLink="users"
+        routerLinkActive
+        #usersLink="routerLinkActive"
+        [activated]="usersLink.isActive"
+    >Usuarios</a>
+    <a 
         mat-list-item
         role="listitem"
         routerLink="students"

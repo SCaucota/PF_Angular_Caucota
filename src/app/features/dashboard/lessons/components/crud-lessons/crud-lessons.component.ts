@@ -5,6 +5,9 @@ import { Lesson } from '../../models/lesson';
 import { LessonsDialogComponent } from '../lessons-dialog/lessons-dialog.component';
 import { DeleteDialogComponent } from '../../../../../shared/components/delete-dialog/delete-dialog.component';
 import { DetailDialogComponent } from '../../../../../shared/components/detail-dialog/detail-dialog.component';
+import { AuthService } from '../../../../../core/services/auth/auth.service';
+import { Observable } from 'rxjs';
+import { User } from '../../../users/models/user';
 
 @Component({
   selector: 'app-crud-lessons',
@@ -12,11 +15,22 @@ import { DetailDialogComponent } from '../../../../../shared/components/detail-d
   styleUrl: './crud-lessons.component.scss'
 })
 export class CrudLessonsComponent implements OnInit{
-  constructor(private matDialog: MatDialog, private lessonsService: LessonsService) { }
 
-  displayedColumns: string[] = ['id', 'name', 'date', 'courseTitle', 'status', 'actions', 'detail'];
+  authUser$: Observable<User | null>
+
+  constructor(
+    private matDialog: MatDialog,
+    private lessonsService: LessonsService,
+    private authService: AuthService
+  ) {
+    this.authUser$ = this.authService.authUser$;
+   }
+
+  displayedColumns: string[] = ['id', 'name', 'date', 'courseTitle', 'status', 'actions'];
 
   dataSource: Lesson[] = [];
+
+  isAdmin: boolean = false;
 
   loadLessons() {
     this.lessonsService.getLessons().subscribe({
@@ -29,6 +43,9 @@ export class CrudLessonsComponent implements OnInit{
 
   ngOnInit(): void {
     this.loadLessons();
+    this.authService.authUser$.subscribe((user: User | null) => {
+      this.isAdmin = user?.role === 'ADMIN';
+    });
   }
 
   openDialog(): void {

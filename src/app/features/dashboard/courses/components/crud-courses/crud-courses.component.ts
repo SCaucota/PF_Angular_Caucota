@@ -7,6 +7,9 @@ import { DeleteDialogComponent } from '../../../../../shared/components/delete-d
 import { Course } from '../../models/course';
 import { DetailDialogComponent } from '../../../../../shared/components/detail-dialog/detail-dialog.component';
 import { InscriptionsService } from '../../../../../core/services/inscriptions/inscriptions.service';
+import { AuthService } from '../../../../../core/services/auth/auth.service';
+import { Observable } from 'rxjs';
+import { User } from '../../../users/models/user';
 
 @Component({
   selector: 'app-crud-courses',
@@ -15,11 +18,23 @@ import { InscriptionsService } from '../../../../../core/services/inscriptions/i
 })
 export class CrudCoursesComponent implements OnInit{
 
-  constructor(private matDialog: MatDialog, private coursesService: CoursesService, private studentsService: StudentsService, private inscriptionService: InscriptionsService) { }
+  authUser$: Observable<User | null>
 
-  displayedColumns: string[] = ['id', 'name', 'description', 'startDate', 'endDate', 'time', 'detail', 'actions'];
+  constructor(
+    private matDialog: MatDialog,
+    private coursesService: CoursesService,
+    private studentsService: StudentsService,
+    private inscriptionService: InscriptionsService,
+    private authService: AuthService
+  ) {
+    this.authUser$ = this.authService.authUser$;
+   }
+
+  displayedColumns: string[] = ['id', 'name', 'description', 'startDate', 'endDate', 'time', 'actions'];
 
   dataSource: Course[] = [];
+
+  isAdmin: boolean = false;
 
   loadCourses() {
     this.coursesService.getCourses().subscribe({
@@ -32,6 +47,9 @@ export class CrudCoursesComponent implements OnInit{
 
   ngOnInit(): void {
     this.loadCourses();
+    this.authService.authUser$.subscribe((user: User | null) => {
+      this.isAdmin = user?.role === 'ADMIN';
+    });
   }
 
   openDialog(): void {

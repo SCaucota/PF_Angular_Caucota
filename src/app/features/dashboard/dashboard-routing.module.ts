@@ -5,6 +5,7 @@ import { StudentsComponent } from './students/students.component';
 import { LessonsComponent } from './lessons/lessons.component';
 import { InscriptionsComponent } from './inscriptions/inscriptions.component';
 import { HomeComponent } from './home/home.component';
+import { adminGuard } from '../../core/guards/admin.guard';
 
 const routes: Routes = [
   {

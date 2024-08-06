@@ -7,6 +7,9 @@ import { StudentsService } from '../../../../../core/services/students/students.
 import { CoursesService } from '../../../../../core/services/courses/courses.service';
 import { DetailDialogComponent } from '../../../../../shared/components/detail-dialog/detail-dialog.component';
 import { InscriptionsService } from '../../../../../core/services/inscriptions/inscriptions.service';
+import { AuthService } from '../../../../../core/services/auth/auth.service';
+import { Observable } from 'rxjs';
+import { User } from '../../../users/models/user';
 
 @Component({
   selector: 'app-crud-students',
@@ -15,16 +18,23 @@ import { InscriptionsService } from '../../../../../core/services/inscriptions/i
 })
 export class CrudStudentsComponent implements OnInit{
 
+  authUser$: Observable<User | null>
+
   constructor(
     private matDialog: MatDialog,
     private studentsService: StudentsService,
     private coursesService: CoursesService,
-    private inscriptionsService: InscriptionsService
-  ) { }
+    private inscriptionsService: InscriptionsService,
+    private authService: AuthService
+  ) { 
+    this.authUser$ = this.authService.authUser$;
+  }
 
-  displayedColumns: string[] = ['id', 'name', 'surname', 'actions', 'detail'];
+  displayedColumns: string[] = ['id', 'name', 'surname', 'actions'];
 
   dataSource: Student[] = []
+
+  isAdmin: boolean = false;
 
   loadStudents() {
     this.studentsService.getStudents().subscribe({
@@ -36,7 +46,10 @@ export class CrudStudentsComponent implements OnInit{
   }
 
   ngOnInit(): void {
-   this.loadStudents()
+   this.loadStudents();
+   this.authService.authUser$.subscribe((user: User | null) => {
+    this.isAdmin = user?.role === 'ADMIN';
+  });
   }
 
   openDialog(): void {

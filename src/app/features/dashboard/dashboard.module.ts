@@ -28,7 +28,7 @@ import { HomeComponent } from './home/home.component';
     LessonsModule,
     InscriptionsModule, */
     LayoutModule,
-    CoreModule,
+    /* CoreModule, */
     SharedModule
 ]
 })

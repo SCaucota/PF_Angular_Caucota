@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of, switchMap } from 'rxjs';
 import { Inscription } from '../../../features/dashboard/inscriptions/models/inscription';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -24,12 +25,16 @@ export class InscriptionsService {
     {id: '15', studentId: '5', courseId: '6', date: new Date('2024-11-15'), status: true},
   ];
 
+  constructor(private httpClient: HttpClient) {}
+
   getInscriptions(): Observable<Inscription[]> {
-    return of([...this.INSCRIPTIONS_DATABASE])
+    /* return of([...this.INSCRIPTIONS_DATABASE]) */
+    return this.httpClient.get<Inscription[]>("http://localhost:3000/inscriptions")
   }
 
   getInscriptionById(id: string) {
-    return this.INSCRIPTIONS_DATABASE.find(inscription => inscription.id === id)
+    /* return this.INSCRIPTIONS_DATABASE.find(inscription => inscription.id === id) */
+    return this.httpClient.get<Inscription>("http://localhost:3000/inscriptions/" + id)
   }
 
   addInscription(inscription: Inscription) {
@@ -58,9 +63,20 @@ export class InscriptionsService {
   }
 
   cancelInscription(courseId: string, studentId: string) {
-    this.INSCRIPTIONS_DATABASE = this.INSCRIPTIONS_DATABASE.map((inscription) =>
+    /* this.INSCRIPTIONS_DATABASE = this.INSCRIPTIONS_DATABASE.map((inscription) =>
       (inscription.studentId === studentId && inscription.courseId === courseId) ? {...inscription, status: false} : inscription
-    )
+    ) */
+   return this.getInscriptions().pipe(
+    switchMap(inscriptions => {
+      const inscriptionCanceled = inscriptions.find(inscription => inscription.courseId === courseId && inscription.studentId === studentId);
+
+      console.log(inscriptionCanceled)
+
+      const idInscription = inscriptionCanceled?.id
+
+      return this.httpClient.patch<void>(`http://localhost:3000/inscriptions/${idInscription}`, {status: false})
+    })
+   )
   }
 
 }

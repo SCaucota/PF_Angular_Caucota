@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of, switchMap } from 'rxjs';
 import { Student } from '../../../features/dashboard/students/models/student';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StudentsService {
+
+  constructor(private httpClient: HttpClient) {}
   private STUDENTS_DATABASE: Student[] = [
     { id: '1', name: 'JUAN', surname: 'PÉREZ', courses: ['1', '2'] },
     { id: '2', name: 'MARÍA', surname: 'GÓMEZ', courses: ['2', '3'] },
@@ -20,11 +23,13 @@ export class StudentsService {
   ]
   
   getStudents(): Observable<Student[]> {
-    return of([...this.STUDENTS_DATABASE])
+    /* return of([...this.STUDENTS_DATABASE]) */
+    return this.httpClient.get<Student[]>('http://localhost:3000/students')
   }
 
-  getStudentById(id: string) {
-    return this.STUDENTS_DATABASE.find(student => student.id === id)
+  getStudentById(id: string): Observable<Student> {
+    /* return this.STUDENTS_DATABASE.find(student => student.id === id) */
+    return this.httpClient.get<Student>('http://localhost:3000/students/' + id)
   }
 
   addStudent(student: Student) {
@@ -52,16 +57,30 @@ export class StudentsService {
   }
 
   unregisterStudent(courseId: string, studentId: string) {
-    console.log(courseId, studentId)
+    /* console.log(courseId, studentId)
     const student = this.STUDENTS_DATABASE.find(student => student.id === studentId);
     if(student) {
       const courses = student?.courses.filter((course) => course !== courseId);
       student.courses = courses
-    }
+    } */
+   return this.getStudentById(studentId).pipe(
+    switchMap(student => {
+      const updatedCourses = student.courses.filter(course => course !== courseId);
+      return this.httpClient.patch<void>(`http://localhost:3000/students/${studentId}`, {courses: updatedCourses})
+    })
+   )
   }
 
   addCourseToStudent(courseId: string, studentId: string) {
-    const student = this.STUDENTS_DATABASE.find(student => student.id === studentId)
-    student?.courses.push(courseId)
+    /* const student = this.STUDENTS_DATABASE.find(student => student.id === studentId)
+    student?.courses.push(courseId) */
+    return this.getStudentById(studentId).pipe(
+      switchMap(student => {
+        const courses = student.courses;
+        const updatedCourses = {...courses, courseId}
+
+        return this.httpClient.patch<void>(`http://localhost:3000/students/${courseId}`, {students: updatedCourses})
+      })
+    )
   }
 }

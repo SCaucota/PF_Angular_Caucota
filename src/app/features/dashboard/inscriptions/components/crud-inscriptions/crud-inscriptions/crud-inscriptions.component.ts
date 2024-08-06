@@ -125,7 +125,7 @@ export class CrudInscriptionsComponent {
 
   openDetail(id: string): void {
     const inscription = this.inscriptionsService.getInscriptionById(id);
-    const studentid = inscription?.studentId
+    /* const studentid = inscription?.studentId
     const student = studentid ? this.studentsService.getStudentById(studentid) : null
     const courseid = inscription?.courseId;
     const course = courseid ? this.coursesService.getCourseById(courseid) : null
@@ -136,6 +136,6 @@ export class CrudInscriptionsComponent {
         item: inscription,
         subitem: subdata
       }
-    })
+    }) */
   }
 }

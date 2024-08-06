@@ -1,390 +1,446 @@
 {
-    "users": [
-        {
-            "id": "f6s5ef4",
-            "firstName": "Lucía",
-            "lastName": "Torres",
-            "email": "lucia@gmail.com",
-            "password": "1234",
-            "role": "ADMIN",
-            "token": "dfs6e5fs6e1s2dfe2g13dg1"
-        },
-        {
-            "id": "f5e9g6",
-            "firstName": "María",
-            "lastName": "Moreno",
-            "email": "mariamoreno@gmail.com",
-            "password": "5678",
-            "role": "CLIENT",
-            "token": "jtgyjfg6k8l332y3k48gk688"
-        }
-    ],
-    "students": [
-        {
-            "id": "1",
-            "name": "JUAN",
-            "surname": "PEREZ",
-            "courses": ["1", "2"]
-        },
-        {
-            "id": "2",
-            "name": "MARÍA",
-            "surname": "GÓMEZ",
-            "courses": ["2", "3"]
-        },
-        {
-            "id": "3",
-            "name": "CARLOS",
-            "surname":"LOPEZ",
-            "courses": ["3", "4"]
-        },
-        {
-            "id": "4",
-            "name": "ANA",
-            "surname": "FERNÁNDEZ",
-            "courses": ["4", "5"]
-        },
-        {
-            "id": "5",
-            "name": "LUIS",
-            "surname": "MARTÍNEZ",
-            "courses": ["5", "6"]
-        },
-        {
-            "id": "6",
-            "name": "SOFÍA",
-            "surname": "GARCÍA",
-            "courses": ["6"]
-        },
-        {
-            "id": "7",
-            "name": "MIGUEL",
-            "surname": "RODRIGUEZ",
-            "courses": ["7"]
-        },
-        {
-            "id": "8",
-            "name": "ELENA",
-            "surname": "MORALES",
-            "courses": ["8"]
-        },
-        {
-            "id": "9",
-            "name": "DAVID",
-            "surname": "NUñEZ",
-            "courses": ["9"]
-        },
-        {
-            "id": "10",
-            "name": "LAURA",
-            "surname": "RAMÍREZ",
-            "courses": ["10"]
-        }
-    ],
-    "courses": [
-        {
-            "id": "1",
-            "name": "ANGULAR",
-            "description": "curso inicial de Angular",
-            "startDate": "2024-11-05T00:00:00.000Z",
-            "endDate": "2024-12-08T00:00:00.000Z",
-            "time": "08:30 - 10:30",
-            "students": ["1"]
-        },
-        {
-            "id":   "2",
-            "name": "REACT",
-            "description": "curso avanzado de React",
-            "startDate": "2024-11-01T00:00:00.000Z",
-            "endDate": "2025-01-15T00:00:00.000Z",
-            "time": "16:00 - 18:00",
-            "students": ["1","2"]
-        },
-        {
-            "id": "3",
-            "name": "NODE.JS",
-            "description": "desarrollo backend con Node.js",
-            "startDate": "2024-09-15T00:00:00.000Z",
-            "endDate": "2024-11-20T00:00:00.000Z",
-            "time": "20:30 - 22:30",
-            "students": ["2", "3"]
-        },
-        {
-            "id": "4",
-            "name": "PYTHON",
-            "description": "introducción a Python para desarrollo web",
-            "startDate": "2024-08-10T00:00:00.000Z",
-            "endDate": "2024-10-25T00:00:00.000Z",
-            "time": "19:00 - 21:00",
-            "students": ["3", "4"]
-        },
-        {
-            "id": "5",
-            "name": "JAVA",
-            "description": "fundamentos de Java para programación orientada a objetos",
-            "startDate": "2024-09-01T00:00:00.000Z",
-            "endDate": "2024-12-01T00:00:00.000Z",
-            "time": "08:00 - 10:00",
-            "students": ["4", "5"]
-        },
-        {
-            "id": "6",
-            "name": "C#",
-            "description": "desarrollo de aplicaciones con C# y .NET",
-            "startDate": "2024-10-15T00:00:00.000Z",
-            "endDate": "2024-12-15T00:00:00.000Z",
-            "time": "17:00 - 19:00",
-            "students": ["5", "6"]
-        },
-        {
-            "id": "7",
-            "name": "VUE.JS",
-            "description": "desarrollo frontend con Vue.js",
-            "startDate": "2024-11-05T00:00:00.000Z",
-            "endDate": "2025-01-10T00:00:00.000Z",
-            "time": "20:30 - 22:30",
-            "students": ["7"]
-        },
-        {
-            "id": "8",
-            "name": "SWIFT",
-            "description": "desarrollo de aplicaciones iOS con Swift",
-            "startDate": "2024-12-01T00:00:00.000Z",
-            "endDate": "2025-03-01T00:00:00.000Z",
-            "time": "10:00 - 12:00",
-            "students": ["8"]
-        },
-        {
-            "id": "9",
-            "name": "RUBY ON NAILS",
-            "description": "desarrollo web con Ruby on Rails",
-            "startDate": "2024-09-20T00:00:00.000Z",
-            "endDate": "2024-11-30T00:00:00.000Z",
-            "time": "10:00 - 12:00",
-            "students": ["9"]
-        },
-        {
-            "id": "10",
-            "name": "DJANGO",
-            "description": "desarrollo web con Django y Python",
-            "startDate": "2024-12-05T00:00:00.000Z",
-            "endDate": "2025-03-10T00:00:00.000Z",
-            "time": "17:30 - 19:30",
-            "students": ["10"]
-        }
-    ],
-    "lessons": [
-        {
-            "id": "1",
-            "name": "MODULES",
-            "date": "2024-10-06T00:00:00.000Z",
-            "courseTitle": "ANGULAR",
-            "status": true
-        },
-        {
-            "id": "2",
-            "name": "HOOKS",
-            "date": "2024-11-05T00:00:00.000Z",
-            "courseTitle": "REACT",
-            "status": true
-        },
-        {
-            "id": "3",
-            "name": "EXPRESS.JS BASICS",
-            "date": "2024-09-20T00:00:00.000Z",
-            "courseTitle": "NODE.JS",
-            "status": false
-        },
-        {
-            "id": "4",
-            "name": "OOP BASICS",
-            "date": "2024-09-10T00:00:00.000Z",
-            "courseTitle": "JAVA",
-            "status": true
-        },
-        {
-            "id": "5",
-            "name": "SWIFT BASICS",
-            "date": "2024-12-05T00:00:00.000Z",
-            "courseTitle": "SWIFT",
-            "status": false
-        },
-        {
-            "id": "6",
-            "name": "ROUTING IN RAILS",
-            "date": "2024-09-25T00:00:00.000Z",
-            "courseTitle": "RUBY ON RAILS",
-            "status": true
-        },
-        {
-            "id": "7",
-            "name": "COMPONENTS",
-            "date": "2024-10-13T00:00:00.000Z",
-            "courseTitle": "ANGULAR",
-            "status": true
-        },
-        {
-            "id": "8",
-            "name": "STATE MANAGEMENT",
-            "date": "2024-11-12T00:00:00.000Z",
-            "courseTitle": "REACT",
-            "status": true
-        },
-        {
-            "id": "9",
-            "name": "DATABASE INTEGRATION",
-            "date": "2024-10-02T00:00:00.000Z",
-            "courseTitle": "NODE.JS",
-            "status": true
-        },
-        {
-            "id": "10",
-            "name": "WEB FRAMEWORKS",
-            "date": "2024-09-05T00:00:00.000Z",
-            "courseTitle": "PYTHON",
-            "status": true
-        },
-        {
-            "id": "11",
-            "name": "ADVANCED OOP",
-            "date": "2024-10-01T00:00:00.000Z",
-            "courseTitle": "JAVA",
-            "status": false
-        },
-        {
-            "id": "12",
-            "name": "ASP.NET CORE",
-            "date": "2024-11-01T00:00:00.000Z",
-            "courseTitle": "C#",
-            "status": true
-        },
-        {
-            "id": "13",
-            "name": "VUE ROUTER",
-            "date": "2024-11-20T00:00:00.000Z",
-            "courseTitle": "VUE.JS",
-            "status": true
-        },
-        {
-            "id": "14",
-            "name": "ACTIVE RECORD",
-            "date": "2024-10-10T00:00:00.000Z",
-            "courseTitle": "RUBY ON RAILS",
-            "status": true
-        },
-        {
-            "id": "15",
-            "name": "DJANGO TEMPLATES",
-            "date": "2025-01-05T00:00:00.000Z",
-            "courseTitle": "DJANGO",
-            "status": true
-        }
-    ],
-    "inscriptions": [
-        {
-            "id": "1",
-            "studentId": "1",
-            "courseId": "1",
-            "date": "2024-10-01T00:00:00.000Z",
-            "status": true
-        },
-        {
-            "id": "2",
-            "studentId": "2",
-            "courseId": "2",
-            "date": "2024-10-15T00:00:00.000Z",
-            "status": true
-        },
-        {
-            "id": "3",
-            "studentId": "3",
-            "courseId": "3",
-            "date": "2024-08-03T00:00:00.000Z",
-            "status": false
-        },
-        {
-            "id": "4",
-            "studentId": "4",
-            "courseId": "4",
-            "date": "2024-10-04T00:00:00.000Z",
-            "status": true
-        },
-        {
-            "id": "5",
-            "studentId": "5",
-            "courseId": "5",
-            "date": "2024-05-05T00:00:00.000Z",
-            "status": false
-        },
-        {
-            "id": "6",
-            "studentId": "6",
-            "courseId": "6",
-            "date": "2024-01-06T00:00:00.000Z",
-            "status": true
-        },
-        {
-            "id": "7",
-            "studentId": "7",
-            "courseId": "7",
-            "date": "2024-02-07T00:00:00.000Z",
-            "status": true
-        },
-        {
-            "id": "8",
-            "studentId": "8",
-            "courseId": "8",
-            "date": "2024-11-08T00:00:00.000Z",
-            "status": true
-        },
-        {
-            "id": "9",
-            "studentId": "9",
-            "courseId": "9",
-            "date": "2024-12-09T00:00:00.000Z",
-            "status": true
-        },
-        {
-            "id": "10",
-            "studentId": "10",
-            "courseId": "10",
-            "date": "2024-09-10T00:00:00.000Z",
-            "status": false
-        },
-        {
-            "id": "11",
-            "studentId": "1",
-            "courseId": "2",
-            "date": "2024-06-11T00:00:00.000Z",
-            "status": true
-        },
-        {
-            "id": "12",
-            "studentId": "2",
-            "courseId": "3",
-            "date": "2024-03-12T00:00:00.000Z",
-            "status": false
-        },
-        {
-            "id": "13",
-            "studentId": "3",
-            "courseId": "4",
-            "date": "2024-10-13T00:00:00.000Z",
-            "status": true
-        },
-        {
-            "id": "14",
-            "studentId": "4",
-            "courseId": "5",
-            "date": "2024-11-14T00:00:00.000Z",
-            "status": true
-        },
-        {
-            "id": "15",
-            "studentId": "5",
-            "courseId": "6",
-            "date": "2024-11-15T00:00:00.000Z",
-            "status": true
-        }
-    ]
+  "users": [
+    {
+      "id": "f6s5ef4",
+      "firstName": "Lucía",
+      "lastName": "Torres",
+      "email": "lucia@gmail.com",
+      "password": "1234",
+      "role": "ADMIN",
+      "token": "dfs6e5fs6e1s2dfe2g13dg1"
+    },
+    {
+      "id": "f5e9g6",
+      "firstName": "María",
+      "lastName": "Moreno",
+      "email": "mariamoreno@gmail.com",
+      "password": "5678",
+      "role": "CLIENT",
+      "token": "jtgyjfg6k8l332y3k48gk688"
+    }
+  ],
+  "students": [
+    {
+      "id": "1",
+      "name": "JUAN",
+      "surname": "PEREZ",
+      "courses": [
+        "2"
+      ]
+    },
+    {
+      "id": "2",
+      "name": "MARÍA",
+      "surname": "GÓMEZ",
+      "courses": [
+        "2",
+        "3"
+      ]
+    },
+    {
+      "id": "3",
+      "name": "CARLOS",
+      "surname": "LOPEZ",
+      "courses": [
+        "3",
+        "4"
+      ]
+    },
+    {
+      "id": "4",
+      "name": "ANA",
+      "surname": "FERNÁNDEZ",
+      "courses": [
+        "4",
+        "5"
+      ]
+    },
+    {
+      "id": "5",
+      "name": "LUIS",
+      "surname": "MARTÍNEZ",
+      "courses": [
+        "5",
+        "6"
+      ]
+    },
+    {
+      "id": "6",
+      "name": "SOFÍA",
+      "surname": "GARCÍA",
+      "courses": [
+        "6"
+      ]
+    },
+    {
+      "id": "7",
+      "name": "MIGUEL",
+      "surname": "RODRIGUEZ",
+      "courses": [
+        "7"
+      ]
+    },
+    {
+      "id": "8",
+      "name": "ELENA",
+      "surname": "MORALES",
+      "courses": [
+        "8"
+      ]
+    },
+    {
+      "id": "9",
+      "name": "DAVID",
+      "surname": "NUñEZ",
+      "courses": [
+        "9"
+      ]
+    },
+    {
+      "id": "10",
+      "name": "LAURA",
+      "surname": "RAMÍREZ",
+      "courses": [
+        "10"
+      ]
+    }
+  ],
+  "courses": [
+    {
+      "id": "1",
+      "name": "ANGULAR",
+      "description": "curso inicial de Angular",
+      "startDate": "2024-11-05T00:00:00.000Z",
+      "endDate": "2024-12-08T00:00:00.000Z",
+      "time": "08:30 - 10:30",
+      "students": []
+    },
+    {
+      "id": "2",
+      "name": "REACT",
+      "description": "curso avanzado de React",
+      "startDate": "2024-11-01T00:00:00.000Z",
+      "endDate": "2025-01-15T00:00:00.000Z",
+      "time": "16:00 - 18:00",
+      "students": [
+        "1",
+        "2"
+      ]
+    },
+    {
+      "id": "3",
+      "name": "NODE.JS",
+      "description": "desarrollo backend con Node.js",
+      "startDate": "2024-09-15T00:00:00.000Z",
+      "endDate": "2024-11-20T00:00:00.000Z",
+      "time": "20:30 - 22:30",
+      "students": [
+        "2",
+        "3"
+      ]
+    },
+    {
+      "id": "4",
+      "name": "PYTHON",
+      "description": "introducción a Python para desarrollo web",
+      "startDate": "2024-08-10T00:00:00.000Z",
+      "endDate": "2024-10-25T00:00:00.000Z",
+      "time": "19:00 - 21:00",
+      "students": [
+        "3",
+        "4"
+      ]
+    },
+    {
+      "id": "5",
+      "name": "JAVA",
+      "description": "fundamentos de Java para programación orientada a objetos",
+      "startDate": "2024-09-01T00:00:00.000Z",
+      "endDate": "2024-12-01T00:00:00.000Z",
+      "time": "08:00 - 10:00",
+      "students": [
+        "4",
+        "5"
+      ]
+    },
+    {
+      "id": "6",
+      "name": "C#",
+      "description": "desarrollo de aplicaciones con C# y .NET",
+      "startDate": "2024-10-15T00:00:00.000Z",
+      "endDate": "2024-12-15T00:00:00.000Z",
+      "time": "17:00 - 19:00",
+      "students": [
+        "5",
+        "6"
+      ]
+    },
+    {
+      "id": "7",
+      "name": "VUE.JS",
+      "description": "desarrollo frontend con Vue.js",
+      "startDate": "2024-11-05T00:00:00.000Z",
+      "endDate": "2025-01-10T00:00:00.000Z",
+      "time": "20:30 - 22:30",
+      "students": [
+        "7"
+      ]
+    },
+    {
+      "id": "8",
+      "name": "SWIFT",
+      "description": "desarrollo de aplicaciones iOS con Swift",
+      "startDate": "2024-12-01T00:00:00.000Z",
+      "endDate": "2025-03-01T00:00:00.000Z",
+      "time": "10:00 - 12:00",
+      "students": [
+        "8"
+      ]
+    },
+    {
+      "id": "9",
+      "name": "RUBY ON NAILS",
+      "description": "desarrollo web con Ruby on Rails",
+      "startDate": "2024-09-20T00:00:00.000Z",
+      "endDate": "2024-11-30T00:00:00.000Z",
+      "time": "10:00 - 12:00",
+      "students": [
+        "9"
+      ]
+    },
+    {
+      "id": "10",
+      "name": "DJANGO",
+      "description": "desarrollo web con Django y Python",
+      "startDate": "2024-12-05T00:00:00.000Z",
+      "endDate": "2025-03-10T00:00:00.000Z",
+      "time": "17:30 - 19:30",
+      "students": [
+        "10"
+      ]
+    },
+    {
+      "name": "GGGGGG",
+      "description": "asdfaef",
+      "startDate": "2024-08-14T03:00:00.000Z",
+      "endDate": "2024-08-22T03:00:00.000Z",
+      "time": "09:30 - 11:30",
+      "students": [],
+      "id": "aac3"
+    }
+  ],
+  "lessons": [
+    {
+      "id": "1",
+      "name": "MODULES",
+      "date": "2024-10-06T00:00:00.000Z",
+      "courseTitle": "ANGULAR",
+      "status": true
+    },
+    {
+      "id": "2",
+      "name": "HOOKS",
+      "date": "2024-11-05T00:00:00.000Z",
+      "courseTitle": "REACT",
+      "status": true
+    },
+    {
+      "id": "3",
+      "name": "EXPRESS.JS BASICS",
+      "date": "2024-09-20T00:00:00.000Z",
+      "courseTitle": "NODE.JS",
+      "status": false
+    },
+    {
+      "id": "4",
+      "name": "OOP BASICS",
+      "date": "2024-09-10T00:00:00.000Z",
+      "courseTitle": "JAVA",
+      "status": true
+    },
+    {
+      "id": "5",
+      "name": "SWIFT BASICS",
+      "date": "2024-12-05T00:00:00.000Z",
+      "courseTitle": "SWIFT",
+      "status": false
+    },
+    {
+      "id": "6",
+      "name": "ROUTING IN RAILS",
+      "date": "2024-09-25T00:00:00.000Z",
+      "courseTitle": "RUBY ON RAILS",
+      "status": true
+    },
+    {
+      "id": "7",
+      "name": "COMPONENTS",
+      "date": "2024-10-13T00:00:00.000Z",
+      "courseTitle": "ANGULAR",
+      "status": true
+    },
+    {
+      "id": "8",
+      "name": "STATE MANAGEMENT",
+      "date": "2024-11-12T00:00:00.000Z",
+      "courseTitle": "REACT",
+      "status": true
+    },
+    {
+      "id": "9",
+      "name": "DATABASE INTEGRATION",
+      "date": "2024-10-02T00:00:00.000Z",
+      "courseTitle": "NODE.JS",
+      "status": true
+    },
+    {
+      "id": "10",
+      "name": "WEB FRAMEWORKS",
+      "date": "2024-09-05T00:00:00.000Z",
+      "courseTitle": "PYTHON",
+      "status": true
+    },
+    {
+      "id": "11",
+      "name": "ADVANCED OOP",
+      "date": "2024-10-01T00:00:00.000Z",
+      "courseTitle": "JAVA",
+      "status": false
+    },
+    {
+      "id": "12",
+      "name": "ASP.NET CORE",
+      "date": "2024-11-01T00:00:00.000Z",
+      "courseTitle": "C#",
+      "status": true
+    },
+    {
+      "id": "13",
+      "name": "VUE ROUTER",
+      "date": "2024-11-20T00:00:00.000Z",
+      "courseTitle": "VUE.JS",
+      "status": true
+    },
+    {
+      "id": "14",
+      "name": "ACTIVE RECORD",
+      "date": "2024-10-10T00:00:00.000Z",
+      "courseTitle": "RUBY ON RAILS",
+      "status": true
+    },
+    {
+      "id": "15",
+      "name": "DJANGO TEMPLATES",
+      "date": "2025-01-05T00:00:00.000Z",
+      "courseTitle": "DJANGO",
+      "status": true
+    }
+  ],
+  "inscriptions": [
+    {
+      "id": "1",
+      "studentId": "1",
+      "courseId": "1",
+      "date": "2024-10-01T00:00:00.000Z",
+      "status": false
+    },
+    {
+      "id": "2",
+      "studentId": "2",
+      "courseId": "2",
+      "date": "2024-10-15T00:00:00.000Z",
+      "status": true
+    },
+    {
+      "id": "3",
+      "studentId": "3",
+      "courseId": "3",
+      "date": "2024-08-03T00:00:00.000Z",
+      "status": false
+    },
+    {
+      "id": "4",
+      "studentId": "4",
+      "courseId": "4",
+      "date": "2024-10-04T00:00:00.000Z",
+      "status": true
+    },
+    {
+      "id": "5",
+      "studentId": "5",
+      "courseId": "5",
+      "date": "2024-05-05T00:00:00.000Z",
+      "status": false
+    },
+    {
+      "id": "6",
+      "studentId": "6",
+      "courseId": "6",
+      "date": "2024-01-06T00:00:00.000Z",
+      "status": true
+    },
+    {
+      "id": "7",
+      "studentId": "7",
+      "courseId": "7",
+      "date": "2024-02-07T00:00:00.000Z",
+      "status": true
+    },
+    {
+      "id": "8",
+      "studentId": "8",
+      "courseId": "8",
+      "date": "2024-11-08T00:00:00.000Z",
+      "status": true
+    },
+    {
+      "id": "9",
+      "studentId": "9",
+      "courseId": "9",
+      "date": "2024-12-09T00:00:00.000Z",
+      "status": true
+    },
+    {
+      "id": "10",
+      "studentId": "10",
+      "courseId": "10",
+      "date": "2024-09-10T00:00:00.000Z",
+      "status": false
+    },
+    {
+      "id": "11",
+      "studentId": "1",
+      "courseId": "2",
+      "date": "2024-06-11T00:00:00.000Z",
+      "status": true
+    },
+    {
+      "id": "12",
+      "studentId": "2",
+      "courseId": "3",
+      "date": "2024-03-12T00:00:00.000Z",
+      "status": false
+    },
+    {
+      "id": "13",
+      "studentId": "3",
+      "courseId": "4",
+      "date": "2024-10-13T00:00:00.000Z",
+      "status": true
+    },
+    {
+      "id": "14",
+      "studentId": "4",
+      "courseId": "5",
+      "date": "2024-11-14T00:00:00.000Z",
+      "status": true
+    },
+    {
+      "id": "15",
+      "studentId": "5",
+      "courseId": "6",
+      "date": "2024-11-15T00:00:00.000Z",
+      "status": true
+    }
+  ]
 }

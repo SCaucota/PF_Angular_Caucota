@@ -8,15 +8,16 @@ import { Course } from '../../models/course';
 import { DetailDialogComponent } from '../../../../../shared/components/detail-dialog/detail-dialog.component';
 import { InscriptionsService } from '../../../../../core/services/inscriptions/inscriptions.service';
 import { AuthService } from '../../../../../core/services/auth/auth.service';
-import { Observable } from 'rxjs';
+import { catchError, forkJoin, Observable, of, switchMap, tap } from 'rxjs';
 import { User } from '../../../users/models/user';
+import { Student } from '../../../students/models/student';
 
 @Component({
   selector: 'app-crud-courses',
   templateUrl: './crud-courses.component.html',
   styleUrl: './crud-courses.component.scss'
 })
-export class CrudCoursesComponent implements OnInit{
+export class CrudCoursesComponent implements OnInit {
 
   authUser$: Observable<User | null>
 
@@ -28,7 +29,7 @@ export class CrudCoursesComponent implements OnInit{
     private authService: AuthService
   ) {
     this.authUser$ = this.authService.authUser$;
-   }
+  }
 
   displayedColumns: string[] = ['id', 'name', 'description', 'startDate', 'endDate', 'time', 'actions'];
 
@@ -61,57 +62,61 @@ export class CrudCoursesComponent implements OnInit{
   }
 
   onSubmitCourse(course: Course): void {
-    this.coursesService.addCourse(course);
-    this.loadCourses();
+    this.coursesService.addCourse(course).pipe(
+      tap(() => this.loadCourses())
+    ).subscribe();
   }
 
   deleteCourse(id: string): void {
-    const course = this.coursesService.getCourseById(id);
+    this.coursesService.getCourseById(id).subscribe(course => {
   
-    if (course?.students && course.students.length > 0) {
-      course.students.forEach((studentId: string) => {
-        this.coursesService.deleteStudentFromCourse(id, studentId);
-        this.studentsService.unregisterStudent(id, studentId);
-        this.inscriptionService.cancelInscription(studentId, id);
+      const dialogRef = this.matDialog.open(DeleteDialogComponent, {
+        data: {
+          title: 'Eliminar Curso',
+          entityName: 'el curso',
+          item: course
+        }
       });
-    }
-
-    const dialogRef = this.matDialog.open(DeleteDialogComponent, {
-      data: {
-        title: 'Eliminar Curso',
-        entityName: 'el curso',
-        item: course
-      }
-    });
   
-    dialogRef.componentInstance.confirmDeleteEvent.subscribe(() => {
-      this.coursesService.deleteCourse(id);
-      this.loadCourses();
+      dialogRef.componentInstance.confirmDeleteEvent.subscribe(() => {
+        if(course?.students && course.students.length > 0) {
+          const deleteOperations = course.students.map((studentId: string) => {
+            return this.coursesService.deleteStudentFromCourse(id, studentId).pipe(
+              switchMap(() => this.studentsService.unregisterStudent(id, studentId)),
+              switchMap(() => this.inscriptionService.cancelInscription(id, studentId))
+            )
+          });
+
+          forkJoin(deleteOperations).pipe(
+            switchMap(() => this.coursesService.deleteCourse(id)),
+            tap(() => this.loadCourses())
+          ).subscribe();
+        }else {
+          this.coursesService.deleteCourse(id).pipe(
+            tap(() => this.loadCourses())
+          ).subscribe()
+        }
+      });
     });
   }
-  
+
 
   editCourse(editingCourse: Course): void {
-    this.matDialog.open(CoursesDialogComponent, {data: editingCourse}).afterClosed().subscribe({
-      next: (value) => {
-        if(!!value){
-          this.coursesService.editCourse(editingCourse.id, value);
-          this.loadCourses();
-        }
-      },
-      error: (err) => console.log("Error al editar el curso: ", err)
-    })
+    this.coursesService.getCourseById(editingCourse.id).subscribe(course => {
+      this.matDialog.open(CoursesDialogComponent, { data: editingCourse }).afterClosed().subscribe({
+        next: (value) => {
+          if (!!value) {
+            this.coursesService.editCourse(editingCourse.id, value, course.students)
+              .pipe(tap(() => this.loadCourses()))
+              .subscribe();
+          }
+        },
+        error: (err) => console.log("Error al editar el curso: ", err)
+      })
+    });
   }
 
-  openDetail(id: string): void {
-    const course = this.coursesService.getCourseById(id);
-    let students: any[] = []
-    if(course?.students && course?.students.length !== 0){
-      students = course?.students.map((studentId: string) => {
-        return this.studentsService.getStudentById(studentId) || null
-      });
-    }
-    
+  openDetailDialog(course: Course, students: (Student | null)[]): void {
     const dialogRef = this.matDialog.open(DetailDialogComponent, {
       data: {
         title: 'Detalles del curso',
@@ -120,11 +125,33 @@ export class CrudCoursesComponent implements OnInit{
       }
     })
 
-    dialogRef.componentInstance.confirmUnregistrationEvent.subscribe(({courseId, studentId}) => {
-      this.coursesService.deleteStudentFromCourse(courseId, studentId);
-      this.studentsService.unregisterStudent(courseId, studentId);
-      this.inscriptionService.cancelInscription(courseId, studentId)
-      this.loadCourses();
+    dialogRef.componentInstance.confirmUnregistrationEvent.subscribe(({ courseId, studentId }) => {
+      this.coursesService.deleteStudentFromCourse(courseId, studentId).subscribe(() => {
+        this.studentsService.unregisterStudent(courseId, studentId).subscribe(() => {
+          this.inscriptionService.cancelInscription(courseId, studentId)
+          .pipe(
+            tap(() => this.loadCourses())
+          )
+          .subscribe()
+        })
+      })
     })
+  }
+
+  openDetail(id: string): void {
+    this.coursesService.getCourseById(id).subscribe(course => {
+      if (course?.students && course?.students.length !== 0) {
+        const studentObservables = course.students.map((studentId: string) =>
+          this.studentsService.getStudentById(studentId).pipe(
+            catchError(() => of(null))
+          )
+        );
+        forkJoin(studentObservables).subscribe(studentsList => {
+          this.openDetailDialog(course, studentsList)
+        });
+      } else {
+        this.openDetailDialog(course, []);
+      }
+    });
   }
 }

@@ -8,8 +8,9 @@ import { CoursesService } from '../../../../../core/services/courses/courses.ser
 import { DetailDialogComponent } from '../../../../../shared/components/detail-dialog/detail-dialog.component';
 import { InscriptionsService } from '../../../../../core/services/inscriptions/inscriptions.service';
 import { AuthService } from '../../../../../core/services/auth/auth.service';
-import { Observable } from 'rxjs';
+import { catchError, forkJoin, Observable, of, switchMap, tap } from 'rxjs';
 import { User } from '../../../users/models/user';
+import { Course } from '../../../courses/models/course';
 
 @Component({
   selector: 'app-crud-students',
@@ -61,55 +62,60 @@ export class CrudStudentsComponent implements OnInit{
   }
 
   onSubmitStudent(student: Student): void{
-    this.studentsService.addStudent(student);
-    this.loadStudents()
+    this.studentsService.addStudent(student).pipe(
+      tap(() => this.loadStudents())
+    ).subscribe();
   }
 
   deleteStudent(id: string): void {
-    const student = this.studentsService.getStudentById(id);
-
-    /* if(student?.courses && student.courses.length > 0){
-      student.courses.forEach((courseId: string) => {
-        this.coursesService.deleteStudentFromCourse(courseId, id);
-        this.studentsService.unregisterStudent(courseId, id);
-        this.inscriptionsService.cancelInscription(courseId, id)
+    this.studentsService.getStudentById(id).subscribe(student => {
+  
+      const dialogRef = this.matDialog.open(DeleteDialogComponent, {
+        data: {
+          title: 'Eliminar Alumno',
+          entityName: 'el alumno',
+          item: student
+        }
+      });
+      
+      dialogRef.componentInstance.confirmDeleteEvent.subscribe(() => {
+        if(student?.courses && student.courses.length > 0) {
+          const deleteOperations = student.courses.map((courseId: string) => {
+            return this.studentsService.unregisterStudent(courseId, id).pipe(
+              switchMap(() => this.coursesService.deleteStudentFromCourse(courseId, id)),
+              switchMap(() => this.inscriptionsService.cancelInscription(courseId, id))
+            )
+          });
+          forkJoin(deleteOperations).pipe(
+            switchMap(() => this.studentsService.deleteStudent(id)),
+            tap(() => this.loadStudents())
+          ).subscribe();
+        }else {
+          this.studentsService.deleteStudent(id).pipe(
+            tap(() => this.loadStudents())
+          ).subscribe();
+        }
       })
-    } */
 
-    const dialogRef = this.matDialog.open(DeleteDialogComponent, {
-      data: {
-        title: 'Eliminar Alumno',
-        entityName: 'el alumno',
-        item: student
-      }
     });
-    
-    dialogRef.componentInstance.confirmDeleteEvent.subscribe((student: Student) => {
-      this.studentsService.deleteStudent(id);
-      this.loadStudents()
-    })
   }
 
   editStudent(editingStudent: Student): void{
-    this.matDialog.open(StudentsDialogComponent, {data: editingStudent}).afterClosed().subscribe({
-      next: (value) => {
-        if(!!value){
-          this.studentsService.editStudent( editingStudent.id, editingStudent.courses,value);        
-          this.loadStudents();
-        }
-      },
-      error: (err) => console.log("Error al editar el estudiante: ", err)
+    this.studentsService.getStudentById(editingStudent.id).subscribe(student => {
+      this.matDialog.open(StudentsDialogComponent, {data: editingStudent}).afterClosed().subscribe({
+        next: (value) => {
+          if(!!value){
+            this.studentsService.editStudent( editingStudent.id, student.courses, value)
+            .pipe(tap(() => this.loadStudents()))
+            .subscribe();
+          }
+        },
+        error: (err) => console.log("Error al editar el estudiante: ", err)
+      })
     })
   }
 
-  openDetail(id: string): void{
-    let courses: any[] = []
-    const student = this.studentsService.getStudentById(id).subscribe(student => {
-      student?.courses.map((courseId: string) => {
-        return this.coursesService.getCourseById(courseId)
-      });
-    });
-    
+  openDetailDialog(student: Student, courses: (Course | null)[]): void {
     const dialogRef = this.matDialog.open(DetailDialogComponent, {
       data: {
         title: 'Detalles del Alumno',
@@ -119,11 +125,34 @@ export class CrudStudentsComponent implements OnInit{
     });
 
     dialogRef.componentInstance.confirmUnregistrationEvent.subscribe(({courseId, studentId}) => {
-      this.studentsService.unregisterStudent(courseId, studentId);
-      this.coursesService.deleteStudentFromCourse(courseId, studentId);
-      this.inscriptionsService.cancelInscription(courseId, studentId)
-      this.loadStudents();
+      this.studentsService.unregisterStudent(courseId, studentId).subscribe(() => {
+        this.coursesService.deleteStudentFromCourse(courseId, studentId).subscribe(() => {
+          this.inscriptionsService.cancelInscription(courseId, studentId)
+          .pipe(
+            tap(() => this.loadStudents())
+          )
+          .subscribe()
+        })
+      })
     })
+  }
+
+  openDetail(id: string): void{
+    this.studentsService.getStudentById(id).subscribe(student => {
+      if(student?.courses && student.courses.length > 0) {
+        const courseObservable = student.courses.map((courseId: string) =>
+          this.coursesService.getCourseById(courseId).pipe(
+            catchError(() => of(null))
+          )
+        );
+        forkJoin(courseObservable).subscribe(coursesList => {
+          this.openDetailDialog(student, coursesList)
+        });
+      }else {
+        this.openDetailDialog(student, []);
+      }
+    })
+    
   }
 
 }

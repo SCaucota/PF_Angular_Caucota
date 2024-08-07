@@ -128,5 +128,4 @@ export class UsersDialogComponent {
     this.matDialogRef.close(this.userForm.value);
     this.onSubmitUserEvent.emit(this.userForm.value)
   }
-  
 }

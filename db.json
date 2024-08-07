@@ -1,13 +1,12 @@
 {
   "users": [
     {
-      "id": "f6s5ef4",
-      "name": "Lucía",
-      "surname": "Torres",
+      "name": "LUCÍA",
+      "surname": "TORRES",
       "email": "lucia@gmail.com",
       "password": "1234",
       "role": "ADMIN",
-      "token": "dfs6e5fs6e1s2dfe2g13dg1"
+      "id": "f6s5ef4"
     },
     {
       "id": "f5e9g6",

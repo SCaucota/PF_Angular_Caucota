@@ -9,7 +9,8 @@
         <div
             *ngIf="handleStudents(item) && 
             !handleInscription(item) &&
-            !handleLessons(item) "
+            !handleLessons(item) &&
+            !handleUsers(item)"
             >
             <div class="titledata-data">
                 <strong>Nombre Completo: </strong>
@@ -31,7 +32,7 @@
                 <p *ngIf="isEmpty">No se encuentra aún inscripto a ningún curso</p>
         </div>
         <div 
-            *ngIf="!handleStudents(item) && !handleLessons(item) && !handleInscription(item)"
+            *ngIf="!handleStudents(item) && !handleLessons(item) && !handleInscription(item) && !handleUsers(item)"
         >
             <div class="titledata-data">
                 <strong>Nombre: </strong>

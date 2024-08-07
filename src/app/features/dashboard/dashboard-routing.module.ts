@@ -5,17 +5,13 @@ import { StudentsComponent } from './students/students.component';
 import { LessonsComponent } from './lessons/lessons.component';
 import { InscriptionsComponent } from './inscriptions/inscriptions.component';
 import { HomeComponent } from './home/home.component';
-import { adminGuard } from '../../core/guards/admin.guard';
 import { UsersComponent } from './users/users.component';
+
 
 const routes: Routes = [
   {
     path: 'home',
     component: HomeComponent
-  },
-  {
-    path: 'users',
-    component: UsersComponent
   },
   {
     path: 'courses',
@@ -32,6 +28,10 @@ const routes: Routes = [
   {
     path: 'inscriptions',
     component: InscriptionsComponent
+  },
+  {
+    path: 'users',
+    component: UsersComponent
   },
   {
     path: '**',

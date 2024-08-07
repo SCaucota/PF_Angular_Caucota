@@ -12,7 +12,7 @@ import { DeleteDialogComponent } from '../../../../../shared/components/delete-d
   templateUrl: './crud-users.component.html',
   styleUrl: './crud-users.component.scss'
 })
-export class CrudUsersComponent implements OnInit{
+export class CrudUsersComponent {
   constructor(
     private matDialog: MatDialog,
     private usersService: UsersService
@@ -91,5 +91,4 @@ export class CrudUsersComponent implements OnInit{
       })
     })
   }
-
 }

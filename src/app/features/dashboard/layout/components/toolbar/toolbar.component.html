@@ -2,6 +2,23 @@
     <button (click)="drawer.toggle()" mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
       <mat-icon>menu</mat-icon>
     </button>
-    <a class="titulo-toolbar" routerLink="home"><span>Administración Estudiantes</span></a>
+    <a class="titulo-toolbar" routerLink="home">
+      <span>Administración Estudiantes </span>
+      <span *ngIf="currentRoute === students">
+        | Alumnos
+      </span>
+      <span *ngIf="currentRoute === lessons">
+        | Clases
+      </span>
+      <span *ngIf="currentRoute === courses">
+        | Cursos
+      </span>
+      <span *ngIf="currentRoute === inscriptions">
+        | Inscripciones
+      </span>
+      <span *ngIf="currentRoute === users">
+        | Usuarios
+      </span>
+    </a>
     <span class="example-spacer"></span>
 </mat-toolbar>

@@ -23,8 +23,8 @@ export class UsersService {
 
     const modifiedUser = {
       ...user,
-      firstName: user.firstName.toUpperCase(),
-      lastName: user.lastName.toUpperCase(),
+      name: user.name.toUpperCase(),
+      surname: user.surname.toUpperCase(),
     }
 
     return this.httpClient.post(this.URL_BASE, modifiedUser);

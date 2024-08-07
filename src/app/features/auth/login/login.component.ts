@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { AuthService } from '../../../core/services/auth/auth.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { APP_CONFIG } from '../../../core/injection-tokens/token';
 
 @Component({
   selector: 'app-login',
@@ -7,9 +9,29 @@ import { AuthService } from '../../../core/services/auth/auth.service';
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
-  constructor(private authService: AuthService) {}
+  loginForm: FormGroup;
 
-  login() {
-    this.authService.login()
+  constructor(
+    private authService: AuthService,
+    private fb: FormBuilder,
+    @Inject(APP_CONFIG) private appConfig: any
+  ) {
+    this.loginForm = this.fb.group({
+      email: ['lucia@gmail.com', [Validators.required, Validators.email]],
+      password: ['1234', Validators.required],
+    })
+  }
+
+  onSubmit() {
+    if(this.loginForm.invalid) {
+      alert('El formulario noes valido');
+    }else {
+      const data = {
+        email: this.loginForm.get('email')?.value,
+        password: this.loginForm.get('password')?.value
+      }
+
+      this.authService.login(data)
+    }
   }
 }

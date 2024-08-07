@@ -1,18 +1,20 @@
 <div class="login-container">
     <div class="div-login">
         <h1>Iniciar Sesión</h1>
-        <form class="fields-container">
+        <form (ngSubmit)="onSubmit()" [formGroup]="loginForm" class="fields-container">
             <mat-form-field>
                 <mat-label>Email</mat-label>
-                <input matInput>
+                <input matInput formControlName="email">
+                <mat-icon matSuffix>email</mat-icon>
             </mat-form-field>
             <mat-form-field>
                 <mat-label>Contaseña</mat-label>
-                <input matInput>
+                <input matInput formControlName="password">
+                <mat-icon matSuffix>key</mat-icon>
             </mat-form-field>
             <button
                 mat-flat-button
-                (click)="login()"
+                type="submit"
             >Iniciar Sesión</button>
         </form>
     </div>

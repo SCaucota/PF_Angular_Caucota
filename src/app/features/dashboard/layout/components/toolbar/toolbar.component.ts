@@ -20,9 +20,11 @@ export class ToolbarComponent implements OnInit{
   courses: string = '/dashboard/courses'
   users: string = '/dashboard/users'
 
-  /* authUser$: Observable<User | null> */
+  authUser$: Observable<User | null>
 
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(private router: Router, private authService: AuthService) {
+    this.authUser$ = this.authService.authUser$;
+  }
 
   ngOnInit(): void {
     this.router.events.subscribe(() => {

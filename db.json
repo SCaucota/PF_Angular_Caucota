@@ -2,8 +2,8 @@
   "users": [
     {
       "id": "f6s5ef4",
-      "firstName": "Lucía",
-      "lastName": "Torres",
+      "name": "Lucía",
+      "surname": "Torres",
       "email": "lucia@gmail.com",
       "password": "1234",
       "role": "ADMIN",
@@ -11,8 +11,8 @@
     },
     {
       "id": "f5e9g6",
-      "firstName": "María",
-      "lastName": "Moreno",
+      "name": "María",
+      "surname": "Moreno",
       "email": "mariamoreno@gmail.com",
       "password": "5678",
       "role": "CLIENT",

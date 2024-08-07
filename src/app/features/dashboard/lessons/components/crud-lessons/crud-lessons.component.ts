@@ -6,7 +6,7 @@ import { LessonsDialogComponent } from '../lessons-dialog/lessons-dialog.compone
 import { DeleteDialogComponent } from '../../../../../shared/components/delete-dialog/delete-dialog.component';
 import { DetailDialogComponent } from '../../../../../shared/components/detail-dialog/detail-dialog.component';
 import { AuthService } from '../../../../../core/services/auth/auth.service';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { User } from '../../../users/models/user';
 
 @Component({
@@ -14,7 +14,7 @@ import { User } from '../../../users/models/user';
   templateUrl: './crud-lessons.component.html',
   styleUrl: './crud-lessons.component.scss'
 })
-export class CrudLessonsComponent implements OnInit{
+export class CrudLessonsComponent implements OnInit {
 
   authUser$: Observable<User | null>
 
@@ -24,7 +24,7 @@ export class CrudLessonsComponent implements OnInit{
     private authService: AuthService
   ) {
     this.authUser$ = this.authService.authUser$;
-   }
+  }
 
   displayedColumns: string[] = ['id', 'name', 'date', 'courseTitle', 'status', 'actions'];
 
@@ -57,32 +57,37 @@ export class CrudLessonsComponent implements OnInit{
   }
 
   onSubmitLesson(lesson: Lesson): void {
-    this.lessonsService.addLesson(lesson);
-    this.loadLessons();
+    this.lessonsService.addLesson(lesson).pipe(
+      tap(() => this.loadLessons())
+    ).subscribe();
   }
 
   deleteLesson(id: string): void {
-    const lesson = this.lessonsService.getLessonById(id)
-    const dialogRef = this.matDialog.open(DeleteDialogComponent, {
-      data: {
-        title:'Eliminar Clase',
-        entityName: 'la clase',
-        item: lesson
-      }
+    this.lessonsService.getLessonById(id).subscribe(lesson => {
+      const dialogRef = this.matDialog.open(DeleteDialogComponent, {
+        data: {
+          title: 'Eliminar Clase',
+          entityName: 'la clase',
+          item: lesson
+        }
+      })
+
+      dialogRef.componentInstance.confirmDeleteEvent.subscribe(() => {
+        this.lessonsService.deleteLesson(id).pipe(
+          tap(() => this.loadLessons())
+        ).subscribe()
+      })
     })
 
-    dialogRef.componentInstance.confirmDeleteEvent.subscribe((lesson: Lesson) => {
-      this.lessonsService.deleteLesson(id);
-      this.loadLessons()
-    })
   }
 
   editLesson(editingLesson: Lesson): void {
-    this.matDialog.open(LessonsDialogComponent, {data: editingLesson}).afterClosed().subscribe({
+    this.matDialog.open(LessonsDialogComponent, { data: editingLesson }).afterClosed().subscribe({
       next: (value) => {
-        if(!!value){
-          this.lessonsService.editLesson(editingLesson.id, value);
-          this.loadLessons();
+        if (!!value) {
+          this.lessonsService.editLesson(editingLesson.id, value).pipe(
+            tap(() => this.loadLessons())
+          ).subscribe();
         }
       },
       error: (err) => console.log("Error al editar la clase: ", err)
@@ -90,13 +95,14 @@ export class CrudLessonsComponent implements OnInit{
   }
 
   openDetail(id: string): void {
-    const lesson = this.lessonsService.getLessonById(id)
-    this.matDialog.open(DetailDialogComponent, {
-      data: {
-        title: 'Detalles de la Clase',
-        item: lesson,
-        subitem: []
-      }
+    this.lessonsService.getLessonById(id).subscribe(lesson => {
+      this.matDialog.open(DetailDialogComponent, {
+        data: {
+          title: 'Detalles de la Clase',
+          item: lesson,
+          subitem: []
+        }
+      })
     })
   }
 }

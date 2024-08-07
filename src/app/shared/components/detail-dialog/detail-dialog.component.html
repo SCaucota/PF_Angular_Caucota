@@ -68,7 +68,7 @@
 
                 <p *ngIf="isEmpty">No hay estudiantes inscriptos</p>
         </div>
-        <div *ngIf="handleInscription(item)">
+        <div *ngIf="handleInscription(item) && !handleLessons(item)">
             <div class="titledata-data">
                 <strong>Id Estudiante: </strong>
                 <p *ngIf="subitem.student && item.studentId !== null; else studentDeleted">

@@ -11,6 +11,17 @@ export class UsersService {
 
   constructor(private httpClient: HttpClient) { }
 
+  generateToken(longitud: number): string {
+    let token = '';
+    const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    for (let i = 0; i < longitud; i++) {
+      const caracterAleatorio = caracteres.charAt(Math.floor(Math.random() * caracteres.length));
+      token += caracterAleatorio;
+    }
+  
+    return token;
+  }
+
   getUsers(): Observable<User[]> {
     return this.httpClient.get<User[]>(this.URL_BASE);
   }
@@ -25,8 +36,23 @@ export class UsersService {
       ...user,
       name: user.name.toUpperCase(),
       surname: user.surname.toUpperCase(),
+      token: this.generateToken(20)
     }
 
     return this.httpClient.post(this.URL_BASE, modifiedUser);
+  }
+
+  deleteUser(id: string) {
+    return this.httpClient.delete(`${this.URL_BASE}/${id}`);
+  }
+
+  editUser(id: string, editingUser: User) {
+    const user = {
+      ...editingUser,
+      name: editingUser.name.toUpperCase(),
+      surname: editingUser.surname.toUpperCase()
+    }
+
+    return this.httpClient.put(`${this.URL_BASE}/${id}`, user);
   }
 }

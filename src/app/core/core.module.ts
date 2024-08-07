@@ -6,6 +6,7 @@ import { LessonsService } from './services/lessons/lessons.service';
 import { StudentsService } from './services/students/students.service';
 import { InscriptionsService } from './services/inscriptions/inscriptions.service';
 import { AuthService } from './services/auth/auth.service';
+import { UsersService } from './services/users/users.service';
 
 
 
@@ -20,6 +21,7 @@ import { AuthService } from './services/auth/auth.service';
     LessonsService,
     StudentsService,
     InscriptionsService,
+    UsersService,
     AuthService
   ]
 })

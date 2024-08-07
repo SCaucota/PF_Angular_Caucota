@@ -1,0 +1,142 @@
+<h2 appTitle mat-dialog-title>{{
+    editingUser ? 'Editando ' + (editingUser | fullname) : 'Agregando Usuario'
+}}</h2>
+
+<form (ngSubmit)="onSubmitUser()" class="form-add-user" [formGroup]="userForm">
+    <mat-form-field appearance="fill">
+        <mat-label>Nombre</mat-label>
+        <input
+            type="text"
+            formControlName="name" 
+            matInput
+            [ngClass]="{
+                'is-invalid': nameControlInvalid,
+                'is-valid': !nameControlInvalid
+            }"
+        >
+
+        <mat-error *ngIf="nameControl?.invalid && nameControl?.touched">
+            <div *ngIf="nameControl?.hasError('required')">
+                El nombre es <strong>requerido</strong>
+            </div>
+            <div *ngIf="nameControl?.hasError('minlength')">
+                Mínimo de 3 caracteres
+            </div>
+            <div *ngIf="nameControl?.hasError('pattern')">
+                Ingrese únicamente letras
+            </div>
+            <div *ngIf="nameControl?.hasError('noOnlySpaces')">
+                No ingresar únicamente espacios
+            </div>
+            <div *ngIf="nameControl?.hasError('noLeadingSpaces')">
+                No ingresar espacios al inicio
+            </div>
+        </mat-error>
+
+    </mat-form-field>
+    <mat-form-field class="form-surname" appearance="fill">
+        <mat-label>Apellido</mat-label>
+        <input 
+            formControlName="surname"
+            matInput
+            [ngClass]="{
+                'is-invalid': surnameControlInvalid,
+                'is-valid': !surnameControlInvalid
+            }"
+        >
+        
+        <mat-error *ngIf="surnameControl?.invalid && surnameControl?.touched">
+            <div *ngIf="surnameControl?.hasError('required')">
+                El apellido es <strong>requerido</strong>
+            </div>
+            <div *ngIf="surnameControl?.hasError('minlength')">
+                Mínimo de 3 caracteres
+            </div>
+            <div *ngIf="surnameControl?.hasError('pattern')">
+                Ingrese únicamente letras
+            </div>
+            <div *ngIf="surnameControl?.hasError('noOnlySpaces')">
+                No ingresar únicamente espacios
+            </div>
+            <div *ngIf="surnameControl?.hasError('noLeadingSpaces')">
+                No ingresar espacios al inicio
+            </div>
+        </mat-error>
+
+    </mat-form-field>
+    <mat-form-field class="form-email" appearance="fill">
+        <mat-label>Email</mat-label>
+        <input 
+            formControlName="email"
+            matInput
+            [ngClass]="{
+                'is-invalid': emailControlInvalid,
+                'is-valid': !emailControlInvalid
+            }"
+        >
+        
+        <mat-error *ngIf="emailControl?.invalid && emailControl?.touched">
+            <div *ngIf="emailControl?.hasError('required')">
+                El email es <strong>requerido</strong>
+            </div>
+            <div *ngIf="emailControl?.hasError('email')">
+                Ingrese un email valido
+            </div>
+        </mat-error>
+
+    </mat-form-field>
+    <mat-form-field class="form-password" appearance="fill">
+        <mat-label>Password</mat-label>
+        <input 
+            formControlName="password"
+            matInput
+            [ngClass]="{
+                'is-invalid': passwordControlInvalid,
+                'is-valid': !passwordControlInvalid
+            }"
+        >
+        
+        <mat-error *ngIf="passwordControl?.invalid && passwordControl?.touched">
+            <div *ngIf="passwordControl?.hasError('required')">
+                La contraseña es <strong>requerida</strong>
+            </div>
+            <div *ngIf="passwordControl?.hasError('minlength')">
+                Mínimo de 3 caracteres
+            </div>
+            <div *ngIf="passwordControl?.hasError('noOnlySpaces')">
+                No ingresar únicamente espacios
+            </div>
+            <div *ngIf="passwordControl?.hasError('noLeadingSpaces')">
+                No ingresar espacios al inicio
+            </div>
+        </mat-error>
+    </mat-form-field>
+    <mat-form-field class="form-role" appearance="fill">
+        <mat-label>Password</mat-label>
+        <mat-select 
+            formControlName="role"
+            matInput
+            [ngClass]="{
+                'is-invalid': roleControlInvalid,
+                'is-valid': !roleControlInvalid
+            }"
+        >
+            <mat-option value="ADMIN">ADMIN</mat-option>
+            <mat-option value="CLIENT">CLIENT</mat-option>
+        </mat-select>
+        
+        <mat-error *ngIf="roleControl?.invalid && roleControl?.touched">
+            <div *ngIf="roleControl?.hasError('required')">
+                El rol es <strong>requerido</strong>
+            </div>
+        </mat-error>
+
+    </mat-form-field>
+
+    <mat-dialog-actions class="buttons-container">
+        <button mat-flat-button mat-dialog-close>Cancelar</button>
+        <button [disabled]="userForm.invalid" type="submit" mat-flat-button>
+            {{ editingUser ? 'Editar' : 'Guardar' }}
+        </button>
+    </mat-dialog-actions>
+</form>

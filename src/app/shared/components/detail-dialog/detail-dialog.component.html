@@ -120,6 +120,22 @@
                 <p>{{item.status ? 'Activo' : 'Cancelado'}}</p>
             </div>
         </div>
+        <div *ngIf="handleUsers(item)">
+            <div class="titledata-data">
+                <strong>Nombre: </strong>
+                <p>{{item | fullname}}</p>
+            </div>
+            <hr>
+            <div class="titledata-data">
+                <strong>Email: </strong>
+                <p>{{item.email}}</p>
+            </div>
+            <hr>
+            <div class="titledata-data">
+                <strong>Rol: </strong>
+                <p>{{item.role}}</p>
+            </div>
+        </div>
     </div>
 </mat-dialog-content>
 <mat-dialog-actions>

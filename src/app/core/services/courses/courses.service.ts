@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { mergeMap, Observable, of, switchMap } from 'rxjs';
+import { Observable, switchMap } from 'rxjs';
 import { Course } from '../../../features/dashboard/courses/models/course';
 import { HttpClient } from '@angular/common/http';
 
@@ -60,7 +60,7 @@ export class CoursesService {
     return this.getCourseById(courseId).pipe(
       switchMap(course => {
         const students = course.students;
-        const updatedStudents = {...students, studentId}
+        const updatedStudents = [...students, studentId]
 
         return this.httpClient.patch<void>(`${this.URL_BASE}/${courseId}`, {students: updatedStudents})
       })

@@ -58,9 +58,9 @@ export class StudentsService {
     return this.getStudentById(studentId).pipe(
       switchMap(student => {
         const courses = student.courses;
-        const updatedCourses = {...courses, courseId}
+        const updatedCourses = [...courses, courseId]
 
-        return this.httpClient.patch<void>(`${this.URL_BASE}/${courseId}`, {students: updatedCourses})
+        return this.httpClient.patch<void>(`${this.URL_BASE}/${studentId}`, {courses: updatedCourses})
       })
     )
   }

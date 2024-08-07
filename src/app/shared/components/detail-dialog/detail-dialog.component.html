@@ -71,7 +71,7 @@
         <div *ngIf="handleInscription(item)">
             <div class="titledata-data">
                 <strong>Id Estudiante: </strong>
-                <p *ngIf="subitem.student; else studentDeleted">
+                <p *ngIf="subitem.student && item.studentId !== null; else studentDeleted">
                     {{item.studentId}} - {{subitem.student | fullname}}
                 </p>
                 <ng-template #studentDeleted>
@@ -81,7 +81,12 @@
             <hr>
             <div class="titledata-data">
                 <strong>Id Curso: </strong>
-                <p>{{item.courseId}} - {{subitem.course ? subitem.course.name : 'Curso eliminado'}}</p>
+                <p *ngIf="subitem.course && item.courseId !== null; else courseDeleted">
+                    {{item.courseId}} - {{subitem.course.name}}
+                </p>
+                <ng-template #courseDeleted>
+                    Curso eliminado
+                </ng-template>
             </div>
             <hr>
             <div class="titledata-data">

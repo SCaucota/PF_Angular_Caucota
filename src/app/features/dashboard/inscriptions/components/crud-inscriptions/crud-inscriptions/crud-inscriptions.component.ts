@@ -8,7 +8,7 @@ import { DetailDialogComponent } from '../../../../../../shared/components/detai
 import { StudentsService } from '../../../../../../core/services/students/students.service';
 import { CoursesService } from '../../../../../../core/services/courses/courses.service';
 import { AuthService } from '../../../../../../core/services/auth/auth.service';
-import { Observable } from 'rxjs';
+import { EMPTY, forkJoin, mergeMap, Observable, of, switchMap, tap } from 'rxjs';
 import { User } from '../../../../users/models/user';
 
 @Component({
@@ -61,27 +61,44 @@ export class CrudInscriptionsComponent {
   }
 
   onSubmitInscription(inscription: Inscription): void {
-    const newInscription = this.inscriptionsService.addInscription(inscription);
-    this.coursesService.addStudentToCourse(newInscription.studentId, newInscription.courseId)
-    this.studentsService.addCourseToStudent(newInscription.courseId, newInscription.studentId)
-    this.loadInscription();
+    this.inscriptionsService.addInscription(inscription).subscribe(newInscription => {
+      this.coursesService.addStudentToCourse(newInscription.studentId, newInscription.courseId).subscribe(() => {
+        this.studentsService.addCourseToStudent(newInscription.courseId, newInscription.studentId)
+        .pipe(
+          tap(() => this.loadInscription())
+        )
+        .subscribe()
+      })
+    });
   }
 
   deleteInscription(id: string): void {
-    const inscription = this.inscriptionsService.getInscriptionById(id)
-    const dialogRef = this.matDialog.open(DeleteDialogComponent, {
-      data: {
-        title:'Eliminar Inscripción',
-        entityName: 'la inscripción',
-        item: inscription
-      }
-    })
-
-    dialogRef.componentInstance.confirmDeleteEvent.subscribe((inscription: Inscription) => {
-      this.inscriptionsService.deleteInscription(id);
-      this.coursesService.deleteStudentFromCourse(inscription.courseId, inscription.studentId);
-      this.studentsService.unregisterStudent(inscription.courseId, inscription.studentId)
-      this.loadInscription()
+    this.inscriptionsService.getInscriptionById(id).subscribe(inscription => {
+      const dialogRef = this.matDialog.open(DeleteDialogComponent, {
+        data: {
+          title:'Eliminar Inscripción',
+          entityName: 'la inscripción',
+          item: inscription
+        }
+      })
+  
+      dialogRef.componentInstance.confirmDeleteEvent.subscribe((inscription: Inscription) => {
+        this.loadInscription()
+        this.inscriptionsService.deleteInscription(id).pipe(
+          mergeMap(() => {
+            if(inscription.studentId !== null && inscription.courseId !== null) {
+              return this.coursesService.deleteStudentFromCourse(inscription.courseId, inscription.studentId).pipe(
+                switchMap(() => this.studentsService.unregisterStudent(inscription.courseId, inscription.studentId))
+              )
+            }else{
+              return of(null).pipe(
+                tap(() => this.loadInscription())
+              );
+            }
+          }),
+          tap(() => this.loadInscription())
+        ).subscribe()
+      })
     })
   }
 
@@ -91,32 +108,45 @@ export class CrudInscriptionsComponent {
     this.matDialog.open(InscriptionsDialogComponent, {data: editingInscription}).afterClosed().subscribe({
       next: (updatedInscription) => {
         if (updatedInscription) {
-          this.inscriptionsService.editInscription(editingInscription.id, updatedInscription);
+          this.inscriptionsService.editInscription(editingInscription.id, updatedInscription).pipe(
+            switchMap(() => {
+              if (originalInscription.studentId !== updatedInscription.studentId || originalInscription.courseId !== updatedInscription.courseId || originalInscription.status !== updatedInscription.status) {
+                const tasks = [];
 
-          if (originalInscription.studentId !== updatedInscription.studentId) {
-            this.coursesService.deleteStudentFromCourse(originalInscription.courseId, originalInscription.studentId);
-            this.studentsService.unregisterStudent(originalInscription.courseId, originalInscription.studentId);
-
-            this.coursesService.addStudentToCourse(updatedInscription.studentId, updatedInscription.courseId);
-            this.studentsService.addCourseToStudent(updatedInscription.courseId, updatedInscription.studentId);
-          } else if (originalInscription.courseId !== updatedInscription.courseId) {
-            this.coursesService.deleteStudentFromCourse(originalInscription.courseId, originalInscription.studentId);
-            this.studentsService.unregisterStudent(originalInscription.courseId, originalInscription.studentId);
-
-            this.coursesService.addStudentToCourse(updatedInscription.studentId, updatedInscription.courseId);
-            this.studentsService.addCourseToStudent(updatedInscription.courseId, updatedInscription.studentId);
-          } else if (originalInscription.status !== updatedInscription.status) {
-            if(updatedInscription.status === true) {
-              this.coursesService.addStudentToCourse(updatedInscription.studentId, updatedInscription.courseId);
-              this.studentsService.addCourseToStudent(updatedInscription.courseId, updatedInscription.studentId);
-            }
-            else {
-              this.coursesService.deleteStudentFromCourse(originalInscription.courseId, originalInscription.studentId);
-              this.studentsService.unregisterStudent(originalInscription.courseId, originalInscription.studentId);
-            }
-          }
-
-          this.loadInscription();
+                if (originalInscription.studentId !== updatedInscription.studentId || originalInscription.courseId !== updatedInscription.courseId){
+                  tasks.push(
+                    this.coursesService.deleteStudentFromCourse(originalInscription.courseId, originalInscription.studentId).pipe(
+                      switchMap(() => this.coursesService.addStudentToCourse(updatedInscription.studentId, updatedInscription.courseId))
+                    ),
+                    this.studentsService.unregisterStudent(originalInscription.courseId, originalInscription.studentId).pipe(
+                      switchMap(() => this.studentsService.addCourseToStudent(updatedInscription.courseId, updatedInscription.studentId)
+                      )
+                    )
+                  )
+                }else if (originalInscription.status !== updatedInscription.status) {
+                  if(updatedInscription.status === true) {
+                    tasks.push(
+                      this.coursesService.addStudentToCourse(updatedInscription.studentId, updatedInscription.courseId).pipe(
+                        switchMap(() => this.studentsService.addCourseToStudent(updatedInscription.courseId, updatedInscription.studentId))
+                      )
+                    )
+                  }else {
+                    tasks.push(
+                      this.coursesService.deleteStudentFromCourse(originalInscription.courseId, originalInscription.studentId).pipe(
+                        switchMap(() => this.studentsService.unregisterStudent(originalInscription.courseId, originalInscription.studentId))
+                      )
+                    )
+                  }
+                }
+                return forkJoin(tasks);
+              } else {
+                return of(null);
+              }
+            })
+          ).subscribe({
+            next: () => this.loadInscription(),
+            error: (err) => console.log("Error al editar la Inscripción: ", err)
+          })
         }
       },
       error: (err) => console.log("Error al editar la Inscripción: ", err)
@@ -124,18 +154,27 @@ export class CrudInscriptionsComponent {
   }
 
   openDetail(id: string): void {
-    const inscription = this.inscriptionsService.getInscriptionById(id);
-    /* const studentid = inscription?.studentId
-    const student = studentid ? this.studentsService.getStudentById(studentid) : null
-    const courseid = inscription?.courseId;
-    const course = courseid ? this.coursesService.getCourseById(courseid) : null
-    const subdata = {student: student, course: course}
-    this.matDialog.open(DetailDialogComponent, {
-      data: {
-        title: 'Detalles de la inscripción',
-        item: inscription,
-        subitem: subdata
+    this.inscriptionsService.getInscriptionById(id).subscribe(inscription => {
+      if(inscription) {
+        const studentid = inscription.studentId
+        const courseid = inscription.courseId;
+
+        const student$ = studentid ? this.studentsService.getStudentById(studentid) : of(null);
+        const course$ = courseid ? this.coursesService.getCourseById(courseid) : of(null);
+
+        forkJoin([student$, course$]).subscribe(([student, course]) => {
+          this.matDialog.open(DetailDialogComponent, {
+            data: {
+              title: 'Detalles de la inscripción',
+              item: inscription,
+              subitem: {
+                student: student,
+                course: course
+              }
+            }
+          })
+        })
       }
-    }) */
+    })
   }
 }

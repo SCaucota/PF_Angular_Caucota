@@ -37,7 +37,7 @@ export class DetailDialogComponent implements OnInit{
     return item && item.courses
   }
   handleInscription(item: any) {
-    return item && item.studentId
+    return item && item.status !== undefined && item.status !== null;
   }
 
   handleLessons(item:any) {

@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { LessonsService } from './lessons.service';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import { Lesson } from '../../../features/dashboard/lessons/models/lesson';
 
 describe('LessonsService', () => {
@@ -39,9 +39,10 @@ describe('LessonsService', () => {
       expect(lessons).toEqual(mockLessons)
     })
 
-    const request = httpMock.expectOne(`${service.URL_BASE}`);
-    expect(request.request.method).toBe('GET');
-    request.flush(mockLessons);
+    httpMock.expectOne({
+      url: `${service.URL_BASE}`,
+      method: 'GET'
+    }).flush(mockLessons)
   })
 
   it('Se devuelve únicamente una clase', () => {
@@ -51,9 +52,10 @@ describe('LessonsService', () => {
       expect(lesson).toEqual(mockSingleLesson)
     })
 
-    const request = httpMock.expectOne(`${service.URL_BASE}/${id}`);
-    expect(request.request.method).toBe('GET');
-    request.flush(mockSingleLesson)
+    httpMock.expectOne({
+      url: `${service.URL_BASE}/${id}`,
+      method: 'GET'
+    }).flush(mockSingleLesson)
   })
 
   it('Agregado existoso de una nueva clase', () => {
@@ -79,10 +81,11 @@ describe('LessonsService', () => {
     service.deleteLesson(id).subscribe(response => {
       expect(response).toEqual({});
     })
-
-    const request = httpMock.expectOne(`${service.URL_BASE}/${id}`);
-    expect(request.request.method).toBe('DELETE');
-    request.flush({})
+    
+    httpMock.expectOne({
+      url: `${service.URL_BASE}/${id}`,
+      method: 'DELETE'
+    }).flush({})
   })
 
   it('Se debe editar una clase existente', () => {

@@ -1,10 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { LessonsDialogComponent } from './lessons-dialog.component';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { HttpClient } from '@angular/common/http';
 import { LessonsService } from '../../../../../core/services/lessons/lessons.service';
-import { HttpClientTestingModule, provideHttpClientTesting } from '@angular/common/http/testing';
+import { HttpClientTestingModule} from '@angular/common/http/testing';
 import { SharedModule } from '../../../../../shared/shared.module';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { Lesson } from '../../models/lesson';
@@ -12,7 +10,7 @@ import { of, throwError } from 'rxjs';
 import { CoursesService } from '../../../../../core/services/courses/courses.service';
 import { Course } from '../../../courses/models/course';
 import { FormBuilder, Validators } from '@angular/forms';
-import { dateRangeValidator, noLeadingSpacesValidator, noOnlySpacesValidator } from '../../../../../shared/utils/custom.validators';
+import { noLeadingSpacesValidator, noOnlySpacesValidator } from '../../../../../shared/utils/custom.validators';
 
 describe('LessonsDialogComponent', () => {
   let component: LessonsDialogComponent;
@@ -30,7 +28,7 @@ describe('LessonsDialogComponent', () => {
     ];
     await TestBed.configureTestingModule({
       declarations: [LessonsDialogComponent],
-      imports: [MatDialogModule, HttpClientTestingModule, SharedModule],
+      imports: [MatDialogModule, SharedModule, HttpClientTestingModule],
       providers:[
         LessonsService,
         provideAnimationsAsync(),

@@ -7,7 +7,6 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 
 import esAR from '@angular/common/locales/es-AR';
 import { registerLocaleData } from '@angular/common';
-import { DashboardModule } from './features/dashboard/dashboard.module';
 import { CoreModule } from './core/core.module';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 registerLocaleData(esAR);

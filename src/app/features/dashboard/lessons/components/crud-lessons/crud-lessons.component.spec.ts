@@ -1,6 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CrudLessonsComponent } from './crud-lessons.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { LessonsService } from '../../../../../core/services/lessons/lessons.service';
+import { SharedModule } from '../../../../../shared/shared.module';
 
 describe('CrudLessonsComponent', () => {
   let component: CrudLessonsComponent;
@@ -8,7 +11,9 @@ describe('CrudLessonsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [CrudLessonsComponent]
+      declarations: [CrudLessonsComponent],
+      imports: [HttpClientTestingModule, SharedModule],
+      providers: [LessonsService]
     })
     .compileComponents();
 

@@ -7,6 +7,10 @@ import { LessonsDialogComponent } from './components/lessons-dialog/lessons-dial
 import { LessonsComponent } from './lessons.component';
 import { SharedModule } from '../../../shared/shared.module';
 import { MatIconModule } from '@angular/material/icon';
+import { EffectsModule } from '@ngrx/effects';
+import { LessonEffects } from './store/lesson.effects';
+import { StoreModule } from '@ngrx/store';
+import { lessonFeature } from './store/lesson.reducer';
 
 
 @NgModule({
@@ -21,7 +25,9 @@ import { MatIconModule } from '@angular/material/icon';
   imports: [
     CommonModule,
     LessonsRoutingModule,
-    SharedModule
+    SharedModule,
+    StoreModule.forFeature(lessonFeature),
+    EffectsModule.forFeature([LessonEffects]),
   ]
 })
 export class LessonsModule { }

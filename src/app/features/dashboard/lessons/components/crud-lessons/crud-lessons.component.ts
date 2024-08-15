@@ -6,8 +6,11 @@ import { LessonsDialogComponent } from '../lessons-dialog/lessons-dialog.compone
 import { DeleteDialogComponent } from '../../../../../shared/components/delete-dialog/delete-dialog.component';
 import { DetailDialogComponent } from '../../../../../shared/components/detail-dialog/detail-dialog.component';
 import { AuthService } from '../../../../../core/services/auth/auth.service';
-import { Observable, tap } from 'rxjs';
+import { map, Observable, tap } from 'rxjs';
 import { User } from '../../../users/models/user';
+import { select, Store } from '@ngrx/store';
+import { LessonActions } from '../../store/lesson.actions';
+import { selectLessons, selectLessonState } from '../../store/lesson.selectors';
 
 @Component({
   selector: 'app-crud-lessons',
@@ -16,14 +19,17 @@ import { User } from '../../../users/models/user';
 })
 export class CrudLessonsComponent implements OnInit {
 
+  lessons$: Observable<Lesson[]>;
   authUser$: Observable<User | null>
 
   constructor(
     private matDialog: MatDialog,
     private lessonsService: LessonsService,
-    private authService: AuthService
+    private authService: AuthService,
+    private store: Store
   ) {
     this.authUser$ = this.authService.authUser$;
+    this.lessons$ = this.store.select(selectLessons)
   }
 
   displayedColumns: string[] = ['id', 'name', 'date', 'courseTitle', 'status', 'actions'];
@@ -42,7 +48,18 @@ export class CrudLessonsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadLessons();
+    /* this.loadLessons(); */
+    this.store.dispatch(LessonActions.loadLessons());
+
+    /* this.lessons$ = this.store.pipe(
+      select(selectLessons),
+      map(state => state)
+    ) */
+/* 
+      this.store.subscribe(state => {
+        console.log('Estado globarl: ', state)
+      }) */
+
     this.authService.authUser$.subscribe((user: User | null) => {
       this.isAdmin = user?.role === 'ADMIN';
     });

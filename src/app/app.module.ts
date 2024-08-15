@@ -1,4 +1,4 @@
-import { LOCALE_ID, NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -9,6 +9,10 @@ import esAR from '@angular/common/locales/es-AR';
 import { registerLocaleData } from '@angular/common';
 import { CoreModule } from './core/core.module';
 import { provideHttpClient, withFetch } from '@angular/common/http';
+import { StoreModule } from '@ngrx/store';
+import { rootReducer } from './core/store';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 registerLocaleData(esAR);
 
 @NgModule({
@@ -18,7 +22,10 @@ registerLocaleData(esAR);
   imports: [
     BrowserModule,
     AppRoutingModule,
-    CoreModule
+    CoreModule,
+    StoreModule.forRoot({}, {}),
+    EffectsModule.forRoot([]),
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() })
   ],
   providers: [
     {provide: LOCALE_ID, useValue: 'es-AR'},

@@ -1,7 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { AuthService } from '../../../core/services/auth/auth.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { APP_CONFIG } from '../../../core/injection-tokens/token';
 
 @Component({
   selector: 'app-login',
@@ -13,8 +12,7 @@ export class LoginComponent {
 
   constructor(
     private authService: AuthService,
-    private fb: FormBuilder,
-    @Inject(APP_CONFIG) private appConfig: any
+    private fb: FormBuilder
   ) {
     this.loginForm = this.fb.group({
       email: ['lucia@gmail.com', [Validators.required, Validators.email]],

@@ -10,7 +10,7 @@ import { map, Observable, tap } from 'rxjs';
 import { User } from '../../../users/models/user';
 import { select, Store } from '@ngrx/store';
 import { LessonActions } from '../../store/lesson.actions';
-import { selectLessons, selectLessonState } from '../../store/lesson.selectors';
+import { selectIsLoadingLessons, selectLessons, selectLessonsError, selectLessonState } from '../../store/lesson.selectors';
 
 @Component({
   selector: 'app-crud-lessons',
@@ -29,7 +29,7 @@ export class CrudLessonsComponent implements OnInit {
     private store: Store
   ) {
     this.authUser$ = this.authService.authUser$;
-    this.lessons$ = this.store.select(selectLessons)
+    this.lessons$ = this.store.select(selectLessons);
   }
 
   displayedColumns: string[] = ['id', 'name', 'date', 'courseTitle', 'status', 'actions'];
@@ -48,21 +48,24 @@ export class CrudLessonsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    /* this.loadLessons(); */
+    this.loadLessons();
     this.store.dispatch(LessonActions.loadLessons());
 
-    /* this.lessons$ = this.store.pipe(
-      select(selectLessons),
-      map(state => state)
-    ) */
+    /* this.lessons$.subscribe(lessons => {
+      console.log('Lessons data: ', lessons)
+    }) */
 /* 
       this.store.subscribe(state => {
-        console.log('Estado globarl: ', state)
+        console.log('Estado global: ', state)
       }) */
 
     this.authService.authUser$.subscribe((user: User | null) => {
       this.isAdmin = user?.role === 'ADMIN';
     });
+  }
+
+  reloadPage() {
+    location.reload();
   }
 
   openDialog(): void {

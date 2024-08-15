@@ -3,6 +3,21 @@
     <mat-icon>add</mat-icon>
 </button>
 
+<!-- @if (isLoading$ | async) {
+    <p>Cargando....</p>
+    } @else {
+        @if (error$ | async) {
+            <p>Ocurrio un error!</p>
+            <button (click)="reloadPage()">Recargar</button>
+        }@else {
+            <mat-list-item *ngFor="let lesson of lessons$ | async">
+                {{lesson.name}}
+            </mat-list-item>
+        }
+    } -->
+
+
+
 <table mat-table [dataSource]="lessons$" class="mat-elevation-z8">
 
     <ng-container matColumnDef="id">

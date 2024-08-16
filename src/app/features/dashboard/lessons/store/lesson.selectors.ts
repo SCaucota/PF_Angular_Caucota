@@ -1,5 +1,6 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import * as fromLesson from './lesson.reducer';
+import { state } from '@angular/animations';
 
 export const selectLessonState = createFeatureSelector<fromLesson.State>(
   fromLesson.lessonFeatureKey
@@ -18,4 +19,9 @@ export const selectIsLoadingLessons = createSelector(
 export const selectLessonsError = createSelector(
   selectLessonState,
   (state) => state.error
+)
+
+export const selectSingleLesson = createSelector(
+  selectLessonState,
+  (state) => state.singlelesson
 )

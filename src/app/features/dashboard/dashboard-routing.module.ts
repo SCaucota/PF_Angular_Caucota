@@ -23,7 +23,7 @@ const routes: Routes = [
   },
   {
     path: 'lessons',
-    component: LessonsComponent
+    loadChildren: () => import('./lessons/lessons.module').then(m => m.LessonsModule)
   },
   {
     path: 'inscriptions',

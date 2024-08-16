@@ -20,21 +20,21 @@ export class LessonsService {
     return this.httpClient.get<Lesson>(`${this.URL_BASE}/${id}`)
   }
 
-  addLesson(lesson: Lesson) {
+  addLesson(lesson: Lesson): Observable<Lesson> {
     const modifiedLesson = {
       ...lesson,
       name: lesson.name.toUpperCase(),
       courseTitle: lesson.courseTitle.toUpperCase()
     }
 
-    return this.httpClient.post(this.URL_BASE, modifiedLesson);
+    return this.httpClient.post<Lesson>(this.URL_BASE, modifiedLesson);
   }
 
-  deleteLesson(id: string) {
-    return this.httpClient.delete(`${this.URL_BASE}/${id}`)
+  deleteLesson(id: string): Observable<Lesson> {
+    return this.httpClient.delete<Lesson>(`${this.URL_BASE}/${id}`)
   }
 
-  editLesson(id: string, editingLesson: Lesson) {
+  editLesson(id: string, editingLesson: Lesson): Observable<Lesson> {
 
     const lesson = {
       ...editingLesson,
@@ -42,6 +42,6 @@ export class LessonsService {
       courseTitle: editingLesson.courseTitle.toUpperCase()
     }
 
-    return this.httpClient.put(`${this.URL_BASE}/${id}`, lesson);
+    return this.httpClient.put<Lesson>(`${this.URL_BASE}/${id}`, lesson);
   }
 }

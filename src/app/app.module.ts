@@ -23,7 +23,7 @@ registerLocaleData(esAR);
     BrowserModule,
     AppRoutingModule,
     CoreModule,
-    StoreModule.forRoot({}, {}),
+    StoreModule.forRoot(rootReducer, {}),
     EffectsModule.forRoot([]),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() })
   ],

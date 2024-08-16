@@ -5,3 +5,10 @@
 .cancelled-lesson{
     background-color: rgb(255, 202, 202);
 }
+
+.spinner{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+}

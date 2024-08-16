@@ -18,6 +18,8 @@ import { DeleteDialogComponent } from './components/delete-dialog/delete-dialog.
 import { DetailDialogComponent } from './components/detail-dialog/detail-dialog.component';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { ErrorComponent } from './components/error/error.component';
 
 
 @NgModule({
@@ -25,7 +27,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     FullnamePipe,
     TitleDirective,
     DeleteDialogComponent,
-    DetailDialogComponent
+    DetailDialogComponent,
+    ErrorComponent
   ],
   exports: [
     TitleDirective,
@@ -42,7 +45,9 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     MatDatepickerModule,
     MatNativeDateModule,
     MatSidenavModule,
-    MatToolbarModule
+    MatToolbarModule,
+    MatProgressSpinnerModule,
+    ErrorComponent
   ],
   imports: [
     CommonModule,
@@ -56,7 +61,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     MatTableModule,
     MatSelectModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatProgressSpinnerModule
   ]
 })
 export class SharedModule { }

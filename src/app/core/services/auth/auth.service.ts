@@ -4,6 +4,9 @@ import { BehaviorSubject, map, Observable, of } from 'rxjs';
 import { User } from '../../../features/dashboard/users/models/user';
 import { HttpClient } from '@angular/common/http';
 import { InfoService } from '../sweetalert/info.service';
+import { Store } from '@ngrx/store';
+import { AuthActions } from '../../store/auth/auth.actions';
+import { LessonActions } from '../../../features/dashboard/lessons/store/lesson.actions';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +20,8 @@ export class AuthService {
   constructor(
     private router: Router,
     private httpClient: HttpClient,
-    private info: InfoService
+    private info: InfoService,
+    private store: Store
   ) { }
   
   login(data: {email: string, password: string}) {
@@ -33,12 +37,15 @@ export class AuthService {
         }else {
           const authUser = response[0];
           localStorage.setItem('token', authUser.token)
+          console.log('login: ', authUser)
           this._authUser$.next(authUser);
+          this.store.dispatch(AuthActions.setAuthsUserSuccess({ data: authUser }))
           this.router.navigate(['dashboard', 'home'])
         }
       },
       error: (err) => {
-        this.info.sendInfo('Lo sentimos, se produjo un error en nuestros servidores')
+        this.info.sendInfo('Lo sentimos, se produjo un error en nuestros servidores');
+        this.store.dispatch(AuthActions.setAuthsUserFailure({error: err}))
       }
     })
   }
@@ -46,6 +53,8 @@ export class AuthService {
   logout() {
     localStorage.removeItem('token');
     this._authUser$.next(null);
+    this.store.dispatch(AuthActions.unsetAuthsUser());
+    this.store.dispatch(LessonActions.resetLessonsState());
     this.router.navigate(['auth', 'login']);
   }
 
@@ -66,8 +75,10 @@ export class AuthService {
           return false;
         }else {
           const authUser = response[0];
+          console.log(authUser)
           localStorage.setItem('token', authUser.token)
           this._authUser$.next(authUser);
+          this.store.dispatch(AuthActions.setAuthsUserSuccess({ data: authUser }))
           return true
         }
       })

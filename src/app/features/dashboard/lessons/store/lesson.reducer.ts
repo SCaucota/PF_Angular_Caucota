@@ -61,7 +61,9 @@ export const reducer = createReducer(
     ...state,
     singlelesson: action.data,
     error: null
-  }))
+  })),
+
+  on(LessonActions.resetLessonsState, () => initialState)
 );
 
 export const lessonFeature = createFeature({

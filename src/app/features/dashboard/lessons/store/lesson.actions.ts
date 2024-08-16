@@ -19,5 +19,6 @@ export const LessonActions = createActionGroup({
     'Edit Lesson': props<{ id: string, editingLesson: Lesson }>(),
     'Edit Lesson Success': props<{ id: string, editingLesson: Lesson }>(),
     'Edit Lesson Failure': props<{ error: unknown }>(),
+    'Reset Lessons State': emptyProps()
   }
 });

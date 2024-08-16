@@ -249,11 +249,11 @@
   ],
   "lessons": [
     {
-      "id": "1",
       "name": "MODULES",
       "date": "2024-10-06T00:00:00.000Z",
       "courseTitle": "ANGULAR",
-      "status": true
+      "status": true,
+      "id": "1"
     },
     {
       "id": "2",

@@ -18,6 +18,6 @@ export const LessonActions = createActionGroup({
     'Delete Lesson Failure': props<{ error: unknown }>(),
     'Edit Lesson': props<{ id: string, editingLesson: Lesson }>(),
     'Edit Lesson Success': props<{ id: string, editingLesson: Lesson }>(),
-    'Edit Lesson Failure': props<{ error: unknown }>()
+    'Edit Lesson Failure': props<{ error: unknown }>(),
   }
 });

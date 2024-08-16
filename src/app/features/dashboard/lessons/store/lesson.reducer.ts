@@ -8,7 +8,6 @@ export interface State {
   isLoadingLessons: boolean;
   lessons: Lesson[];
   singlelesson: Lesson;
-  
   error: unknown
 }
 

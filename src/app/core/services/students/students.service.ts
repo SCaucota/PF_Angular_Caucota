@@ -19,7 +19,7 @@ export class StudentsService {
     return this.httpClient.get<Student>(`${this.URL_BASE}/${id}`)
   }
 
-  addStudent(student: Student) {
+  addStudent(student: Student): Observable<Student> {
     const modifiedStudent = {
       ...student,
       name: student.name.toUpperCase(),
@@ -27,14 +27,14 @@ export class StudentsService {
       courses: []
     }
 
-    return this.httpClient.post(this.URL_BASE, modifiedStudent);
+    return this.httpClient.post<Student>(this.URL_BASE, modifiedStudent);
   }
 
-  deleteStudent(id: string) {
-    return this.httpClient.delete(`${this.URL_BASE}/${id}`)
+  deleteStudent(id: string): Observable<Student> {
+    return this.httpClient.delete<Student>(`${this.URL_BASE}/${id}`)
   }
 
-  editStudent(id: string, courses: any[], editingStudent: Student) {
+  editStudent(id: string, courses: any[], editingStudent: Student): Observable<Student> {
     const student = {
       ...editingStudent,
       name: editingStudent.name.toUpperCase(),
@@ -42,25 +42,25 @@ export class StudentsService {
       courses: courses
     }
 
-    return this.httpClient.put(`${this.URL_BASE}/${id}`, student);
+    return this.httpClient.put<Student>(`${this.URL_BASE}/${id}`, student);
   }
 
-  unregisterStudent(courseId: string, studentId: string) {
+  unregisterStudent(courseId: string, studentId: string): Observable<any> {
    return this.getStudentById(studentId).pipe(
     switchMap(student => {
       const updatedCourses = student.courses.filter(course => course !== courseId);
-      return this.httpClient.patch<void>(`${this.URL_BASE}/${studentId}`, {courses: updatedCourses})
+      return this.httpClient.patch<any>(`${this.URL_BASE}/${studentId}`, {courses: updatedCourses})
     })
    )
   }
 
-  addCourseToStudent(courseId: string, studentId: string) {
+  addCourseToStudent(courseId: string, studentId: string): Observable<any> {
     return this.getStudentById(studentId).pipe(
       switchMap(student => {
         const courses = student.courses;
         const updatedCourses = [...courses, courseId]
 
-        return this.httpClient.patch<void>(`${this.URL_BASE}/${studentId}`, {courses: updatedCourses})
+        return this.httpClient.patch<any>(`${this.URL_BASE}/${studentId}`, {courses: updatedCourses})
       })
     )
   }

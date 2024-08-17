@@ -15,11 +15,11 @@ const routes: Routes = [
   },
   {
     path: 'courses',
-    component: CoursesComponent
+    loadChildren: () => import('./courses/courses.module').then(m => m.CoursesModule)
   },
   {
     path: 'students',
-    component: StudentsComponent
+    loadChildren: () => import('./students/students.module').then(m => m.StudentsModule)
   },
   {
     path: 'lessons',
@@ -27,7 +27,7 @@ const routes: Routes = [
   },
   {
     path: 'inscriptions',
-    component: InscriptionsComponent
+    loadChildren: () => import('./inscriptions/inscriptions.module').then(m => m.InscriptionsModule)
   },
   {
     path: 'users',

@@ -6,6 +6,10 @@ import { SharedModule } from '../../../shared/shared.module';
 import { UsersComponent } from './users.component';
 import { UsersDialogComponent } from './components/users-dialog/users-dialog.component';
 import { CrudUsersComponent } from './components/crud-users/crud-users.component';
+import { EffectsModule } from '@ngrx/effects';
+import { UserEffects } from './store/user.effects';
+import { StoreModule } from '@ngrx/store';
+import { userFeature } from './store/user.reducer';
 
 
 @NgModule({
@@ -20,7 +24,9 @@ import { CrudUsersComponent } from './components/crud-users/crud-users.component
   imports: [
     CommonModule,
     UsersRoutingModule,
-    SharedModule
+    SharedModule,
+    EffectsModule.forFeature([UserEffects]),
+    StoreModule.forFeature(userFeature)
   ]
 })
 export class UsersModule { }

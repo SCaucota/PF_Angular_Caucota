@@ -31,7 +31,7 @@ const routes: Routes = [
   },
   {
     path: 'users',
-    component: UsersComponent
+    loadChildren: () => import('./users/users.module').then(m => m.UsersModule)
   },
   {
     path: '**',

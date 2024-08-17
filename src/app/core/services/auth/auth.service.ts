@@ -7,6 +7,7 @@ import { AlertsService } from '../sweetalert/alerts.service';
 import { Store } from '@ngrx/store';
 import { AuthActions } from '../../store/auth/auth.actions';
 import { LessonActions } from '../../../features/dashboard/lessons/store/lesson.actions';
+import { UserActions } from '../../../features/dashboard/users/store/user.actions';
 
 @Injectable({
   providedIn: 'root'
@@ -37,7 +38,6 @@ export class AuthService {
         }else {
           const authUser = response[0];
           localStorage.setItem('token', authUser.token)
-          console.log('login: ', authUser)
           this._authUser$.next(authUser);
           this.store.dispatch(AuthActions.setAuthsUserSuccess({ data: authUser }))
           this.router.navigate(['dashboard', 'home'])
@@ -55,6 +55,7 @@ export class AuthService {
     this._authUser$.next(null);
     this.store.dispatch(AuthActions.unsetAuthsUser());
     this.store.dispatch(LessonActions.resetLessonsState());
+    this.store.dispatch(UserActions.resetUserState());
     this.router.navigate(['auth', 'login']);
   }
 
@@ -75,7 +76,6 @@ export class AuthService {
           return false;
         }else {
           const authUser = response[0];
-          console.log(authUser)
           localStorage.setItem('token', authUser.token)
           this._authUser$.next(authUser);
           this.store.dispatch(AuthActions.setAuthsUserSuccess({ data: authUser }))

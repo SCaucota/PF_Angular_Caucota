@@ -30,7 +30,7 @@ export class UsersService {
     return this.httpClient.get<User>(`${this.URL_BASE}/${id}`);
   }
 
-  addUser(user: User) {
+  addUser(user: User): Observable<User> {
 
     const modifiedUser = {
       ...user,
@@ -39,20 +39,20 @@ export class UsersService {
       token: this.generateToken(20)
     }
 
-    return this.httpClient.post(this.URL_BASE, modifiedUser);
+    return this.httpClient.post<User>(this.URL_BASE, modifiedUser);
   }
 
-  deleteUser(id: string) {
-    return this.httpClient.delete(`${this.URL_BASE}/${id}`);
+  deleteUser(id: string): Observable<User> {
+    return this.httpClient.delete<User>(`${this.URL_BASE}/${id}`);
   }
 
-  editUser(id: string, editingUser: User) {
+  editUser(id: string, editingUser: User): Observable<User> {
     const user = {
       ...editingUser,
       name: editingUser.name.toUpperCase(),
       surname: editingUser.surname.toUpperCase()
     }
 
-    return this.httpClient.put(`${this.URL_BASE}/${id}`, user);
+    return this.httpClient.put<User>(`${this.URL_BASE}/${id}`, user);
   }
 }

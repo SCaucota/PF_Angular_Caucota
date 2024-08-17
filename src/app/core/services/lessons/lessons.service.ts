@@ -13,7 +13,7 @@ export class LessonsService {
   constructor(private httpClient: HttpClient) {}
 
   getLessons(): Observable<Lesson[]> {
-    return this.httpClient.get<Lesson[]>('http://localhost:3000/lessons');
+    return this.httpClient.get<Lesson[]>(this.URL_BASE);
   }
 
   getLessonById(id: string): Observable<Lesson> {

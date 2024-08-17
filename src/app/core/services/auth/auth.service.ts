@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, map, Observable, of } from 'rxjs';
 import { User } from '../../../features/dashboard/users/models/user';
 import { HttpClient } from '@angular/common/http';
-import { InfoService } from '../sweetalert/info.service';
+import { AlertsService } from '../sweetalert/alerts.service';
 import { Store } from '@ngrx/store';
 import { AuthActions } from '../../store/auth/auth.actions';
 import { LessonActions } from '../../../features/dashboard/lessons/store/lesson.actions';
@@ -20,7 +20,7 @@ export class AuthService {
   constructor(
     private router: Router,
     private httpClient: HttpClient,
-    private info: InfoService,
+    private alertsService: AlertsService,
     private store: Store
   ) { }
   
@@ -44,7 +44,7 @@ export class AuthService {
         }
       },
       error: (err) => {
-        this.info.sendInfo('Lo sentimos, se produjo un error en nuestros servidores');
+        this.alertsService.sendInfo('Lo sentimos, se produjo un error en nuestros servidores');
         this.store.dispatch(AuthActions.setAuthsUserFailure({error: err}))
       }
     })

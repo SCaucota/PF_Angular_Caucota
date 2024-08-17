@@ -11,27 +11,6 @@ import Swal from 'sweetalert2';
 @Injectable()
 export class LessonEffects {
 
-  showError$ = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType(
-          LessonActions.loadLessonsFailure,
-          LessonActions.addLessonFailure,
-          LessonActions.deleteLessonFailure,
-          LessonActions.editLessonFailure,
-          LessonActions.lessonByIdFailure
-        ),
-        tap((action) => {
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Ocurrió un error al procesar la solicitud. Inténtalo nuevamente.',
-          });
-        })
-      ),
-    { dispatch: false }
-  );
-
   loadLessons$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(LessonActions.loadLessons),

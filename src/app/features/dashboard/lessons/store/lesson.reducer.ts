@@ -43,10 +43,22 @@ export const reducer = createReducer(
     error: null
   })),
 
+  on(LessonActions.addLessonFailure, (state, action) => ({
+    ...state,
+    lessons: [],
+    error: action.error
+  })),
+
   on(LessonActions.deleteLessonSuccess, (state, action) => ({
     ...state,
     lessons: state.lessons.filter(lesson => lesson.id !== action.data.id),
     error: null
+  })),
+
+  on(LessonActions.deleteLessonFailure, (state, action) => ({
+    ...state,
+    lessons: [],
+    error: action.error
   })),
 
   on(LessonActions.editLessonSuccess, (state, action) => ({
@@ -57,10 +69,22 @@ export const reducer = createReducer(
     error: null
   })),
 
+  on(LessonActions.editLessonFailure, (state, action) => ({
+    ...state,
+    lessons: [],
+    error: action.error
+  })),
+
   on(LessonActions.lessonByIdSuccess, (state, action) => ({
     ...state,
     singlelesson: action.data,
     error: null
+  })),
+
+  on(LessonActions.lessonByIdFailure, (state, action) => ({
+    ...state,
+    lessons: [],
+    error: action.error
   })),
 
   on(LessonActions.resetLessonsState, () => initialState)

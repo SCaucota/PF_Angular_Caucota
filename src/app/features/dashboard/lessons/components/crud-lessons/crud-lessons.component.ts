@@ -1,22 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Lesson } from '../../models/lesson';
 import { LessonsDialogComponent } from '../lessons-dialog/lessons-dialog.component';
 import { DeleteDialogComponent } from '../../../../../shared/components/delete-dialog/delete-dialog.component';
 import { DetailDialogComponent } from '../../../../../shared/components/detail-dialog/detail-dialog.component';
 import { AuthService } from '../../../../../core/services/auth/auth.service';
-import { filter, Observable, take } from 'rxjs';
+import { filter, Observable, Subject, switchMap, take, takeUntil, throwError } from 'rxjs';
 import { User } from '../../../users/models/user';
 import { Store } from '@ngrx/store';
 import { LessonActions } from '../../store/lesson.actions';
 import { selectIsLoadingLessons, selectLessons, selectLessonsError, selectSingleLesson } from '../../store/lesson.selectors';
+import { AlertsService } from '../../../../../core/services/sweetalert/alerts.service';
 
 @Component({
   selector: 'app-crud-lessons',
   templateUrl: './crud-lessons.component.html',
   styleUrl: './crud-lessons.component.scss'
 })
-export class CrudLessonsComponent implements OnInit {
+export class CrudLessonsComponent implements OnInit, OnDestroy {
 
   lessons$: Observable<Lesson[]>;
   singleLesson$: Observable<Lesson>;
@@ -24,9 +25,12 @@ export class CrudLessonsComponent implements OnInit {
   error$: Observable<unknown>;
   authUser$: Observable<User | null>
 
+  private ngUnsubscribe = new Subject<void>();
+
   constructor(
     private matDialog: MatDialog,
     private authService: AuthService,
+    private alertsService: AlertsService,
     private store: Store
   ) {
     this.authUser$ = this.authService.authUser$;
@@ -43,7 +47,9 @@ export class CrudLessonsComponent implements OnInit {
   ngOnInit(): void {
     this.store.dispatch(LessonActions.loadLessons());
 
-    this.authService.authUser$.subscribe((user: User | null) => {
+    this.authService.authUser$
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe((user: User | null) => {
       this.isAdmin = user?.role === 'ADMIN';
     });
   }
@@ -51,8 +57,12 @@ export class CrudLessonsComponent implements OnInit {
   openDialog(): void {
     const dialogRef = this.matDialog.open(LessonsDialogComponent);
 
-    dialogRef.componentInstance.onSubmitLessonEvent.subscribe((lesson: Lesson) => {
-      this.onSubmitLesson(lesson);
+    dialogRef.componentInstance.onSubmitLessonEvent.subscribe({
+      next: (lesson: Lesson) => {
+        this.onSubmitLesson(lesson);
+      },
+      error: () => this.alertsService.sendError('Error al abrir el form add de las leccióens')
+      
     })
   }
 
@@ -80,7 +90,7 @@ export class CrudLessonsComponent implements OnInit {
           this.store.dispatch(LessonActions.deleteLesson({ id }))
         })
       },
-      error: (err) => console.error('Error al eliminar la clase: ', err)
+      error: () => this.alertsService.sendError("Error al eliminar la clase: ")
     })
 
   }
@@ -92,7 +102,7 @@ export class CrudLessonsComponent implements OnInit {
           this.store.dispatch(LessonActions.editLesson({ id: editingLesson.id, editingLesson: value }))
         }
       },
-      error: (err) => console.log("Error al editar la clase: ", err)
+      error: () => this.alertsService.sendError("Error al editar la clase")
     })
   }
 
@@ -113,7 +123,12 @@ export class CrudLessonsComponent implements OnInit {
           }
         });
       },
-      error: (err) => console.error('Error al cargar los detalles de la calse: ', err)
+      error: () => this.alertsService.sendError("Se produjo un error al ver el detalle")
     })
+  }
+
+  ngOnDestroy(): void {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 }

@@ -8,6 +8,8 @@ import { StudentsDialogComponent } from './components/students-dialog/students-d
 import { CrudStudentsComponent } from './components/crud-students/crud-students.component';
 import { EffectsModule } from '@ngrx/effects';
 import { StudentEffects } from './store/student.effects';
+import { StoreModule } from '@ngrx/store';
+import { studentFeature } from './store/student.reducer';
 
 
 @NgModule({
@@ -19,6 +21,7 @@ import { StudentEffects } from './store/student.effects';
     CommonModule,
     StudentsRoutingModule,
     SharedModule,
+    StoreModule.forFeature(studentFeature),
     EffectsModule.forFeature([StudentEffects]),
   ]
 })

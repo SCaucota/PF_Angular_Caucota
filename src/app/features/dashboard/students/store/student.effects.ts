@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, concatMap, switchMap } from 'rxjs/operators';
-import { Observable, EMPTY, of } from 'rxjs';
+import { forkJoin, of } from 'rxjs';
 import { StudentActions } from './student.actions';
 import { StudentsService } from '../../../../core/services/students/students.service';
+import { CoursesService } from '../../../../core/services/courses/courses.service';
+import { InscriptionsService } from '../../../../core/services/inscriptions/inscriptions.service';
 
 
 @Injectable()
@@ -56,7 +58,7 @@ export class StudentEffects {
     )
   })
   
-  editLesson$ = createEffect(() => {
+  editStudent$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(StudentActions.editStudent),
       concatMap(action => 
@@ -71,13 +73,22 @@ export class StudentEffects {
   unregisterStudent$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(StudentActions.unregisterStudent),
-      concatMap(action => 
-        this.studentsService.unregisterStudent(action.courseId, action.studentId).pipe(
-          map((data) =>  StudentActions.unregisterStudentSuccess({ courseId: data.courseId, studentId: data.studentId})),
+      switchMap(action => 
+        forkJoin([
+          this.studentsService.unregisterStudent(action.courseId, action.studentId),
+          this.coursesService.deleteStudentFromCourse(action.courseId, action.studentId),
+          this.inscriptionsService.cancelInscription(action.courseId, action.studentId)
+        ]).pipe(
+          map(([unregisterResponse, deleteCourseResponse, cancelInscriptionResponse]) => 
+            StudentActions.unregisterStudentSuccess({ 
+              courseId: action.courseId, 
+              studentId: action.studentId 
+            })
+          ),
           catchError(error => of(StudentActions.unregisterStudentFailure({ error })))
         )
       )
-    )
+    );
   })
 
   addCourseToStudent$ = createEffect(() => {
@@ -92,5 +103,5 @@ export class StudentEffects {
     )
   })
 
-  constructor(private actions$: Actions, private studentsService: StudentsService) {}
+  constructor(private actions$: Actions, private studentsService: StudentsService, private coursesService: CoursesService, private inscriptionsService: InscriptionsService) {}
 }

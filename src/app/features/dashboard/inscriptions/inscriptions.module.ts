@@ -6,6 +6,8 @@ import { InscriptionsComponent } from './inscriptions.component';
 import { CrudInscriptionsComponent } from './components/crud-inscriptions/crud-inscriptions/crud-inscriptions.component';
 import { InscriptionsDialogComponent } from './components/inscriptions-dialog/inscriptions-dialog/inscriptions-dialog.component';
 import { SharedModule } from '../../../shared/shared.module';
+import { EffectsModule } from '@ngrx/effects';
+import { InscriptionEffects } from './store/inscription.effects';
 
 
 @NgModule({
@@ -20,7 +22,8 @@ import { SharedModule } from '../../../shared/shared.module';
   imports: [
     CommonModule,
     InscriptionsRoutingModule,
-    SharedModule
+    SharedModule,
+    EffectsModule.forFeature([InscriptionEffects])
   ]
 })
 export class InscriptionsModule { }

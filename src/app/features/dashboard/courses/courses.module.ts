@@ -6,6 +6,8 @@ import { CoursesComponent } from './courses.component';
 import { CoursesDialogComponent } from './components/courses-dialog/courses-dialog.component';
 import { CrudCoursesComponent } from './components/crud-courses/crud-courses.component';
 import { SharedModule } from '../../../shared/shared.module';
+import { EffectsModule } from '@ngrx/effects';
+import { CourseEffects } from './store/course.effects';
 
 
 @NgModule({
@@ -20,7 +22,8 @@ import { SharedModule } from '../../../shared/shared.module';
   imports: [
     CommonModule,
     CoursesRoutingModule,
-    SharedModule
+    SharedModule,
+    EffectsModule.forFeature([CourseEffects])
   ]
 })
 export class CoursesModule { }

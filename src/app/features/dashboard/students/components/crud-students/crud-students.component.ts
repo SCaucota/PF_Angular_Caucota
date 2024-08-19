@@ -8,9 +8,14 @@ import { CoursesService } from '../../../../../core/services/courses/courses.ser
 import { DetailDialogComponent } from '../../../../../shared/components/detail-dialog/detail-dialog.component';
 import { InscriptionsService } from '../../../../../core/services/inscriptions/inscriptions.service';
 import { AuthService } from '../../../../../core/services/auth/auth.service';
-import { catchError, forkJoin, Observable, of, switchMap, tap } from 'rxjs';
+import { catchError, filter, forkJoin, Observable, of, switchMap, take, tap } from 'rxjs';
 import { User } from '../../../users/models/user';
 import { Course } from '../../../courses/models/course';
+import { Store } from '@ngrx/store';
+import { selectIsLoadingStudents, selectSingleStudent, selectStudents, selectStudentsError } from '../../store/student.selectors';
+import { StudentActions } from '../../store/student.actions';
+import { AlertsService } from '../../../../../core/services/sweetalert/alerts.service';
+import { CourseActions } from '../../../courses/store/course.actions';
 
 @Component({
   selector: 'app-crud-students',
@@ -19,16 +24,26 @@ import { Course } from '../../../courses/models/course';
 })
 export class CrudStudentsComponent implements OnInit{
 
-  authUser$: Observable<User | null>
+  authUser$: Observable<User | null>;
+  students$: Observable<Student[]>;
+  singleStudent$: Observable<Student>;
+  isLoading$: Observable<boolean>;
+  error$: Observable<unknown>;
 
   constructor(
     private matDialog: MatDialog,
     private studentsService: StudentsService,
     private coursesService: CoursesService,
     private inscriptionsService: InscriptionsService,
-    private authService: AuthService
+    private authService: AuthService,
+    private store: Store,
+    private alertService: AlertsService
   ) { 
     this.authUser$ = this.authService.authUser$;
+    this.students$ = this.store.select(selectStudents);
+    this.singleStudent$ = this.store.select(selectSingleStudent);
+    this.isLoading$ = this.store.select(selectIsLoadingStudents);
+    this.error$ = this.store.select(selectStudentsError);
   }
 
   displayedColumns: string[] = ['id', 'name', 'surname', 'actions'];
@@ -37,38 +52,36 @@ export class CrudStudentsComponent implements OnInit{
 
   isAdmin: boolean = false;
 
-  loadStudents() {
-    this.studentsService.getStudents().subscribe({
-      next: (studentsFormDb) => {
-        this.dataSource = studentsFormDb
-      },
-      error: (err) => console.log("Error al cargar los estudiantes: ", err)
-    })
-  }
-
   ngOnInit(): void {
-   this.loadStudents();
-   this.authService.authUser$.subscribe((user: User | null) => {
-    this.isAdmin = user?.role === 'ADMIN';
-  });
+    this.store.dispatch(StudentActions.loadStudents());
+
+    this.authService.authUser$.subscribe((user: User | null) => {
+      this.isAdmin = user?.role === 'ADMIN';
+    });
   }
 
   openDialog(): void {
     const dialogRef = this.matDialog.open(StudentsDialogComponent);
 
-    dialogRef.componentInstance.onSubmitStudentEvent.subscribe((student: Student) => {
-      this.onSubmitStudent(student);
+    dialogRef.componentInstance.onSubmitStudentEvent.subscribe({
+      next: (student: Student) => {
+        this.onSubmitStudent(student);
+      },
+      error: () => this.alertService.sendError('Error al abrir el form add de estudiantes')
     })
   }
 
   onSubmitStudent(student: Student): void{
-    this.studentsService.addStudent(student).pipe(
-      tap(() => this.loadStudents())
-    ).subscribe();
+    this.store.dispatch(StudentActions.addStudent({data: student}))
   }
 
   deleteStudent(id: string): void {
-    this.studentsService.getStudentById(id).subscribe(student => {
+    this.store.dispatch(StudentActions.studentById({id}));
+
+    this.singleStudent$.pipe(
+      filter(student => !!student && student.id === id),
+      take(1)
+    ).subscribe(student => {
   
       const dialogRef = this.matDialog.open(DeleteDialogComponent, {
         data: {
@@ -81,33 +94,29 @@ export class CrudStudentsComponent implements OnInit{
       dialogRef.componentInstance.confirmDeleteEvent.subscribe(() => {
         if(student?.courses && student.courses.length > 0) {
           const deleteOperations = student.courses.map((courseId: string) => {
-            return this.studentsService.unregisterStudent(courseId, id).pipe(
-              switchMap(() => this.coursesService.deleteStudentFromCourse(courseId, id)),
-              switchMap(() => this.inscriptionsService.cancelInscription(courseId, id))
-            )
+            return this.store.dispatch(StudentActions.unregisterStudent({courseId, studentId: id}))
           });
           forkJoin(deleteOperations).pipe(
-            switchMap(() => this.studentsService.deleteStudent(id)),
-            tap(() => this.loadStudents())
+            tap(() => this.store.dispatch(StudentActions.deleteStudent({id})))
           ).subscribe();
         }else {
-          this.studentsService.deleteStudent(id).pipe(
-            tap(() => this.loadStudents())
-          ).subscribe();
+          this.store.dispatch(StudentActions.deleteStudent({id}));
         }
       })
-
     });
   }
 
   editStudent(editingStudent: Student): void{
-    this.studentsService.getStudentById(editingStudent.id).subscribe(student => {
+    this.store.dispatch(StudentActions.studentById({id: editingStudent.id}));
+
+    this.singleStudent$.pipe(
+      filter(student => !!student && student.id === editingStudent.id),
+      take(1)
+    ).subscribe(student => {
       this.matDialog.open(StudentsDialogComponent, {data: editingStudent}).afterClosed().subscribe({
         next: (value) => {
           if(!!value){
-            this.studentsService.editStudent( editingStudent.id, student.courses, value)
-            .pipe(tap(() => this.loadStudents()))
-            .subscribe();
+            this.store.dispatch(StudentActions.editStudent({id: editingStudent.id, courses: student.courses, editingStudent: value}))
           }
         },
         error: (err) => console.log("Error al editar el estudiante: ", err)
@@ -128,9 +137,6 @@ export class CrudStudentsComponent implements OnInit{
       this.studentsService.unregisterStudent(courseId, studentId).subscribe(() => {
         this.coursesService.deleteStudentFromCourse(courseId, studentId).subscribe(() => {
           this.inscriptionsService.cancelInscription(courseId, studentId)
-          .pipe(
-            tap(() => this.loadStudents())
-          )
           .subscribe()
         })
       })
@@ -138,7 +144,12 @@ export class CrudStudentsComponent implements OnInit{
   }
 
   openDetail(id: string): void{
-    this.studentsService.getStudentById(id).subscribe(student => {
+    this.store.dispatch(StudentActions.studentById({id}));
+
+    this.singleStudent$.pipe(
+      filter(student => !!student && student.id === id),
+      take(1)
+    ).subscribe(student => {
       if(student?.courses && student.courses.length > 0) {
         const courseObservable = student.courses.map((courseId: string) =>
           this.coursesService.getCourseById(courseId).pipe(

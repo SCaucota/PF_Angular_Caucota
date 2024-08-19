@@ -52,6 +52,7 @@ export const reducer = createReducer(
   on(StudentActions.deleteStudentSuccess, (state, action) => ({
     ...state,
     students: state.students.filter(student => student.id !== action.data.id),
+    singleStudent: {} as Student,
     error: null
   })),
 

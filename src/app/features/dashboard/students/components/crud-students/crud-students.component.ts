@@ -8,7 +8,7 @@ import { CoursesService } from '../../../../../core/services/courses/courses.ser
 import { DetailDialogComponent } from '../../../../../shared/components/detail-dialog/detail-dialog.component';
 import { InscriptionsService } from '../../../../../core/services/inscriptions/inscriptions.service';
 import { AuthService } from '../../../../../core/services/auth/auth.service';
-import { catchError, concat, concatMap, filter, forkJoin, from, Observable, of, switchMap, take, tap } from 'rxjs';
+import { catchError, concat, concatMap, defer, filter, forkJoin, from, Observable, of, switchMap, take, tap } from 'rxjs';
 import { User } from '../../../users/models/user';
 import { Course } from '../../../courses/models/course';
 import { Store } from '@ngrx/store';
@@ -92,23 +92,7 @@ export class CrudStudentsComponent implements OnInit {
       });
 
       dialogRef.componentInstance.confirmDeleteEvent.subscribe(() => {
-        if (student?.courses && student.courses.length > 0) {
-          const deleteOperations = student.courses.map((courseId: string) => {
-            return this.store.dispatch(StudentActions.unregisterStudent({ courseId, studentId: id }));
-          });
-
-          console.log(deleteOperations)
-
-          forkJoin(deleteOperations).pipe(
-            concatMap(() => {
-              return of(this.store.dispatch(StudentActions.deleteStudent({ id })));
-            }),
-            tap(() => console.log("Eliminación completada"))
-          ).subscribe();
-
-        } else {
-          this.store.dispatch(StudentActions.deleteStudent({ id }));
-        }
+        this.store.dispatch(StudentActions.deleteStudent({ id }));
       })
     });
   }

@@ -107,18 +107,6 @@
       "courses": [
         "10"
       ]
-    },
-    {
-      "id": "337f",
-      "name": "TITO",
-      "surname": "PAEZ",
-      "courses": []
-    },
-    {
-      "id": "b03e",
-      "name": "GSR",
-      "surname": "SRGSRG",
-      "courses": []
     }
   ],
   "courses": [
@@ -459,20 +447,6 @@
       "courseId": "6",
       "date": "2024-11-15T00:00:00.000Z",
       "status": true
-    },
-    {
-      "id": "0c68",
-      "studentId": null,
-      "courseId": "92c8",
-      "date": "2024-08-16T03:00:00.000Z",
-      "status": false
-    },
-    {
-      "id": "70f5",
-      "studentId": null,
-      "courseId": "1",
-      "date": "2024-08-22T03:00:00.000Z",
-      "status": false
     }
   ]
 }

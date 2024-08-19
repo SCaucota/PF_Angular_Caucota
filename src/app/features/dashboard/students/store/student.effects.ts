@@ -73,13 +73,15 @@ export class StudentEffects {
   unregisterStudent$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(StudentActions.unregisterStudent),
-      switchMap(action => 
-        forkJoin([
-          this.studentsService.unregisterStudent(action.courseId, action.studentId),
-          this.coursesService.deleteStudentFromCourse(action.courseId, action.studentId),
-          this.inscriptionsService.cancelInscription(action.courseId, action.studentId)
-        ]).pipe(
-          map(([unregisterResponse, deleteCourseResponse, cancelInscriptionResponse]) => 
+      concatMap(action => 
+        this.studentsService.unregisterStudent(action.courseId, action.studentId).pipe(
+          switchMap(() => 
+            this.coursesService.deleteStudentFromCourse(action.courseId, action.studentId)
+          ),
+          switchMap(() => 
+            this.inscriptionsService.cancelInscription(action.courseId, action.studentId)
+          ),
+          map(() => 
             StudentActions.unregisterStudentSuccess({ 
               courseId: action.courseId, 
               studentId: action.studentId 
@@ -89,7 +91,7 @@ export class StudentEffects {
         )
       )
     );
-  })
+  });
 
   addCourseToStudent$ = createEffect(() => {
     return this.actions$.pipe(

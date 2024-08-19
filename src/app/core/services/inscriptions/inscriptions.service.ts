@@ -31,14 +31,14 @@ export class InscriptionsService {
     return this.httpClient.put(`${this.URL_BASE}/${id}`, editingInscription)
   }
 
-  cancelInscription(courseId: string, studentId: string) {
+  cancelInscription(courseId: string, studentId: string): Observable<any> {
    return this.getInscriptions().pipe(
     switchMap(inscriptions => {
       const inscriptionCanceled = inscriptions.find(inscription => inscription.courseId === courseId && inscription.studentId === studentId);
 
       const idInscription = inscriptionCanceled?.id
 
-      return this.httpClient.patch<void>(`${this.URL_BASE}/${idInscription}`, {status: false})
+      return this.httpClient.patch<any>(`${this.URL_BASE}/${idInscription}`, {status: false})
     })
    )
   }

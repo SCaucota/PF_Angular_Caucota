@@ -8,6 +8,8 @@ import { CrudCoursesComponent } from './components/crud-courses/crud-courses.com
 import { SharedModule } from '../../../shared/shared.module';
 import { EffectsModule } from '@ngrx/effects';
 import { CourseEffects } from './store/course.effects';
+import { StoreModule } from '@ngrx/store';
+import { courseFeature } from './store/course.reducer';
 
 
 @NgModule({
@@ -23,6 +25,7 @@ import { CourseEffects } from './store/course.effects';
     CommonModule,
     CoursesRoutingModule,
     SharedModule,
+    StoreModule.forFeature(courseFeature),
     EffectsModule.forFeature([CourseEffects])
   ]
 })

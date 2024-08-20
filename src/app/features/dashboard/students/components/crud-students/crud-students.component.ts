@@ -1,29 +1,26 @@
-import { Component, Input, EventEmitter, Output, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Student } from '../../models/student';
 import { DeleteDialogComponent } from '../../../../../shared/components/delete-dialog/delete-dialog.component';
 import { StudentsDialogComponent } from '../students-dialog/students-dialog.component';
-import { StudentsService } from '../../../../../core/services/students/students.service';
-import { CoursesService } from '../../../../../core/services/courses/courses.service';
 import { DetailDialogComponent } from '../../../../../shared/components/detail-dialog/detail-dialog.component';
-import { InscriptionsService } from '../../../../../core/services/inscriptions/inscriptions.service';
 import { AuthService } from '../../../../../core/services/auth/auth.service';
-import { catchError, concat, concatMap, defer, filter, forkJoin, from, Observable, of, switchMap, take, tap } from 'rxjs';
+import { filter, Observable, Subject, take, takeUntil } from 'rxjs';
 import { User } from '../../../users/models/user';
 import { Course } from '../../../courses/models/course';
 import { Store } from '@ngrx/store';
 import { selectCoursesStudent, selectIsLoadingStudents, selectSingleStudent, selectStudents, selectStudentsError } from '../../store/student.selectors';
 import { StudentActions } from '../../store/student.actions';
 import { AlertsService } from '../../../../../core/services/sweetalert/alerts.service';
-import { CourseActions } from '../../../courses/store/course.actions';
-import { selectCourseState } from '../../../courses/store/course.selectors';
 
 @Component({
   selector: 'app-crud-students',
   templateUrl: './crud-students.component.html',
   styleUrl: './crud-students.component.scss'
 })
-export class CrudStudentsComponent implements OnInit {
+export class CrudStudentsComponent implements OnInit, OnDestroy{
+
+  private unsubscribe$ = new Subject<void>
 
   authUser$: Observable<User | null>;
   students$: Observable<Student[]>;
@@ -34,9 +31,6 @@ export class CrudStudentsComponent implements OnInit {
 
   constructor(
     private matDialog: MatDialog,
-    private studentsService: StudentsService,
-    private coursesService: CoursesService,
-    private inscriptionsService: InscriptionsService,
     private authService: AuthService,
     private store: Store,
     private alertService: AlertsService
@@ -58,7 +52,9 @@ export class CrudStudentsComponent implements OnInit {
   ngOnInit(): void {
     this.store.dispatch(StudentActions.loadStudents());
 
-    this.authService.authUser$.subscribe((user: User | null) => {
+    this.authService.authUser$.pipe(
+      takeUntil(this.unsubscribe$)
+    ).subscribe((user: User | null) => {
       this.isAdmin = user?.role === 'ADMIN';
     });
   }
@@ -70,7 +66,7 @@ export class CrudStudentsComponent implements OnInit {
       next: (student: Student) => {
         this.onSubmitStudent(student);
       },
-      error: () => this.alertService.sendError('Error al abrir el form add de estudiantes')
+      error: () => this.alertService.sendError('Error al abrir el formulario de estudiantes')
     })
   }
 
@@ -94,8 +90,9 @@ export class CrudStudentsComponent implements OnInit {
         }
       });
 
-      dialogRef.componentInstance.confirmDeleteEvent.subscribe(() => {
-        this.store.dispatch(StudentActions.deleteStudent({ id }));
+      dialogRef.componentInstance.confirmDeleteEvent.subscribe({
+        next: () => this.store.dispatch(StudentActions.deleteStudent({ id })),
+        error: () => this.alertService.sendError('Error al confirmar la eliminación del estudiante')
       })
     });
   }
@@ -110,10 +107,14 @@ export class CrudStudentsComponent implements OnInit {
       this.matDialog.open(StudentsDialogComponent, { data: editingStudent }).afterClosed().subscribe({
         next: (value) => {
           if (!!value) {
-            this.store.dispatch(StudentActions.editStudent({ id: editingStudent.id, courses: student.courses, editingStudent: value }))
+            this.store.dispatch(StudentActions.editStudent({
+              id: editingStudent.id, 
+              courses: student.courses, 
+              editingStudent: value 
+            }))
           }
         },
-        error: (err) => console.log("Error al editar el estudiante: ", err)
+        error: () => this.alertService.sendError('Error al editar estudiante')
       })
     })
   }
@@ -152,7 +153,11 @@ export class CrudStudentsComponent implements OnInit {
         this.openDetailDialog(student, []);
       }
     })
+  }
 
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
 }

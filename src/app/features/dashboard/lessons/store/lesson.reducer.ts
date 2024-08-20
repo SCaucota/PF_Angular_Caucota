@@ -1,12 +1,14 @@
 import { createFeature, createReducer, on } from '@ngrx/store';
 import { LessonActions } from './lesson.actions';
 import { Lesson } from '../models/lesson';
+import { Course } from '../../courses/models/course';
 
 export const lessonFeatureKey = 'lesson';
 
 export interface State {
   isLoadingLessons: boolean;
   lessons: Lesson[];
+  coursesForm: Course[];
   singlelesson: Lesson;
   error: unknown
 }
@@ -14,6 +16,7 @@ export interface State {
 export const initialState: State = {
   isLoadingLessons: false,
   lessons: [],
+  coursesForm: [],
   singlelesson: {} as Lesson,
   error: null
 };
@@ -34,6 +37,18 @@ export const reducer = createReducer(
   on(LessonActions.loadLessonsFailure, (state, action) => ({
     ...state,
     isLoadingLessons: false,
+    error: action.error
+  })),
+
+  on(LessonActions.loadCoursesFormSuccess, (state, action) => ({
+    ...state,
+    coursesForm: action.data,
+    error: null
+  })),
+
+  on(LessonActions.loadCoursesFormFailure, (state, action) => ({
+    ...state,
+    coursesForm: [],
     error: action.error
   })),
 

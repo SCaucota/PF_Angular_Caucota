@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, ObservedValueOf, switchMap } from 'rxjs';
+import { Observable, switchMap } from 'rxjs';
 import { Course } from '../../../features/dashboard/courses/models/course';
 import { HttpClient } from '@angular/common/http';
 
@@ -11,7 +11,6 @@ export class CoursesService {
 
   constructor(private httpClient: HttpClient) {}
   
-
   getCourses(): Observable<Course[]> {
     return this.httpClient.get<Course[]>(this.URL_BASE)
   }

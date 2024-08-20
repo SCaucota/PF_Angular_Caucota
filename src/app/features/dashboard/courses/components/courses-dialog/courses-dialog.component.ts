@@ -5,6 +5,8 @@ import { Time } from '../../models/time';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { noLeadingSpacesValidator, noOnlySpacesValidator } from '../../../../../shared/utils/custom.validators';
 import { TimesService } from '../../../../../core/services/courses/times.service';
+import { Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-courses-dialog',

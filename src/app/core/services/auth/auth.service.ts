@@ -8,6 +8,8 @@ import { Store } from '@ngrx/store';
 import { AuthActions } from '../../store/auth/auth.actions';
 import { LessonActions } from '../../../features/dashboard/lessons/store/lesson.actions';
 import { UserActions } from '../../../features/dashboard/users/store/user.actions';
+import { CourseActions } from '../../../features/dashboard/courses/store/course.actions';
+import { StudentActions } from '../../../features/dashboard/students/store/student.actions';
 
 @Injectable({
   providedIn: 'root'
@@ -56,6 +58,8 @@ export class AuthService {
     this.store.dispatch(AuthActions.unsetAuthsUser());
     this.store.dispatch(LessonActions.resetLessonsState());
     this.store.dispatch(UserActions.resetUserState());
+    this.store.dispatch(CourseActions.resetCourseState());
+    this.store.dispatch(StudentActions.resetStudentState());
     this.router.navigate(['auth', 'login']);
   }
 

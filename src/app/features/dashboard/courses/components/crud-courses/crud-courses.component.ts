@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CoursesService } from '../../../../../core/services/courses/courses.service';
 import { StudentsService } from '../../../../../core/services/students/students.service';
@@ -8,27 +8,44 @@ import { Course } from '../../models/course';
 import { DetailDialogComponent } from '../../../../../shared/components/detail-dialog/detail-dialog.component';
 import { InscriptionsService } from '../../../../../core/services/inscriptions/inscriptions.service';
 import { AuthService } from '../../../../../core/services/auth/auth.service';
-import { catchError, forkJoin, Observable, of, switchMap, tap } from 'rxjs';
+import { catchError, filter, forkJoin, Observable, of, Subject, switchMap, take, takeUntil, tap } from 'rxjs';
 import { User } from '../../../users/models/user';
 import { Student } from '../../../students/models/student';
+import { select, Store } from '@ngrx/store';
+import { selectCourses, selectCoursesError, selectIsLoadingCourses, selectSingleCourse, selectStudentsForm } from '../../store/course.selectors';
+import { CourseActions } from '../../store/course.actions';
+import { AlertsService } from '../../../../../core/services/sweetalert/alerts.service';
 
 @Component({
   selector: 'app-crud-courses',
   templateUrl: './crud-courses.component.html',
   styleUrl: './crud-courses.component.scss'
 })
-export class CrudCoursesComponent implements OnInit {
+export class CrudCoursesComponent implements OnInit, OnDestroy {
+  private unsubscribe$ = new Subject<void>();
 
-  authUser$: Observable<User | null>
+  courses$: Observable<Course[]>;
+  studentsCourse$: Observable<Student[]>;
+  singleCourse$: Observable<Course>;
+  authUser$: Observable<User | null>;
+  error$: Observable<unknown>;
+  isLoading$: Observable<boolean>;
 
   constructor(
     private matDialog: MatDialog,
     private coursesService: CoursesService,
     private studentsService: StudentsService,
     private inscriptionService: InscriptionsService,
-    private authService: AuthService
+    private authService: AuthService,
+    private alertsService: AlertsService,
+    private store: Store
   ) {
     this.authUser$ = this.authService.authUser$;
+    this.courses$ = this.store.select(selectCourses);
+    this.studentsCourse$ = this.store.select(selectStudentsForm);
+    this.singleCourse$ = this.store.select(selectSingleCourse);
+    this.error$ = this.store.select(selectCoursesError);
+    this.isLoading$ = this.store.select(selectIsLoadingCourses);
   }
 
   displayedColumns: string[] = ['id', 'name', 'description', 'startDate', 'endDate', 'time', 'actions'];
@@ -37,18 +54,12 @@ export class CrudCoursesComponent implements OnInit {
 
   isAdmin: boolean = false;
 
-  loadCourses() {
-    this.coursesService.getCourses().subscribe({
-      next: (coursesFormDb) => {
-        this.dataSource = [...coursesFormDb]
-      },
-      error: (err) => console.log("Error al cargar los cursos: ", err)
-    })
-  }
-
   ngOnInit(): void {
-    this.loadCourses();
-    this.authService.authUser$.subscribe((user: User | null) => {
+    this.store.dispatch(CourseActions.loadCourses());
+
+    this.authService.authUser$.pipe(
+      takeUntil(this.unsubscribe$)
+    ).subscribe((user: User | null) => {
       this.isAdmin = user?.role === 'ADMIN';
     });
   }
@@ -56,19 +67,25 @@ export class CrudCoursesComponent implements OnInit {
   openDialog(): void {
     const dialogRef = this.matDialog.open(CoursesDialogComponent);
 
-    dialogRef.componentInstance.onSubmitCourseEvent.subscribe((course: Course) => {
-      this.onSubmitCourse(course)
+    dialogRef.componentInstance.onSubmitCourseEvent.subscribe({
+      next: (course: Course) => {
+        this.onSubmitCourse(course);
+      },
+      error: () => this.alertsService.sendError('Error al abrir el formulario de cursos')
     })
   }
 
   onSubmitCourse(course: Course): void {
-    this.coursesService.addCourse(course).pipe(
-      tap(() => this.loadCourses())
-    ).subscribe();
+    this.store.dispatch(CourseActions.addCourse({ data: course }));
   }
 
   deleteCourse(id: string): void {
-    this.coursesService.getCourseById(id).subscribe(course => {
+    this.store.dispatch(CourseActions.courseById({ id }));
+
+    this.singleCourse$.pipe(
+      filter((course) => !!course && course.id === id),
+      take(1)
+    ).subscribe(course => {
   
       const dialogRef = this.matDialog.open(DeleteDialogComponent, {
         data: {
@@ -78,40 +95,32 @@ export class CrudCoursesComponent implements OnInit {
         }
       });
   
-      dialogRef.componentInstance.confirmDeleteEvent.subscribe(() => {
-        if(course?.students && course.students.length > 0) {
-          const deleteOperations = course.students.map((studentId: string) => {
-            return this.coursesService.deleteStudentFromCourse(id, studentId).pipe(
-              switchMap(() => this.studentsService.unregisterStudent(id, studentId)),
-              switchMap(() => this.inscriptionService.cancelInscription(id, studentId))
-            )
-          });
-
-          forkJoin(deleteOperations).pipe(
-            switchMap(() => this.coursesService.deleteCourse(id)),
-            tap(() => this.loadCourses())
-          ).subscribe();
-        }else {
-          this.coursesService.deleteCourse(id).pipe(
-            tap(() => this.loadCourses())
-          ).subscribe()
-        }
+      dialogRef.componentInstance.confirmDeleteEvent.subscribe({
+        next: () => this.store.dispatch(CourseActions.deleteCourse({ id })),
+        error: () => this.alertsService.sendError('Error al confirmar la eliminación del curso')
       });
     });
   }
 
 
   editCourse(editingCourse: Course): void {
-    this.coursesService.getCourseById(editingCourse.id).subscribe(course => {
+    this.store.dispatch(CourseActions.courseById({ id: editingCourse.id}));
+
+    this.singleCourse$.pipe(
+      filter(course => !!course && course.id === editingCourse.id),
+      take(1)
+    ).subscribe(course => {
       this.matDialog.open(CoursesDialogComponent, { data: editingCourse }).afterClosed().subscribe({
         next: (value) => {
           if (!!value) {
-            this.coursesService.editCourse(editingCourse.id, value, course.students)
-              .pipe(tap(() => this.loadCourses()))
-              .subscribe();
+            this.store.dispatch(CourseActions.editCourse({ 
+              id: editingCourse.id,
+              editingStudent: value,
+              students: course.students
+            }))
           }
         },
-        error: (err) => console.log("Error al editar el curso: ", err)
+        error: () => this.alertsService.sendError('Error al editar el curso')
       })
     });
   }
@@ -126,32 +135,34 @@ export class CrudCoursesComponent implements OnInit {
     })
 
     dialogRef.componentInstance.confirmUnregistrationEvent.subscribe(({ courseId, studentId }) => {
-      this.coursesService.deleteStudentFromCourse(courseId, studentId).subscribe(() => {
-        this.studentsService.unregisterStudent(courseId, studentId).subscribe(() => {
-          this.inscriptionService.cancelInscription(courseId, studentId)
-          .pipe(
-            tap(() => this.loadCourses())
-          )
-          .subscribe()
-        })
-      })
+      this.store.dispatch(CourseActions.deleteStudentFromCourse({ courseId, studentId }));
     })
   }
 
   openDetail(id: string): void {
-    this.coursesService.getCourseById(id).subscribe(course => {
+
+    this.store.dispatch(CourseActions.courseById({id}));
+    this.store.dispatch(CourseActions.loadStudentsForm({id}));
+
+    this.singleCourse$.pipe(
+      filter(course => !!course && course.id === id),
+      take(1)
+    ).subscribe(course => {
       if (course?.students && course?.students.length !== 0) {
-        const studentObservables = course.students.map((studentId: string) =>
-          this.studentsService.getStudentById(studentId).pipe(
-            catchError(() => of(null))
-          )
-        );
-        forkJoin(studentObservables).subscribe(studentsList => {
-          this.openDetailDialog(course, studentsList)
-        });
+        this.studentsCourse$.pipe(
+          filter(students => students.length === course.students.length),
+          take(1)
+        ).subscribe(students => {
+          this.openDetailDialog(course, students);
+        })
       } else {
         this.openDetailDialog(course, []);
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }

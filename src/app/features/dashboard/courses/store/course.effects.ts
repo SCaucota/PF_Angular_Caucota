@@ -1,9 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, concatMap, switchMap } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { forkJoin, of } from 'rxjs';
 import { CourseActions } from './course.actions';
 import { CoursesService } from '../../../../core/services/courses/courses.service';
+import { StudentsService } from '../../../../core/services/students/students.service';
+import { InscriptionsService } from '../../../../core/services/inscriptions/inscriptions.service';
+import { Student } from '../../students/models/student';
 
 
 @Injectable()
@@ -47,12 +50,38 @@ export class CourseEffects {
   deleteCourse$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(CourseActions.deleteCourse),
-      concatMap(action =>
-        this.coursesService.deleteCourse(action.id).pipe(
-          map((data) => CourseActions.deleteCourseSuccess({ data })),
-          catchError(error => of(CourseActions.deleteCourseFailure({ error })))
+      concatMap(action => {
+        const courseId = action.id   
+
+        return this.coursesService.getCourseById(courseId).pipe(
+          switchMap( course => {
+            if(course.students.length !== 0) {
+              const studentActions$ = course.students.map(studentId => {
+                return this.studentsService.unregisterStudent(courseId, studentId).pipe(
+                  switchMap(() => this.inscriptionsService.cancelInscription(courseId, studentId))
+                )
+              });
+
+              return forkJoin(studentActions$).pipe(
+                switchMap(() => {
+                  return this.coursesService.deleteCourse(courseId).pipe(
+                    map(() => CourseActions.deleteCourseSuccess({ data: course })),
+                    catchError(error => of(CourseActions.deleteCourseFailure({ error })))
+                  )
+                })
+              )
+            }else {
+              return this.coursesService.deleteCourse(courseId).pipe(
+                map(() => CourseActions.deleteCourseSuccess({ data: course })),
+                catchError(error => of(CourseActions.deleteCourseFailure({ error })))
+              )
+            }
+          }),
+          catchError(error => {
+            return of(CourseActions.deleteCourseFailure({ error }))
+          })
         )
-      )
+      })
     )
   })
   
@@ -71,12 +100,41 @@ export class CourseEffects {
   deleteStudentFromCourse$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(CourseActions.deleteStudentFromCourse),
-      concatMap(action =>
-        this.coursesService.deleteStudentFromCourse(action.courseId, action.studentId).pipe(
-          map((data) => CourseActions.deleteStudentFromCourseSuccess({ courseId: data.courseId, studentId: data.studentId })),
+      concatMap(action =>{
+        const courseId = action.courseId;
+        const studentId = action.studentId;
+
+        return this.coursesService.deleteStudentFromCourse(courseId, studentId).pipe(
+          switchMap(() => this.studentsService.unregisterStudent(courseId, studentId)),
+          switchMap(() => this.inscriptionsService.cancelInscription(courseId, studentId)),
+          map(() => CourseActions.deleteStudentFromCourseSuccess({ courseId, studentId })),
           catchError(error => of(CourseActions.deleteStudentFromCourseFailure({ error })))
         )
-      )
+      })
+    )
+  })
+
+  lodStudentsCourse$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(CourseActions.loadStudentsForm),
+      concatMap(action => {
+        const courseId = action.id;
+
+        return this.coursesService.getCourseById(courseId).pipe(
+          switchMap(course => {
+            const students$ = course.students.map(studentId => {
+              return this.studentsService.getStudentById(studentId).pipe(
+                catchError(() => of(null))
+              )
+            })
+            return forkJoin(students$).pipe(
+              map(students => students.filter((student): student is Student => student !== null)),
+              map((data: Student[]) => CourseActions.loadStudentsFormSuccess({ data })),
+              catchError(error => of(CourseActions.loadStudentsFormFailure({ error })))
+            )
+          })
+        )
+      })
     )
   })
 
@@ -92,5 +150,5 @@ export class CourseEffects {
     )
   })
 
-  constructor(private actions$: Actions, private coursesService: CoursesService) {}
+  constructor(private actions$: Actions, private coursesService: CoursesService, private studentsService: StudentsService, private inscriptionsService: InscriptionsService) {}
 }

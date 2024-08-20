@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, map, concatMap, tap, switchMap } from 'rxjs/operators';
-import { Observable, EMPTY, of } from 'rxjs';
+import { catchError, map, concatMap, switchMap } from 'rxjs/operators';
+import { of } from 'rxjs';
 import { LessonActions } from './lesson.actions';
 import { LessonsService } from '../../../../core/services/lessons/lessons.service';
 import { Lesson } from '../models/lesson';
-import Swal from 'sweetalert2';
+import { CoursesService } from '../../../../core/services/courses/courses.service';
 
 
 @Injectable()
@@ -18,6 +18,17 @@ export class LessonEffects {
         this.lessonsService.getLessons().pipe(
           map(data => LessonActions.loadLessonsSuccess({ data })),
           catchError(error => of(LessonActions.loadLessonsFailure({ error }))))
+      )
+    );
+  });
+
+  loadCoursesForm$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(LessonActions.loadLessons),
+      concatMap(() =>
+        this.coursesService.getCourses().pipe(
+          map(data => LessonActions.loadCoursesFormSuccess({ data })),
+          catchError(error => of(LessonActions.loadCoursesFormFailure({ error }))))
       )
     );
   });
@@ -70,5 +81,5 @@ export class LessonEffects {
     )
   })
 
-  constructor(private actions$: Actions, private lessonsService: LessonsService) {}
+  constructor(private actions$: Actions, private lessonsService: LessonsService, private coursesService: CoursesService) {}
 }

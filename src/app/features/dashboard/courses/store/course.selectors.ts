@@ -15,7 +15,7 @@ export const selectIsLoadingCourses = createSelector(
   (state) => state.isLoadingCourses
 )
 
-export const selecCoursesError = createSelector(
+export const selectCoursesError = createSelector(
   selectCourseState,
   (state) => state.error
 )
@@ -23,4 +23,9 @@ export const selecCoursesError = createSelector(
 export const selectSingleCourse = createSelector(
   selectCourseState,
   (state) => state.singleCourse
+)
+
+export const selectStudentsForm = createSelector(
+  selectCourseState,
+  (state) => state.studentsForm
 )

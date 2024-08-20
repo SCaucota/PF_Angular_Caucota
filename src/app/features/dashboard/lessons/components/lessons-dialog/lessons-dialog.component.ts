@@ -5,6 +5,12 @@ import { Course } from '../../../courses/models/course';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CoursesService } from '../../../../../core/services/courses/courses.service';
 import { noLeadingSpacesValidator, noOnlySpacesValidator, dateRangeValidator } from '../../../../../shared/utils/custom.validators';
+import { Store } from '@ngrx/store';
+import { CourseActions } from '../../../courses/store/course.actions';
+import { Observable } from 'rxjs';
+import { selectCourses, selectSingleCourse } from '../../../courses/store/course.selectors';
+import { selectCoursesForm } from '../../store/lesson.selectors';
+import { LessonActions } from '../../store/lesson.actions';
 
 @Component({
   selector: 'app-lessons-dialog',
@@ -16,6 +22,8 @@ export class LessonsDialogComponent implements OnInit{
   courses: Course[] = [];
   minDate: Date | null = null;
   maxDate: Date | null = null;
+  courses$: Observable<Course[]>;
+  singleCourse$: Observable<Course>;
 
   @Input() lesson!: Lesson;
   @Output() onSubmitLessonEvent: EventEmitter<any> = new EventEmitter();
@@ -23,7 +31,7 @@ export class LessonsDialogComponent implements OnInit{
   constructor(
     private fb: FormBuilder,
     private matDialogRef: MatDialogRef<LessonsDialogComponent>,
-    private coursesService: CoursesService,
+    private store: Store,
     @Inject(MAT_DIALOG_DATA) public editingLesson?: Lesson
   ) {
     this.lessonForm = this.fb.group({
@@ -45,19 +53,13 @@ export class LessonsDialogComponent implements OnInit{
     if(this.editingLesson){
       this.lessonForm.patchValue(this.editingLesson);
     }
-  }
 
-  loadCourses() {
-    this.coursesService.getCourses().subscribe({
-      next: (coursesFomrDb) => {
-        this.courses = coursesFomrDb
-      },
-      error: (err) => console.log("Error al cargar los cursos en Lesson: ", err)
-    })
+    this.courses$ = this.store.select(selectCoursesForm);
+    this.singleCourse$ = this.store.select(selectSingleCourse)
   }
 
   ngOnInit(): void {
-    this.loadCourses();
+    this.store.dispatch(LessonActions.loadCoursesForm());
   }
 
   onCourseTitleChange(courseTitle: string): void {

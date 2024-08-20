@@ -56,7 +56,6 @@ export class StudentEffects {
           switchMap(student => {
             if (student.courses.length !== 0) {
               const courseActions$ = student.courses.map(courseId => {
-                console.log(courseId)
                 return this.coursesService.deleteStudentFromCourse(courseId, studentId).pipe(
                   switchMap(() => this.inscriptionsService.cancelInscription(courseId, studentId))
                 );
@@ -128,7 +127,7 @@ export class StudentEffects {
               )
             })
             return forkJoin(courses$).pipe(
-              map(courses => courses.filter((course): course is Course => course !== null)), // Filtra los `null`
+              map(courses => courses.filter((course): course is Course => course !== null)),
               map((data: Course[]) => StudentActions.loadCoursesStudentSuccess({ data })),
               catchError(error => of(StudentActions.loadCoursesStudentFailure({ error })))
             )

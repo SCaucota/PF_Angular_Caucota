@@ -41,7 +41,7 @@
             }"
             (selectionChange)="onCourseTitleChange($event.value)"
         >
-            @for (course of courses; track course) {
+            @for (course of courses$ | async; track course) {
                 <mat-option value="{{course.name}}">{{course.name}}</mat-option>
             }
         </mat-select>

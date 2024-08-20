@@ -12,10 +12,11 @@ import { catchError, concat, concatMap, defer, filter, forkJoin, from, Observabl
 import { User } from '../../../users/models/user';
 import { Course } from '../../../courses/models/course';
 import { Store } from '@ngrx/store';
-import { selectIsLoadingStudents, selectSingleStudent, selectStudents, selectStudentsError } from '../../store/student.selectors';
+import { selectCoursesStudent, selectIsLoadingStudents, selectSingleStudent, selectStudents, selectStudentsError } from '../../store/student.selectors';
 import { StudentActions } from '../../store/student.actions';
 import { AlertsService } from '../../../../../core/services/sweetalert/alerts.service';
 import { CourseActions } from '../../../courses/store/course.actions';
+import { selectCourseState } from '../../../courses/store/course.selectors';
 
 @Component({
   selector: 'app-crud-students',
@@ -26,6 +27,7 @@ export class CrudStudentsComponent implements OnInit {
 
   authUser$: Observable<User | null>;
   students$: Observable<Student[]>;
+  coursesStudent$: Observable<Course[]>;
   singleStudent$: Observable<Student>;
   isLoading$: Observable<boolean>;
   error$: Observable<unknown>;
@@ -41,6 +43,7 @@ export class CrudStudentsComponent implements OnInit {
   ) {
     this.authUser$ = this.authService.authUser$;
     this.students$ = this.store.select(selectStudents);
+    this.coursesStudent$ = this.store.select(selectCoursesStudent);
     this.singleStudent$ = this.store.select(selectSingleStudent);
     this.isLoading$ = this.store.select(selectIsLoadingStudents);
     this.error$ = this.store.select(selectStudentsError);
@@ -125,31 +128,26 @@ export class CrudStudentsComponent implements OnInit {
     });
 
     dialogRef.componentInstance.confirmUnregistrationEvent.subscribe(({ courseId, studentId }) => {
-      this.studentsService.unregisterStudent(courseId, studentId).subscribe(() => {
-        this.coursesService.deleteStudentFromCourse(courseId, studentId).subscribe(() => {
-          this.inscriptionsService.cancelInscription(courseId, studentId)
-            .subscribe()
-        })
-      })
+      this.store.dispatch(StudentActions.unregisterStudent({ courseId, studentId }));
     })
   }
 
   openDetail(id: string): void {
     this.store.dispatch(StudentActions.studentById({ id }));
 
+    this.store.dispatch(StudentActions.loadCoursesStudent({id}));
+
     this.singleStudent$.pipe(
       filter(student => !!student && student.id === id),
       take(1)
     ).subscribe(student => {
       if (student?.courses && student.courses.length > 0) {
-        const courseObservable = student.courses.map((courseId: string) =>
-          this.coursesService.getCourseById(courseId).pipe(
-            catchError(() => of(null))
-          )
-        );
-        forkJoin(courseObservable).subscribe(coursesList => {
-          this.openDetailDialog(student, coursesList)
-        });
+        this.coursesStudent$.pipe(
+          filter(courses => courses.length === student.courses.length),
+          take(1)
+        ).subscribe(courses => {
+          this.openDetailDialog(student, courses);
+        })
       } else {
         this.openDetailDialog(student, []);
       }

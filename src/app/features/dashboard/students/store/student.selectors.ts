@@ -24,3 +24,8 @@ export const selectSingleStudent = createSelector(
   selectStudentState,
   (state) => state.singleStudent
 )
+
+export const selectCoursesStudent = createSelector(
+  selectStudentState,
+  (state) => state.coursesStudent
+)

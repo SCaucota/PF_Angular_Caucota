@@ -107,6 +107,15 @@
       "courses": [
         "10"
       ]
+    },
+    {
+      "id": "1299",
+      "name": "HOLA",
+      "surname": "TEST",
+      "courses": [
+        "92c8",
+        "1"
+      ]
     }
   ],
   "courses": [
@@ -118,7 +127,8 @@
       "endDate": "2024-12-08T00:00:00.000Z",
       "time": "08:30 - 10:30",
       "students": [
-        "1"
+        "1",
+        "1299"
       ]
     },
     {
@@ -232,7 +242,9 @@
       "startDate": "2024-08-14T03:00:00.000Z",
       "endDate": "2024-08-23T03:00:00.000Z",
       "time": "09:30 - 11:30",
-      "students": []
+      "students": [
+        "1299"
+      ]
     }
   ],
   "lessons": [
@@ -449,25 +461,18 @@
       "status": true
     },
     {
-      "id": "963c",
-      "studentId": null,
+      "studentId": "1299",
       "courseId": "92c8",
-      "date": "2024-08-15T03:00:00.000Z",
-      "status": false
+      "date": "2024-08-22T03:00:00.000Z",
+      "status": true,
+      "id": "76d9"
     },
     {
-      "id": "5955",
-      "studentId": null,
-      "courseId": "92c8",
-      "date": "2024-08-15T03:00:00.000Z",
-      "status": false
-    },
-    {
-      "id": "9da4",
-      "studentId": null,
+      "studentId": "1299",
       "courseId": "1",
       "date": "2024-08-22T03:00:00.000Z",
-      "status": true
+      "status": true,
+      "id": "f7ff"
     }
   ]
 }

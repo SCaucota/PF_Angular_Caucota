@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, map, concatMap, switchMap } from 'rxjs/operators';
+import { catchError, map, concatMap, switchMap, last } from 'rxjs/operators';
 import { concat, EMPTY, forkJoin, of } from 'rxjs';
 import { StudentActions } from './student.actions';
 import { StudentsService } from '../../../../core/services/students/students.service';
 import { CoursesService } from '../../../../core/services/courses/courses.service';
 import { InscriptionsService } from '../../../../core/services/inscriptions/inscriptions.service';
+import { Course } from '../../courses/models/course';
 
 
 @Injectable()
@@ -61,7 +62,7 @@ export class StudentEffects {
                 );
               });
 
-              return concat(...courseActions$).pipe(
+              return forkJoin(courseActions$).pipe(
                 switchMap(() => {
                   return this.studentsService.deleteStudent(studentId).pipe(
                     map(() => StudentActions.deleteStudentSuccess({ data: student })),
@@ -99,17 +100,41 @@ export class StudentEffects {
   unregisterStudent$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(StudentActions.unregisterStudent),
-      concatMap(action => 
-        this.studentsService.unregisterStudent(action.courseId, action.studentId).pipe(
-          map(() => 
-            StudentActions.unregisterStudentSuccess({ 
-              courseId: action.courseId, 
-              studentId: action.studentId 
-            })
-          ),
-          catchError(error => of(StudentActions.unregisterStudentFailure({ error })))
+      concatMap(action => {
+        const courseId = action.courseId;
+        const studentId = action.studentId;
+
+        return this.studentsService.unregisterStudent(courseId, studentId).pipe(
+          switchMap(() => this.coursesService.deleteStudentFromCourse(courseId, studentId)),
+          switchMap(() => this.inscriptionsService.cancelInscription(courseId, studentId)),
+          map(() => StudentActions.unregisterStudentSuccess({courseId: courseId, studentId: studentId})),
+          catchError((error) => of(StudentActions.unregisterStudentFailure({ error })))
         )
-      )
+      })
+    );
+  });
+
+  loadCoursesStudent$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(StudentActions.loadCoursesStudent),
+      concatMap(action => {
+        const studentId = action.id;
+
+        return this.studentsService.getStudentById(studentId).pipe(
+          switchMap(student => {
+            const courses$ = student.courses.map((courseId: string) => {
+              return this.coursesService.getCourseById(courseId).pipe(
+                catchError(() => of(null))
+              )
+            })
+            return forkJoin(courses$).pipe(
+              map(courses => courses.filter((course): course is Course => course !== null)), // Filtra los `null`
+              map((data: Course[]) => StudentActions.loadCoursesStudentSuccess({ data })),
+              catchError(error => of(StudentActions.loadCoursesStudentFailure({ error })))
+            )
+          })
+        )
+      })
     );
   });
 

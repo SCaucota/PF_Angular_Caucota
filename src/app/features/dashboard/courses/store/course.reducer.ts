@@ -121,11 +121,18 @@ export const reducer = createReducer(
         }
         : course
     ),
+    singleCourse: state.singleCourse.id === action.courseId
+      ? {
+        ...state.singleCourse,
+        students: state.singleCourse.students.filter(student => student !== action.studentId)
+        }
+      : state.singleCourse,
     error: null
   })),
 
   on(CourseActions.deleteStudentFromCourseFailure, (state, action) => ({
     ...state,
+    singleCourse: {} as Course,
     courses: [],
     error: action.error
   })),

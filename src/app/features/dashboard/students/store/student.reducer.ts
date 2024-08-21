@@ -44,7 +44,8 @@ export const reducer = createReducer(
 
   on(StudentActions.loadCoursesStudentSuccess, (state, action) => ({
     ...state,
-    coursesStudent: action.data
+    coursesStudent: action.data,
+    error: null
   })),
 
   on(StudentActions.loadCoursesStudentFailure, (state, action) => ({
@@ -126,7 +127,8 @@ export const reducer = createReducer(
           ...state.singleStudent,
           courses: state.singleStudent.courses.filter(course => course !== action.courseId)
         }
-      : state.singleStudent
+      : state.singleStudent,
+    error: null
   })),
 
   on(StudentActions.unregisterStudentFailure, (state, action) => ({

@@ -8,7 +8,7 @@ import { Course } from '../../models/course';
 import { DetailDialogComponent } from '../../../../../shared/components/detail-dialog/detail-dialog.component';
 import { InscriptionsService } from '../../../../../core/services/inscriptions/inscriptions.service';
 import { AuthService } from '../../../../../core/services/auth/auth.service';
-import { catchError, filter, forkJoin, Observable, of, Subject, switchMap, take, takeUntil, tap } from 'rxjs';
+import { catchError, filter, forkJoin, map, Observable, of, Subject, switchMap, take, takeUntil, tap } from 'rxjs';
 import { User } from '../../../users/models/user';
 import { Student } from '../../../students/models/student';
 import { select, Store } from '@ngrx/store';
@@ -139,22 +139,24 @@ export class CrudCoursesComponent implements OnInit, OnDestroy {
   openDetail(id: string): void {
     this.store.dispatch(CourseActions.clearStudents());
     this.store.dispatch(CourseActions.courseById({id}));
-    this.store.dispatch(CourseActions.loadStudentsForm({id}));
 
     this.singleCourse$.pipe(
       filter(course => !!course && course.id === id),
-      take(1)
-    ).subscribe(course => {
-      if (course?.students && course?.students.length !== 0) {
-        this.studentsCourse$.pipe(
-          filter(students => students.length === course.students.length),
-          take(1)
-        ).subscribe(students => {
-          this.openDetailDialog(course, students);
-        })
-      } else {
-        this.openDetailDialog(course, []);
-      }
+      take(1),
+      switchMap(course => {
+        if (course?.students && course?.students.length > 0) {
+          this.store.dispatch(CourseActions.loadStudentsForm({id}));
+          return this.studentsCourse$.pipe(
+            filter(students => students.length === course.students.length),
+            take(1),
+            map(students => ({course, students})
+          )
+        )} else {
+          return of({course, students: []})
+        }
+      })
+    ).subscribe(({course, students}) => {
+      this.openDetailDialog(course, students);
     });
   }
 

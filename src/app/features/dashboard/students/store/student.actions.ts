@@ -27,9 +27,6 @@ export const StudentActions = createActionGroup({
     'Unregister Student': props<{ courseId: string, studentId: string }>(),
     'Unregister Student Success': props<{ courseId: string, studentId: string }>(),
     'Unregister Student Failure': props<{ error: unknown }>(),
-    'Add Course To Student': props<{ courseId: string, studentId: string }>(),
-    'Add Course To Student Success': props<{ courseId: string, studentId: string }>(),
-    'Add Course To Student Failure': props<{ error: unknown }>(),
     'Reset Student State': emptyProps()
   }
 });

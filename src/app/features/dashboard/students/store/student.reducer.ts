@@ -138,33 +138,6 @@ export const reducer = createReducer(
     error: action.error
   })),
 
-  on(StudentActions.addCourseToStudentSuccess, (state, action) => {
-    const updatedStudents = state.students.map(student => 
-      student.id === action.studentId 
-        ? { ...student, courses: [...student.courses, action.courseId] }
-        : student
-    );
-  
-    const updatedSingleStudent = state.singleStudent.id === action.studentId 
-      ? { ...state.singleStudent, courses: [...state.singleStudent.courses, action.courseId] }
-      : state.singleStudent;
-  
-    return {
-      ...state,
-      students: updatedStudents,
-      singleStudent: updatedSingleStudent,
-      error: null
-    };
-  }),
-
-  on(StudentActions.addCourseToStudentFailure, (state, action) => ({
-    ...state,
-    singleStudent: {} as Student,
-    students: [],
-    error: action.error
-  })),
-
-
   on(StudentActions.resetStudentState, () => initialState)
 );
 

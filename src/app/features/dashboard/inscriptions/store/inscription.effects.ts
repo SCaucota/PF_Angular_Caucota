@@ -95,12 +95,21 @@ export class InscriptionEffects {
               oldInscription.status !== newInscription.status
             )
             { 
-              if(oldInscription.courseId === null || 
-                oldInscription.studentId === null
-              ) {
+              if(
+                oldInscription.courseId === null || oldInscription.studentId === null
+              )
+              {
+               if(newInscription.status === true) {
+                 tasks.push(
+                  this.studentsService.addCourseToStudent(newInscription.courseId, newInscription.studentId).pipe(
+                    mergeMap(() => this.coursesService.addStudentToCourse(newInscription.courseId, newInscription.studentId))
+                  )
+                 )
+               }else {
                 tasks.push(
                   of(null)
                 )
+               }
               } else if(newInscription.status === false) {
                 tasks.push(
                   this.coursesService.deleteStudentFromCourse(oldInscription.courseId, oldInscription.studentId).pipe(

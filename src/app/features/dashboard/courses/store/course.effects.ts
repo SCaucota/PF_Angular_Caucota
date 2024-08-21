@@ -138,17 +138,5 @@ export class CourseEffects {
     )
   })
 
-  addStudentToCourse$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(CourseActions.addStudentToCourse),
-      concatMap(action =>
-        this.coursesService.addStudentToCourse(action.studentId, action.courseId).pipe(
-          map((data) => CourseActions.addStudentToCourseSuccess({ studentId: data.studentId, courseId: data.courseId })),
-          catchError(error => of(CourseActions.addStudentToCourseFailure({ error })))
-        )
-      )
-    )
-  })
-
   constructor(private actions$: Actions, private coursesService: CoursesService, private studentsService: StudentsService, private inscriptionsService: InscriptionsService) {}
 }

@@ -137,25 +137,6 @@ export const reducer = createReducer(
     error: action.error
   })),
 
-  on(CourseActions.addStudentToCourseSuccess, (state, action) => ({
-    ...state,
-    courses: state.courses.map(course => 
-      course.id === action.courseId
-        ? {
-          ...course,
-          students: [...course.students, action.studentId]
-        }
-        : course
-    ),
-    error: null
-  })),
-
-  on(CourseActions.addStudentToCourseFailure, (state, action) => ({
-    ...state,
-    courses: [],
-    error: action.error
-  })),
-
   on(CourseActions.resetCourseState, () => initialState)
 );
 

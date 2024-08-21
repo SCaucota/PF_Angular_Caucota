@@ -6,7 +6,8 @@
       "email": "lucia@gmail.com",
       "password": "1234",
       "role": "ADMIN",
-      "id": "f6s5ef4"
+      "id": "f6s5ef4",
+      "token": "asdjfasjefosjdnkcngrgrg"
     },
     {
       "id": "f5e9g6",
@@ -103,16 +104,12 @@
       ]
     },
     {
-      "id": "74c7",
-      "name": "HOLA",
+      "id": "86c5",
+      "name": "TEST",
       "surname": "TEST",
-      "courses": []
-    },
-    {
-      "id": "e393",
-      "name": "TESTING",
-      "surname": "TESTER",
-      "courses": []
+      "courses": [
+        "b166"
+      ]
     }
   ],
   "courses": [
@@ -231,22 +228,15 @@
       ]
     },
     {
-      "id": "b018",
-      "name": "COURSE",
-      "description": "sdflkasfkl",
-      "startDate": "2024-08-15T03:00:00.000Z",
-      "endDate": "2024-08-23T03:00:00.000Z",
-      "time": "09:30 - 11:30",
-      "students": []
-    },
-    {
-      "id": "061e",
-      "name": "COURSO2",
-      "description": "kjasfñej",
-      "startDate": "2024-08-16T03:00:00.000Z",
-      "endDate": "2024-08-22T03:00:00.000Z",
+      "id": "b166",
+      "name": "COURSE1",
+      "description": "sdfasdfjl",
+      "startDate": "2024-08-08T03:00:00.000Z",
+      "endDate": "2024-08-16T03:00:00.000Z",
       "time": "10:00 - 12:00",
-      "students": []
+      "students": [
+        "86c5"
+      ]
     }
   ],
   "lessons": [
@@ -456,11 +446,11 @@
       "status": true
     },
     {
-      "studentId": "74c7",
-      "courseId": "b018",
+      "studentId": "86c5",
+      "courseId": "b166",
       "date": "2024-08-16T03:00:00.000Z",
-      "status": false,
-      "id": "d3d5"
+      "status": true,
+      "id": "8a0a"
     }
   ]
 }

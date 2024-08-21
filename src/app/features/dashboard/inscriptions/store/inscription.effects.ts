@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, map, concatMap, switchMap, mergeMap } from 'rxjs/operators';
-import { Observable, EMPTY, of, forkJoin } from 'rxjs';
+import { catchError, map, concatMap, switchMap, mergeMap, tap } from 'rxjs/operators';
+import { Observable, EMPTY, of, forkJoin, combineLatest } from 'rxjs';
 import { InscriptionActions } from './inscription.actions';
 import { InscriptionsService } from '../../../../core/services/inscriptions/inscriptions.service';
 import { CoursesService } from '../../../../core/services/courses/courses.service';
@@ -19,6 +19,24 @@ export class InscriptionEffects {
           map(data => InscriptionActions.loadInscriptionsSuccess({ data })),
           catchError(error => of(InscriptionActions.loadInscriptionsFailure({ error }))))
       )
+    );
+  });
+
+  loadInscriptionDetails$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(InscriptionActions.loadInscriptionDetails),
+      concatMap(({courseId, studentId}) => {
+        const course$ = this.coursesService.getCourseById(courseId);
+        const student$ = this.studentsService.getStudentById(studentId);
+  
+        return combineLatest([course$, student$]).pipe(
+          tap(([course, student]) => {
+            console.log('Loaded course and student:', course, student);
+          }),
+          map(([course, student]) => InscriptionActions.loadInscriptionDetailsSuccess({course, student})),
+          catchError(error => of(InscriptionActions.loadInscriptionDetailsFailure({ error })))
+        );
+      })
     );
   });
 

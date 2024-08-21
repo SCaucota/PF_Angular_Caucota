@@ -24,3 +24,13 @@ export const selectSingleInscription = createSelector(
   selectInscriptionState,
   (state) => state.singleInscription
 )
+
+export const selectCourseInscription = createSelector(
+  selectInscriptionState,
+  (state) => state.course
+)
+
+export const selectStudentInscription = createSelector(
+  selectInscriptionState,
+  (state) => state.student
+)

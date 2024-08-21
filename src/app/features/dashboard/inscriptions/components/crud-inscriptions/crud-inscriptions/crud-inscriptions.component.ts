@@ -8,12 +8,16 @@ import { DetailDialogComponent } from '../../../../../../shared/components/detai
 import { StudentsService } from '../../../../../../core/services/students/students.service';
 import { CoursesService } from '../../../../../../core/services/courses/courses.service';
 import { AuthService } from '../../../../../../core/services/auth/auth.service';
-import { filter, forkJoin, mergeMap, Observable, of, switchMap, take, tap } from 'rxjs';
+import { combineLatest, filter, forkJoin, mergeMap, Observable, of, switchMap, take, tap } from 'rxjs';
 import { User } from '../../../../users/models/user';
 import { Store } from '@ngrx/store';
-import { selectInscriptions, selectInscriptionsError, selectIsLoadingInscriptions, selectSingleInscription } from '../../../store/inscription.selectors';
+import { selectCourseInscription, selectInscriptions, selectInscriptionsError, selectIsLoadingInscriptions, selectSingleInscription, selectStudentInscription } from '../../../store/inscription.selectors';
 import { InscriptionActions } from '../../../store/inscription.actions';
 import { AlertsService } from '../../../../../../core/services/sweetalert/alerts.service';
+import { Course } from '../../../../courses/models/course';
+import { selectSingleCourse } from '../../../../courses/store/course.selectors';
+import { CourseActions } from '../../../../courses/store/course.actions';
+import { Student } from '../../../../students/models/student';
 
 @Component({
   selector: 'app-crud-inscriptions',
@@ -27,6 +31,8 @@ export class CrudInscriptionsComponent {
   isLoading$: Observable<boolean>;
   error$: Observable<unknown>;
   singleInscription$: Observable<Inscription>;
+  course$: Observable<Course | null>;
+  student$: Observable<Student | null>;
 
   constructor(
     private matDialog: MatDialog,
@@ -42,6 +48,8 @@ export class CrudInscriptionsComponent {
     this.singleInscription$ = this.store.select(selectSingleInscription);
     this.isLoading$ = this.store.select(selectIsLoadingInscriptions);
     this.error$ = this.store.select(selectInscriptionsError);
+    this.course$ = this.store.select(selectCourseInscription);
+    this.student$ = this.store.select(selectStudentInscription)
    }
 
   displayedColumns: string[] = ['id', 'studentId', 'courseId', 'date', 'status', 'actions'];
@@ -113,15 +121,36 @@ export class CrudInscriptionsComponent {
   }
 
   openDetail(id: string): void {
-    this.inscriptionsService.getInscriptionById(id).subscribe(inscription => {
-      if(inscription) {
-        const studentid = inscription.studentId
-        const courseid = inscription.courseId;
-
-        const student$ = studentid ? this.studentsService.getStudentById(studentid) : of(null);
-        const course$ = courseid ? this.coursesService.getCourseById(courseid) : of(null);
-
-        forkJoin([student$, course$]).subscribe(([student, course]) => {
+    this.store.dispatch(InscriptionActions.clearInscriptionDetails());
+    this.store.dispatch(InscriptionActions.inscriptionById({ id }));
+  
+    this.singleInscription$.pipe(
+      filter(inscription => !!inscription && inscription.id === id),
+      take(1)
+    ).subscribe(inscription => {
+      if (inscription) {
+        this.store.dispatch(
+          InscriptionActions.loadInscriptionDetails({
+            courseId: inscription.courseId,
+            studentId: inscription.studentId
+          })
+        );
+  
+        this.student$.pipe(
+          filter(student => !!student?.id && student.id === inscription.studentId),
+          take(1)
+        ).subscribe();
+        
+        this.course$.pipe(
+          filter(course => !!course?.id && course.id === inscription.courseId),
+          take(1)
+        ).subscribe();
+  
+        combineLatest([this.student$, this.course$]).pipe(
+          filter(([student, course]) => !!student && !!course),
+          take(1)
+        ).subscribe(([student, course]) => {
+          console.log(student)
           this.matDialog.open(DetailDialogComponent, {
             data: {
               title: 'Detalles de la inscripción',
@@ -131,9 +160,9 @@ export class CrudInscriptionsComponent {
                 course: course
               }
             }
-          })
-        })
+          });
+        });
       }
-    })
+    });
   }
 }

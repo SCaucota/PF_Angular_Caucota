@@ -1,6 +1,8 @@
 import { createFeature, createReducer, on } from '@ngrx/store';
 import { InscriptionActions } from './inscription.actions';
 import { Inscription } from '../models/inscription';
+import { Student } from '../../students/models/student';
+import { Course } from '../../courses/models/course';
 
 export const inscriptionFeatureKey = 'inscription';
 
@@ -8,14 +10,18 @@ export interface State {
   isLoadingInscriptions: boolean;
   inscriptions: Inscription[];
   singleInscription: Inscription;
-  error: unknown
+  error: unknown;
+  student: Student | null;
+  course: Course | null;
 }
 
 export const initialState: State = {
   isLoadingInscriptions: false,
   inscriptions: [],
   singleInscription: {} as Inscription,
-  error: null
+  error: null,
+  student: {} as Student,
+  course: {} as Course
 };
 
 export const reducer = createReducer(
@@ -28,13 +34,38 @@ export const reducer = createReducer(
   on(InscriptionActions.loadInscriptionsSuccess, (state, action) => ({
     ...state,
     isLoadingInscriptions: false,
-    inscriptions: action.data
+    inscriptions: action.data,
+    singleInscription: {} as Inscription,
+    error: null,
+    student: {} as Student,
+    course: {} as Course
   })),
 
   on(InscriptionActions.loadInscriptionsFailure, (state, action) => ({
     ...state,
     isLoadingInscriptions: false,
     error: action.error
+  })),
+
+  on(InscriptionActions.loadInscriptionDetailsSuccess, (state, action) => ({
+    ...state,
+    student: action.student,
+    course: action.course,
+    error: null
+  })),
+
+  on(InscriptionActions.loadInscriptionDetailsFailure, (state, action) => ({
+    ...state,
+    student: {} as Student,
+    course: {} as Course,
+    error: action.error
+  })),
+
+  on(InscriptionActions.clearInscriptionDetails, (state, action) => ({
+    ...state,
+    student: {} as Student,
+    course: {} as Course,
+    error: null
   })),
 
   on(InscriptionActions.addInscriptionSuccess, (state, action) => ({

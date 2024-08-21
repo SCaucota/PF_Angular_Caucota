@@ -19,7 +19,6 @@ export class DetailDialogComponent implements OnInit{
   ngOnInit(): void {
     this.data.subitem.length === 0 ?
     this.isEmpty = true : this.isEmpty = false
-    console.log(this.subitem)
   }
 
   get title(): string {

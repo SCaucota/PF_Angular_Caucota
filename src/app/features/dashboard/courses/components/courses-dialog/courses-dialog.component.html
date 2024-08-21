@@ -107,9 +107,9 @@
                 'is-valid': !timeControlInvalid
             }"
         >
-            @for (time of times; track time) {
-                <mat-option value="{{time.viewValue}}">{{time.viewValue}}</mat-option>
-            }
+            <mat-option *ngFor="let time of times$ | async" [value]="time.id">
+                {{ time.viewValue }}
+            </mat-option>
         </mat-select>
         
         <mat-error *ngIf="timeControl?.invalid && timeControl?.touched">

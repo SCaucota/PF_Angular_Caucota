@@ -34,3 +34,13 @@ export const selectStudentInscription = createSelector(
   selectInscriptionState,
   (state) => state.student
 )
+
+export const selectCoursesForm = createSelector(
+  selectInscriptionState,
+  (state) => state.coursesForm
+)
+
+export const selectStudentsForm = createSelector(
+  selectInscriptionState,
+  (state) => state.studentsForm
+)

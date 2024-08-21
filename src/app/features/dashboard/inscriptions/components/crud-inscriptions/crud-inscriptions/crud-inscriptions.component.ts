@@ -1,22 +1,17 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { InscriptionsService } from '../../../../../../core/services/inscriptions/inscriptions.service';
 import { Inscription } from '../../../models/inscription';
 import { DeleteDialogComponent } from '../../../../../../shared/components/delete-dialog/delete-dialog.component';
 import { InscriptionsDialogComponent } from '../../inscriptions-dialog/inscriptions-dialog/inscriptions-dialog.component';
 import { DetailDialogComponent } from '../../../../../../shared/components/detail-dialog/detail-dialog.component';
-import { StudentsService } from '../../../../../../core/services/students/students.service';
-import { CoursesService } from '../../../../../../core/services/courses/courses.service';
 import { AuthService } from '../../../../../../core/services/auth/auth.service';
-import { combineLatest, filter, forkJoin, mergeMap, Observable, of, switchMap, take, tap } from 'rxjs';
+import { combineLatest, filter, Observable, Subject, take, takeUntil } from 'rxjs';
 import { User } from '../../../../users/models/user';
 import { Store } from '@ngrx/store';
 import { selectCourseInscription, selectInscriptions, selectInscriptionsError, selectIsLoadingInscriptions, selectSingleInscription, selectStudentInscription } from '../../../store/inscription.selectors';
 import { InscriptionActions } from '../../../store/inscription.actions';
 import { AlertsService } from '../../../../../../core/services/sweetalert/alerts.service';
 import { Course } from '../../../../courses/models/course';
-import { selectSingleCourse } from '../../../../courses/store/course.selectors';
-import { CourseActions } from '../../../../courses/store/course.actions';
 import { Student } from '../../../../students/models/student';
 
 @Component({
@@ -24,7 +19,8 @@ import { Student } from '../../../../students/models/student';
   templateUrl: './crud-inscriptions.component.html',
   styleUrl: './crud-inscriptions.component.scss'
 })
-export class CrudInscriptionsComponent {
+export class CrudInscriptionsComponent implements OnDestroy{
+  private unsubscribe$ = new Subject<void>();
 
   authUser$: Observable<User | null>;
   inscriptions$: Observable<Inscription[]>;
@@ -36,9 +32,6 @@ export class CrudInscriptionsComponent {
 
   constructor(
     private matDialog: MatDialog,
-    private inscriptionsService: InscriptionsService,
-    private studentsService: StudentsService,
-    private coursesService: CoursesService,
     private store: Store,
     private alertsService: AlertsService,
     private authService: AuthService
@@ -61,7 +54,9 @@ export class CrudInscriptionsComponent {
   ngOnInit(): void {
     this.store.dispatch(InscriptionActions.loadInscriptions());
 
-    this.authService.authUser$.subscribe((user: User | null) => {
+    this.authService.authUser$.pipe(
+      takeUntil(this.unsubscribe$)
+    ).subscribe((user: User | null) => {
       this.isAdmin = user?.role === 'ADMIN';
     });
   }
@@ -136,21 +131,10 @@ export class CrudInscriptionsComponent {
           })
         );
   
-        this.student$.pipe(
-          filter(student => !!student?.id && student.id === inscription.studentId),
-          take(1)
-        ).subscribe();
-        
-        this.course$.pipe(
-          filter(course => !!course?.id && course.id === inscription.courseId),
-          take(1)
-        ).subscribe();
-  
         combineLatest([this.student$, this.course$]).pipe(
-          filter(([student, course]) => !!student && !!course),
+          filter(([student, course]) => !!student?.id && !!course?.id),
           take(1)
         ).subscribe(([student, course]) => {
-          console.log(student)
           this.matDialog.open(DetailDialogComponent, {
             data: {
               title: 'Detalles de la inscripción',
@@ -164,5 +148,10 @@ export class CrudInscriptionsComponent {
         });
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }

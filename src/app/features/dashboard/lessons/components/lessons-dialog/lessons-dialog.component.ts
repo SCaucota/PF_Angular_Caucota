@@ -3,12 +3,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Lesson } from '../../models/lesson';
 import { Course } from '../../../courses/models/course';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { CoursesService } from '../../../../../core/services/courses/courses.service';
 import { noLeadingSpacesValidator, noOnlySpacesValidator, dateRangeValidator } from '../../../../../shared/utils/custom.validators';
 import { Store } from '@ngrx/store';
-import { CourseActions } from '../../../courses/store/course.actions';
 import { Observable } from 'rxjs';
-import { selectCourses, selectSingleCourse } from '../../../courses/store/course.selectors';
+import { selectSingleCourse } from '../../../courses/store/course.selectors';
 import { selectCoursesForm } from '../../store/lesson.selectors';
 import { LessonActions } from '../../store/lesson.actions';
 

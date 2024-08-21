@@ -7,6 +7,7 @@ import { CoursesService } from '../../../../core/services/courses/courses.servic
 import { StudentsService } from '../../../../core/services/students/students.service';
 import { InscriptionsService } from '../../../../core/services/inscriptions/inscriptions.service';
 import { Student } from '../../students/models/student';
+import { TimesService } from '../../../../core/services/courses/times.service';
 
 
 @Injectable()
@@ -19,6 +20,17 @@ export class CourseEffects {
         this.coursesService.getCourses().pipe(
           map(data => CourseActions.loadCoursesSuccess({ data })),
           catchError(error => of(CourseActions.loadCoursesFailure({ error }))))
+      )
+    );
+  });
+
+  loadTimes$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(CourseActions.loadTimesForm),
+      concatMap(() =>
+        this.timesService.getTimes().pipe(
+          map(data => CourseActions.loadTimesFormSuccess({ data })),
+          catchError(error => of(CourseActions.loadTimesFormFailure({ error }))))
       )
     );
   });
@@ -138,5 +150,11 @@ export class CourseEffects {
     )
   })
 
-  constructor(private actions$: Actions, private coursesService: CoursesService, private studentsService: StudentsService, private inscriptionsService: InscriptionsService) {}
+  constructor(
+    private actions$: Actions,
+    private coursesService: CoursesService,
+    private studentsService: StudentsService,
+    private inscriptionsService: InscriptionsService,
+    private timesService: TimesService
+  ) {}
 }

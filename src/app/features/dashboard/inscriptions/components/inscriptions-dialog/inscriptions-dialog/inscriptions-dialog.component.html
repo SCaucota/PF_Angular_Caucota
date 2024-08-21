@@ -13,9 +13,9 @@
                 'is-valid': !studentControlInvalid
             }"
         >
-            @for (student of students; track student) {
-                <mat-option value="{{student.id}}">{{student.id + ' - ' + student.name + ' ' + student.surname}}</mat-option>
-            }
+            <mat-option *ngFor="let student of students$ | async" [value]="student.id">
+                {{ student.id + ' - ' + student.name + ' ' + student.surname }}
+            </mat-option>
         </mat-select>
         
         <mat-error *ngIf="studentControl?.invalid && studentControl?.touched">
@@ -34,9 +34,9 @@
                 'is-valid': !courseControlInvalid
             }"
         >
-            @for (course of courses; track course) {
-                <mat-option value="{{course.id}}">{{course.id + ' - ' + course.name}}</mat-option>
-            }
+            <mat-option *ngFor="let course of courses$ | async" [value]="course.id">
+                {{ course.id + ' - ' + course.name }}
+            </mat-option>
         </mat-select>
         
         <mat-error *ngIf="courseControl?.invalid && courseControl?.touched">

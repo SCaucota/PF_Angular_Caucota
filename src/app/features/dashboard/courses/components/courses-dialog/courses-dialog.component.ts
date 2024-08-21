@@ -4,9 +4,10 @@ import { Course } from '../../models/course';
 import { Time } from '../../models/time';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { noLeadingSpacesValidator, noOnlySpacesValidator } from '../../../../../shared/utils/custom.validators';
-import { TimesService } from '../../../../../core/services/courses/times.service';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
+import { selectTimesForm } from '../../store/course.selectors';
+import { CourseActions } from '../../store/course.actions';
 
 @Component({
   selector: 'app-courses-dialog',
@@ -16,7 +17,7 @@ import { Store } from '@ngrx/store';
 export class CoursesDialogComponent implements OnInit{
   courseForm: FormGroup;
 
-  times: Time[] = []
+  times$: Observable<Time[]>;
 
   @Input() course!: Course;
   @Output() onSubmitCourseEvent: EventEmitter<any> = new EventEmitter();
@@ -24,7 +25,7 @@ export class CoursesDialogComponent implements OnInit{
   constructor(
     private fb: FormBuilder,
     private matDialogRef: MatDialogRef<CoursesDialogComponent>,
-    private timesService: TimesService,
+    private store: Store,
     @Inject(MAT_DIALOG_DATA) public editingCourse?: Course
   ){
     this.courseForm = this.fb.group({
@@ -56,19 +57,12 @@ export class CoursesDialogComponent implements OnInit{
     if(this.editingCourse){
       this.courseForm.patchValue(this.editingCourse);
     }
-  }
 
-  loadTimes() {
-    this.timesService.getTimes().subscribe({
-      next: (timesFormDb) => {
-        this.times = timesFormDb
-      },
-      error: (err) => console.log("Error al cargar los horarios: ", err)
-    })
+    this.times$ = this.store.select(selectTimesForm);
   }
 
   ngOnInit(): void {
-    this.loadTimes();
+    this.store.dispatch(CourseActions.loadTimesForm());
   }
 
 

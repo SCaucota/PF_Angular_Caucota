@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { AuthService } from '../../../core/services/auth/auth.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AlertsService } from '../../../core/services/sweetalert/alerts.service';
 
 @Component({
   selector: 'app-login',
@@ -12,6 +13,7 @@ export class LoginComponent {
 
   constructor(
     private authService: AuthService,
+    private alertsService: AlertsService,
     private fb: FormBuilder
   ) {
     this.loginForm = this.fb.group({
@@ -22,7 +24,7 @@ export class LoginComponent {
 
   onSubmit() {
     if(this.loginForm.invalid) {
-      alert('El formulario noes valido');
+      this.alertsService.sendError('El formulario es inválido')
     }else {
       const data = {
         email: this.loginForm.get('email')?.value,

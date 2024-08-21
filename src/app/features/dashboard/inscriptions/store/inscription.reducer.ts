@@ -13,6 +13,8 @@ export interface State {
   error: unknown;
   student: Student | null;
   course: Course | null;
+  coursesForm: Course[];
+  studentsForm: Student[];
 }
 
 export const initialState: State = {
@@ -21,7 +23,9 @@ export const initialState: State = {
   singleInscription: {} as Inscription,
   error: null,
   student: {} as Student,
-  course: {} as Course
+  course: {} as Course,
+  coursesForm: [],
+  studentsForm: []
 };
 
 export const reducer = createReducer(
@@ -66,6 +70,30 @@ export const reducer = createReducer(
     student: {} as Student,
     course: {} as Course,
     error: null
+  })),
+
+  on(InscriptionActions.loadCoursesFormSuccess, (state, action) => ({
+    ...state,
+    coursesForm: action.data,
+    error: null
+  })),
+
+  on(InscriptionActions.loadCoursesFormFailure, (state, action) => ({
+    ...state,
+    coursesForm: [],
+    error: action.error
+  })),
+
+  on(InscriptionActions.loadStudentsFormSuccess, (state, action) => ({
+    ...state,
+    studentsForm: action.data,
+    error: null
+  })),
+
+  on(InscriptionActions.loadStudentsFormFailure, (state, action) => ({
+    ...state,
+    studentsForm: [],
+    error: action.error
   })),
 
   on(InscriptionActions.addInscriptionSuccess, (state, action) => ({

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { catchError, Observable, of, switchMap, tap } from 'rxjs';
+import { Observable,switchMap } from 'rxjs';
 import { Inscription } from '../../../features/dashboard/inscriptions/models/inscription';
 import { HttpClient } from '@angular/common/http';
 
@@ -12,7 +12,7 @@ export class InscriptionsService {
   constructor(private httpClient: HttpClient) {}
 
   getInscriptions(): Observable<Inscription[]> {
-    return this.httpClient.get<Inscription[]>(`${this.URL_BASE}?_embed=course&_embed=student`);
+    return this.httpClient.get<Inscription[]>(this.URL_BASE);
   }
 
   getInscriptionById(id: string): Observable<Inscription> {

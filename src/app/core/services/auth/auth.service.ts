@@ -37,7 +37,7 @@ export class AuthService {
     }).subscribe({
       next: (response) => {
         if(!response.length) {
-          alert('Usuario o password invalido')
+          this.alertsService.sendError('Formulario Inválido')
         }else {
           const authUser = response[0];
           localStorage.setItem('token', authUser.token)

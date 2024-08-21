@@ -29,3 +29,8 @@ export const selectStudentsForm = createSelector(
   selectCourseState,
   (state) => state.studentsForm
 )
+
+export const selectTimesForm = createSelector(
+  selectCourseState,
+  (state) => state.times
+)

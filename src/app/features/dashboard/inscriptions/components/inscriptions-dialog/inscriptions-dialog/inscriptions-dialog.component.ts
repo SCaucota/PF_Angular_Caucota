@@ -8,8 +8,8 @@ import { StudentsService } from '../../../../../../core/services/students/studen
 import { Student } from '../../../../students/models/student';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { selectCourses } from '../../../../courses/store/course.selectors';
-import { CourseActions } from '../../../../courses/store/course.actions';
+import { selectCoursesForm, selectStudentsForm } from '../../../store/inscription.selectors';
+import { InscriptionActions } from '../../../store/inscription.actions';
 
 @Component({
   selector: 'app-inscriptions-dialog',
@@ -18,9 +18,8 @@ import { CourseActions } from '../../../../courses/store/course.actions';
 })
 export class InscriptionsDialogComponent {
   inscriptionForm: FormGroup;
-  courses: Course[] = [];
-  students: Student[] = [];
-  courses$: Observable<Course[]>
+  students$: Observable<Student[]>;
+  courses$: Observable<Course[]>;
 
   @Input() inscription!: Inscription;
   @Output() onSubmitInscriptionEvent: EventEmitter<any> = new EventEmitter();
@@ -28,8 +27,6 @@ export class InscriptionsDialogComponent {
   constructor(
     private fb: FormBuilder,
     private matDialogRef: MatDialogRef<InscriptionsDialogComponent>,
-    private coursesService: CoursesService,
-    private studentsService: StudentsService,
     private store: Store,
     @Inject(MAT_DIALOG_DATA) public editingInscription?: Inscription
   ) { 
@@ -44,27 +41,13 @@ export class InscriptionsDialogComponent {
       this.inscriptionForm.patchValue(this.editingInscription);
     }
 
-    this.courses$ = this.store.select(selectCourses)
-  }
-
-  loadCourses() {
-    this.coursesService.getCourses().subscribe({
-      next: (coursesFomrDb) => {
-        this.courses = coursesFomrDb
-      },
-      error: (err) => console.log("Error al cargar los cursos en Insciprción: ", err)
-    })
-    /* this.store.dispatch(CourseActions.loadCourses()); */
-    this.studentsService.getStudents().subscribe({
-      next: (studentsFormDb) => {
-        this.students = studentsFormDb
-      },
-      error: (err) => console.log("Error al cargar estudiantes en Insciprión: ", err)
-    })
+    this.courses$ = this.store.select(selectCoursesForm);
+    this.students$ = this.store.select(selectStudentsForm)
   }
 
   ngOnInit(): void {
-    this.loadCourses();
+    this.store.dispatch(InscriptionActions.loadCoursesForm());
+    this.store.dispatch(InscriptionActions.loadStudentsForm());
   }
 
   get studentControl() {

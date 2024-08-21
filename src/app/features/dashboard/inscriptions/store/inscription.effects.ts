@@ -22,6 +22,44 @@ export class InscriptionEffects {
     );
   });
 
+  loadCoursesAndStudentsForm$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(InscriptionActions.loadCoursesForm, InscriptionActions.loadStudentsForm),
+      concatMap(() =>
+        forkJoin([
+          this.coursesService.getCourses(),
+          this.studentsService.getStudents()
+        ]).pipe(
+          mergeMap(([courses, students]) => [
+            InscriptionActions.loadCoursesFormSuccess({ data: courses }),
+            InscriptionActions.loadStudentsFormSuccess({ data: students })
+          ]),
+          catchError(error => 
+            of(
+              InscriptionActions.loadCoursesFormFailure({ error }),
+              InscriptionActions.loadStudentsFormFailure({ error })
+            )
+          )
+        )
+      )
+    );
+  });
+
+  loadCoursesStudents$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(InscriptionActions.loadInscriptionDetails),
+      concatMap(({courseId, studentId}) => {
+        const course$ = this.coursesService.getCourseById(courseId);
+        const student$ = this.studentsService.getStudentById(studentId);
+  
+        return combineLatest([course$, student$]).pipe(
+          map(([course, student]) => InscriptionActions.loadInscriptionDetailsSuccess({course, student})),
+          catchError(error => of(InscriptionActions.loadInscriptionDetailsFailure({ error })))
+        );
+      })
+    );
+  });
+
   loadInscriptionDetails$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(InscriptionActions.loadInscriptionDetails),
@@ -30,9 +68,6 @@ export class InscriptionEffects {
         const student$ = this.studentsService.getStudentById(studentId);
   
         return combineLatest([course$, student$]).pipe(
-          tap(([course, student]) => {
-            console.log('Loaded course and student:', course, student);
-          }),
           map(([course, student]) => InscriptionActions.loadInscriptionDetailsSuccess({course, student})),
           catchError(error => of(InscriptionActions.loadInscriptionDetailsFailure({ error })))
         );

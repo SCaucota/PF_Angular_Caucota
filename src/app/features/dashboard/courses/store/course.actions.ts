@@ -1,6 +1,7 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
 import { Course } from '../models/course';
 import { Student } from '../../students/models/student';
+import { Time } from '../models/time';
 
 export const CourseActions = createActionGroup({
   source: 'Course',
@@ -12,6 +13,9 @@ export const CourseActions = createActionGroup({
     'Load Students Form Success': props<{ data: Student[] }>(),
     'Load Students Form Failure': props<{ error: unknown }>(),
     'Clear Students': emptyProps(),
+    'Load Times Form': emptyProps(),
+    'Load Times Form Success': props<{ data: Time[] }>(),
+    'Load Times Form Failure': props<{ error: unknown }>(),
     'Course By Id': props<{ id: string }>(),
     'Course By Id Success': props<{ data: Course }>(),
     'Course By Id Failure': props<{ error: unknown}>(),

@@ -6,7 +6,7 @@ import { filter, Observable, take} from 'rxjs';
 import { DetailDialogComponent } from '../../../../../shared/components/detail-dialog/detail-dialog.component';
 import { DeleteDialogComponent } from '../../../../../shared/components/delete-dialog/delete-dialog.component';
 import { Store } from '@ngrx/store';
-import { selectIsLoadingUsers, selectSingleUser, selectUsers, selectUsersError, selectUserState } from '../../store/user.selectors';
+import { selectIsLoadingUsers, selectSingleUser, selectUsers, selectUsersError } from '../../store/user.selectors';
 import { UserActions } from '../../store/user.actions';
 import { AlertsService } from '../../../../../core/services/sweetalert/alerts.service';
 

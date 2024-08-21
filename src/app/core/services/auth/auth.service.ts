@@ -10,6 +10,7 @@ import { LessonActions } from '../../../features/dashboard/lessons/store/lesson.
 import { UserActions } from '../../../features/dashboard/users/store/user.actions';
 import { CourseActions } from '../../../features/dashboard/courses/store/course.actions';
 import { StudentActions } from '../../../features/dashboard/students/store/student.actions';
+import { InscriptionActions } from '../../../features/dashboard/inscriptions/store/inscription.actions';
 
 @Injectable({
   providedIn: 'root'
@@ -59,6 +60,7 @@ export class AuthService {
     this.store.dispatch(LessonActions.resetLessonsState());
     this.store.dispatch(UserActions.resetUserState());
     this.store.dispatch(CourseActions.resetCourseState());
+    this.store.dispatch(InscriptionActions.resetInscriptionState());
     this.store.dispatch(StudentActions.resetStudentState());
     this.router.navigate(['auth', 'login']);
   }

@@ -8,6 +8,8 @@ import { InscriptionsDialogComponent } from './components/inscriptions-dialog/in
 import { SharedModule } from '../../../shared/shared.module';
 import { EffectsModule } from '@ngrx/effects';
 import { InscriptionEffects } from './store/inscription.effects';
+import { StoreModule } from '@ngrx/store';
+import { inscriptionFeature } from './store/inscription.reducer';
 
 
 @NgModule({
@@ -23,7 +25,8 @@ import { InscriptionEffects } from './store/inscription.effects';
     CommonModule,
     InscriptionsRoutingModule,
     SharedModule,
-    EffectsModule.forFeature([InscriptionEffects])
+    EffectsModule.forFeature([InscriptionEffects]),
+    StoreModule.forFeature(inscriptionFeature)
   ]
 })
 export class InscriptionsModule { }

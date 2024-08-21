@@ -6,6 +6,10 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CoursesService } from '../../../../../../core/services/courses/courses.service';
 import { StudentsService } from '../../../../../../core/services/students/students.service';
 import { Student } from '../../../../students/models/student';
+import { Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { selectCourses } from '../../../../courses/store/course.selectors';
+import { CourseActions } from '../../../../courses/store/course.actions';
 
 @Component({
   selector: 'app-inscriptions-dialog',
@@ -16,6 +20,7 @@ export class InscriptionsDialogComponent {
   inscriptionForm: FormGroup;
   courses: Course[] = [];
   students: Student[] = [];
+  courses$: Observable<Course[]>
 
   @Input() inscription!: Inscription;
   @Output() onSubmitInscriptionEvent: EventEmitter<any> = new EventEmitter();
@@ -25,6 +30,7 @@ export class InscriptionsDialogComponent {
     private matDialogRef: MatDialogRef<InscriptionsDialogComponent>,
     private coursesService: CoursesService,
     private studentsService: StudentsService,
+    private store: Store,
     @Inject(MAT_DIALOG_DATA) public editingInscription?: Inscription
   ) { 
     this.inscriptionForm = this.fb.group({
@@ -37,6 +43,8 @@ export class InscriptionsDialogComponent {
     if(this.editingInscription){
       this.inscriptionForm.patchValue(this.editingInscription);
     }
+
+    this.courses$ = this.store.select(selectCourses)
   }
 
   loadCourses() {
@@ -46,6 +54,7 @@ export class InscriptionsDialogComponent {
       },
       error: (err) => console.log("Error al cargar los cursos en Insciprción: ", err)
     })
+    /* this.store.dispatch(CourseActions.loadCourses()); */
     this.studentsService.getStudents().subscribe({
       next: (studentsFormDb) => {
         this.students = studentsFormDb

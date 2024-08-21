@@ -42,7 +42,6 @@
       "name": "CARLOS",
       "surname": "LOPEZ",
       "courses": [
-        "3",
         "4"
       ]
     },
@@ -53,10 +52,6 @@
       "courses": [
         "4",
         "5"
-      ],
-      "students": [
-        "1",
-        "2"
       ]
     },
     {
@@ -64,8 +59,7 @@
       "name": "LUIS",
       "surname": "MARTÍNEZ",
       "courses": [
-        "5",
-        "6"
+        "5"
       ]
     },
     {
@@ -109,13 +103,18 @@
       ]
     },
     {
-      "id": "1299",
+      "id": "74c7",
       "name": "HOLA",
       "surname": "TEST",
       "courses": [
-        "92c8",
-        "1"
+        "b018"
       ]
+    },
+    {
+      "id": "e393",
+      "name": "TESTING",
+      "surname": "TESTER",
+      "courses": []
     }
   ],
   "courses": [
@@ -127,8 +126,7 @@
       "endDate": "2024-12-08T00:00:00.000Z",
       "time": "08:30 - 10:30",
       "students": [
-        "1",
-        "1299"
+        "1"
       ]
     },
     {
@@ -187,7 +185,6 @@
       "endDate": "2024-12-15T00:00:00.000Z",
       "time": "17:00 - 19:00",
       "students": [
-        "5",
         "6"
       ]
     },
@@ -236,15 +233,24 @@
       ]
     },
     {
-      "id": "92c8",
-      "name": "CURSO",
-      "description": "test",
-      "startDate": "2024-08-14T03:00:00.000Z",
+      "id": "b018",
+      "name": "COURSE",
+      "description": "sdflkasfkl",
+      "startDate": "2024-08-15T03:00:00.000Z",
       "endDate": "2024-08-23T03:00:00.000Z",
       "time": "09:30 - 11:30",
       "students": [
-        "1299"
+        "74c7"
       ]
+    },
+    {
+      "id": "061e",
+      "name": "COURSO2",
+      "description": "kjasfñej",
+      "startDate": "2024-08-16T03:00:00.000Z",
+      "endDate": "2024-08-22T03:00:00.000Z",
+      "time": "10:00 - 12:00",
+      "students": []
     }
   ],
   "lessons": [
@@ -370,11 +376,11 @@
       "status": true
     },
     {
-      "id": "3",
       "studentId": "3",
       "courseId": "3",
       "date": "2024-08-03T00:00:00.000Z",
-      "status": false
+      "status": true,
+      "id": "3"
     },
     {
       "id": "4",
@@ -384,11 +390,11 @@
       "status": true
     },
     {
-      "id": "5",
       "studentId": "5",
       "courseId": "5",
       "date": "2024-05-05T00:00:00.000Z",
-      "status": false
+      "status": true,
+      "id": "5"
     },
     {
       "id": "6",
@@ -419,11 +425,11 @@
       "status": true
     },
     {
-      "id": "10",
       "studentId": "10",
       "courseId": "10",
       "date": "2024-09-10T00:00:00.000Z",
-      "status": false
+      "status": true,
+      "id": "10"
     },
     {
       "id": "11",
@@ -433,11 +439,11 @@
       "status": true
     },
     {
-      "id": "12",
       "studentId": "2",
       "courseId": "3",
       "date": "2024-03-12T00:00:00.000Z",
-      "status": false
+      "status": true,
+      "id": "12"
     },
     {
       "id": "13",
@@ -454,25 +460,11 @@
       "status": true
     },
     {
-      "id": "15",
-      "studentId": "5",
-      "courseId": "6",
-      "date": "2024-11-15T00:00:00.000Z",
-      "status": true
-    },
-    {
-      "studentId": "1299",
-      "courseId": "92c8",
-      "date": "2024-08-22T03:00:00.000Z",
+      "studentId": "74c7",
+      "courseId": "b018",
+      "date": "2024-08-16T03:00:00.000Z",
       "status": true,
-      "id": "76d9"
-    },
-    {
-      "studentId": "1299",
-      "courseId": "1",
-      "date": "2024-08-22T03:00:00.000Z",
-      "status": true,
-      "id": "f7ff"
+      "id": "d3d5"
     }
   ]
 }

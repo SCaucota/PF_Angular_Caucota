@@ -33,9 +33,6 @@ export class CrudCoursesComponent implements OnInit, OnDestroy {
 
   constructor(
     private matDialog: MatDialog,
-    private coursesService: CoursesService,
-    private studentsService: StudentsService,
-    private inscriptionService: InscriptionsService,
     private authService: AuthService,
     private alertsService: AlertsService,
     private store: Store
@@ -140,7 +137,7 @@ export class CrudCoursesComponent implements OnInit, OnDestroy {
   }
 
   openDetail(id: string): void {
-
+    this.store.dispatch(CourseActions.clearStudents());
     this.store.dispatch(CourseActions.courseById({id}));
     this.store.dispatch(CourseActions.loadStudentsForm({id}));
 

@@ -25,13 +25,15 @@ export const reducer = createReducer(
   initialState,
   on(StudentActions.loadStudents, state => ({
     ...state,
-    isLoadingStudents: true
+    isLoadingStudents: true,
   })),
 
   on(StudentActions.loadStudentsSuccess, (state, action) => ({
     ...state,
     isLoadingStudents: false,
-    students: action.data
+    students: action.data,
+    singleStudent: {} as Student,
+    coursesStudent: []
   })),
 
   on(StudentActions.loadStudentsFailure, (state, action) => ({
@@ -49,6 +51,12 @@ export const reducer = createReducer(
     ...state,
     coursesStudent: [],
     error: action.error
+  })),
+
+  on(StudentActions.clearCourses, (state, action) => ({
+    ...state,
+    coursesStudent: [],
+    error: null
   })),
 
   on(StudentActions.addStudentSuccess, (state, action) => ({

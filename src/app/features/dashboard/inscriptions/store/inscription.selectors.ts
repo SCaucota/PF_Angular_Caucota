@@ -4,3 +4,23 @@ import * as fromInscription from './inscription.reducer';
 export const selectInscriptionState = createFeatureSelector<fromInscription.State>(
   fromInscription.inscriptionFeatureKey
 );
+
+export const selectInscriptions = createSelector(
+  selectInscriptionState,
+  (state) => state.inscriptions
+)
+
+export const selectIsLoadingInscriptions = createSelector(
+  selectInscriptionState,
+  (state) => state.isLoadingInscriptions
+)
+
+export const selectInscriptionsError = createSelector(
+  selectInscriptionState,
+  (state) => state.error
+)
+
+export const selectSingleInscription = createSelector(
+  selectInscriptionState,
+  (state) => state.singleInscription
+)

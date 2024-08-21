@@ -11,6 +11,7 @@ export const CourseActions = createActionGroup({
     'Load Students Form': props<{ id: string }>(),
     'Load Students Form Success': props<{ data: Student[] }>(),
     'Load Students Form Failure': props<{ error: unknown }>(),
+    'Clear Students': emptyProps(),
     'Course By Id': props<{ id: string }>(),
     'Course By Id Success': props<{ data: Course }>(),
     'Course By Id Failure': props<{ error: unknown}>(),

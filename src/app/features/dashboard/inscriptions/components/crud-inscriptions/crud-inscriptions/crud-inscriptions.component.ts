@@ -8,8 +8,12 @@ import { DetailDialogComponent } from '../../../../../../shared/components/detai
 import { StudentsService } from '../../../../../../core/services/students/students.service';
 import { CoursesService } from '../../../../../../core/services/courses/courses.service';
 import { AuthService } from '../../../../../../core/services/auth/auth.service';
-import { EMPTY, forkJoin, mergeMap, Observable, of, switchMap, tap } from 'rxjs';
+import { filter, forkJoin, mergeMap, Observable, of, switchMap, take, tap } from 'rxjs';
 import { User } from '../../../../users/models/user';
+import { Store } from '@ngrx/store';
+import { selectInscriptions, selectInscriptionsError, selectIsLoadingInscriptions, selectSingleInscription } from '../../../store/inscription.selectors';
+import { InscriptionActions } from '../../../store/inscription.actions';
+import { AlertsService } from '../../../../../../core/services/sweetalert/alerts.service';
 
 @Component({
   selector: 'app-crud-inscriptions',
@@ -18,16 +22,26 @@ import { User } from '../../../../users/models/user';
 })
 export class CrudInscriptionsComponent {
 
-  authUser$: Observable<User | null>
+  authUser$: Observable<User | null>;
+  inscriptions$: Observable<Inscription[]>;
+  isLoading$: Observable<boolean>;
+  error$: Observable<unknown>;
+  singleInscription$: Observable<Inscription>;
 
   constructor(
     private matDialog: MatDialog,
     private inscriptionsService: InscriptionsService,
     private studentsService: StudentsService,
     private coursesService: CoursesService,
+    private store: Store,
+    private alertsService: AlertsService,
     private authService: AuthService
   ) {
     this.authUser$ = this.authService.authUser$;
+    this.inscriptions$ = this.store.select(selectInscriptions);
+    this.singleInscription$ = this.store.select(selectSingleInscription);
+    this.isLoading$ = this.store.select(selectIsLoadingInscriptions);
+    this.error$ = this.store.select(selectInscriptionsError);
    }
 
   displayedColumns: string[] = ['id', 'studentId', 'courseId', 'date', 'status', 'actions'];
@@ -36,17 +50,9 @@ export class CrudInscriptionsComponent {
 
   isAdmin: boolean = false;
 
-  loadInscription() {
-    this.inscriptionsService.getInscriptions().subscribe({
-      next: (inscriptionFormDb) => {
-        this.dataSource = [...inscriptionFormDb]
-      },
-      error: (err) => console.log("Error al cargar las inscripciones: ", err)
-    })
-  }
-
   ngOnInit(): void {
-    this.loadInscription();
+    this.store.dispatch(InscriptionActions.loadInscriptions());
+
     this.authService.authUser$.subscribe((user: User | null) => {
       this.isAdmin = user?.role === 'ADMIN';
     });
@@ -55,25 +61,25 @@ export class CrudInscriptionsComponent {
   openDialog(): void {
     const dialogRef = this.matDialog.open(InscriptionsDialogComponent);
 
-    dialogRef.componentInstance.onSubmitInscriptionEvent.subscribe((inscription: Inscription) => {
-      this.onSubmitInscription(inscription);
+    dialogRef.componentInstance.onSubmitInscriptionEvent.subscribe({
+      next: (inscription: Inscription) => {
+        this.onSubmitInscription(inscription);
+      },
+      error: () => this.alertsService.sendError('Error al abrir el formulario de inscripciones')
     })
   }
 
   onSubmitInscription(inscription: Inscription): void {
-    this.inscriptionsService.addInscription(inscription).subscribe(newInscription => {
-      this.coursesService.addStudentToCourse(newInscription.studentId, newInscription.courseId).subscribe(() => {
-        this.studentsService.addCourseToStudent(newInscription.courseId, newInscription.studentId)
-        .pipe(
-          tap(() => this.loadInscription())
-        )
-        .subscribe()
-      })
-    });
+    this.store.dispatch(InscriptionActions.addInscription({ data: inscription }))
   }
 
   deleteInscription(id: string): void {
-    this.inscriptionsService.getInscriptionById(id).subscribe(inscription => {
+    this.store.dispatch(InscriptionActions.inscriptionById({id}));
+
+    this.singleInscription$.pipe(
+      filter(inscription => !!inscription && inscription.id === id),
+      take(1)
+    ).subscribe(inscription => {
       const dialogRef = this.matDialog.open(DeleteDialogComponent, {
         data: {
           title:'Eliminar Inscripción',
@@ -82,22 +88,11 @@ export class CrudInscriptionsComponent {
         }
       })
   
-      dialogRef.componentInstance.confirmDeleteEvent.subscribe((inscription: Inscription) => {
-        this.loadInscription()
-        this.inscriptionsService.deleteInscription(id).pipe(
-          mergeMap(() => {
-            if(inscription.studentId !== null && inscription.courseId !== null) {
-              return this.coursesService.deleteStudentFromCourse(inscription.courseId, inscription.studentId).pipe(
-                switchMap(() => this.studentsService.unregisterStudent(inscription.courseId, inscription.studentId))
-              )
-            }else{
-              return of(null).pipe(
-                tap(() => this.loadInscription())
-              );
-            }
-          }),
-          tap(() => this.loadInscription())
-        ).subscribe()
+      dialogRef.componentInstance.confirmDeleteEvent.subscribe({
+        next: (inscription: Inscription) => {
+          this.store.dispatch(InscriptionActions.deleteInscription({id : inscription.id}))
+        },
+        error: () => this.alertsService.sendError('Error al eliminar la inscripción')
       })
     })
   }
@@ -107,49 +102,13 @@ export class CrudInscriptionsComponent {
 
     this.matDialog.open(InscriptionsDialogComponent, {data: editingInscription}).afterClosed().subscribe({
       next: (updatedInscription) => {
-        if (updatedInscription) {
-          this.inscriptionsService.editInscription(editingInscription.id, updatedInscription).pipe(
-            switchMap(() => {
-              if (originalInscription.studentId !== updatedInscription.studentId || originalInscription.courseId !== updatedInscription.courseId || originalInscription.status !== updatedInscription.status) {
-                const tasks = [];
-
-                if (originalInscription.studentId !== updatedInscription.studentId || originalInscription.courseId !== updatedInscription.courseId){
-                  tasks.push(
-                    this.coursesService.deleteStudentFromCourse(originalInscription.courseId, originalInscription.studentId).pipe(
-                      switchMap(() => this.coursesService.addStudentToCourse(updatedInscription.studentId, updatedInscription.courseId))
-                    ),
-                    this.studentsService.unregisterStudent(originalInscription.courseId, originalInscription.studentId).pipe(
-                      switchMap(() => this.studentsService.addCourseToStudent(updatedInscription.courseId, updatedInscription.studentId)
-                      )
-                    )
-                  )
-                }else if (originalInscription.status !== updatedInscription.status) {
-                  if(updatedInscription.status === true) {
-                    tasks.push(
-                      this.coursesService.addStudentToCourse(updatedInscription.studentId, updatedInscription.courseId).pipe(
-                        switchMap(() => this.studentsService.addCourseToStudent(updatedInscription.courseId, updatedInscription.studentId))
-                      )
-                    )
-                  }else {
-                    tasks.push(
-                      this.coursesService.deleteStudentFromCourse(originalInscription.courseId, originalInscription.studentId).pipe(
-                        switchMap(() => this.studentsService.unregisterStudent(originalInscription.courseId, originalInscription.studentId))
-                      )
-                    )
-                  }
-                }
-                return forkJoin(tasks);
-              } else {
-                return of(null);
-              }
-            })
-          ).subscribe({
-            next: () => this.loadInscription(),
-            error: (err) => console.log("Error al editar la Inscripción: ", err)
-          })
-        }
+        this.store.dispatch(InscriptionActions.editInscription({
+          id: editingInscription.id,
+          newInscription: updatedInscription !== "" ? updatedInscription : editingInscription,
+          oldInscription: originalInscription
+        }))
       },
-      error: (err) => console.log("Error al editar la Inscripción: ", err)
+      error: () => this.alertsService.sendError('Error al editar la inscripción')
     });
   }
 

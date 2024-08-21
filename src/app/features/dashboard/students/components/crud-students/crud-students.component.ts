@@ -5,7 +5,7 @@ import { DeleteDialogComponent } from '../../../../../shared/components/delete-d
 import { StudentsDialogComponent } from '../students-dialog/students-dialog.component';
 import { DetailDialogComponent } from '../../../../../shared/components/detail-dialog/detail-dialog.component';
 import { AuthService } from '../../../../../core/services/auth/auth.service';
-import { filter, Observable, Subject, take, takeUntil } from 'rxjs';
+import { filter, map, Observable, of, Subject, switchMap, take, takeUntil } from 'rxjs';
 import { User } from '../../../users/models/user';
 import { Course } from '../../../courses/models/course';
 import { Store } from '@ngrx/store';
@@ -134,24 +134,26 @@ export class CrudStudentsComponent implements OnInit, OnDestroy{
   }
 
   openDetail(id: string): void {
+    this.store.dispatch(StudentActions.clearCourses());
     this.store.dispatch(StudentActions.studentById({ id }));
-
-    this.store.dispatch(StudentActions.loadCoursesStudent({id}));
-
+    
     this.singleStudent$.pipe(
       filter(student => !!student && student.id === id),
-      take(1)
-    ).subscribe(student => {
-      if (student?.courses && student.courses.length > 0) {
-        this.coursesStudent$.pipe(
-          filter(courses => courses.length === student.courses.length),
-          take(1)
-        ).subscribe(courses => {
-          this.openDetailDialog(student, courses);
-        })
-      } else {
-        this.openDetailDialog(student, []);
-      }
+      take(1),
+      switchMap(student => {
+        if (student?.courses && student.courses.length > 0) {
+          this.store.dispatch(StudentActions.loadCoursesStudent({id}));
+          return this.coursesStudent$.pipe(
+            filter(courses => courses.length === student.courses.length),
+            take(1),
+            map(courses => ({student, courses}))
+          )
+        } else {
+          return of({student, courses: []})
+        }
+      })
+    ).subscribe(({student, courses}) => {
+      this.openDetailDialog(student, courses)
     })
   }
 

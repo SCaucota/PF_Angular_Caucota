@@ -55,7 +55,7 @@ export class CoursesService {
     )
   }
 
-  addStudentToCourse(studentId: string, courseId: string): Observable<any>{
+  addStudentToCourse(courseId: string, studentId: string): Observable<any>{
     return this.getCourseById(courseId).pipe(
       switchMap(course => {
         const students = course.students;

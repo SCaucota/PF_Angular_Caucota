@@ -1,25 +1,26 @@
-import { Component, EventEmitter, Inject, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, OnDestroy, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Course } from '../../../../courses/models/course';
-import { Inscription } from '../../../models/inscription';
+import { Course } from '../../../courses/models/course';
+import { Inscription } from '../../models/inscription';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { CoursesService } from '../../../../../../core/services/courses/courses.service';
-import { StudentsService } from '../../../../../../core/services/students/students.service';
-import { Student } from '../../../../students/models/student';
-import { Observable } from 'rxjs';
+import { Student } from '../../../students/models/student';
+import { filter, map, Observable, Subject, take, takeUntil } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { selectCoursesForm, selectStudentsForm } from '../../../store/inscription.selectors';
-import { InscriptionActions } from '../../../store/inscription.actions';
+import { selectCoursesForm, selectStudentsForm } from '../../store/inscription.selectors';
+import { InscriptionActions } from '../../store/inscription.actions';
+import { beforeStartDateValidator, studentAlreadyEnrolledValidator } from '../../../../../shared/utils/custom.validators';
 
 @Component({
   selector: 'app-inscriptions-dialog',
   templateUrl: './inscriptions-dialog.component.html',
   styleUrl: './inscriptions-dialog.component.scss'
 })
-export class InscriptionsDialogComponent {
+export class InscriptionsDialogComponent{
   inscriptionForm: FormGroup;
   students$: Observable<Student[]>;
   courses$: Observable<Course[]>;
+  maxDate: Date | null = null;
+  selectedCourse?: Course;
 
   @Input() inscription!: Inscription;
   @Output() onSubmitInscriptionEvent: EventEmitter<any> = new EventEmitter();
@@ -48,6 +49,35 @@ export class InscriptionsDialogComponent {
   ngOnInit(): void {
     this.store.dispatch(InscriptionActions.loadCoursesForm());
     this.store.dispatch(InscriptionActions.loadStudentsForm());
+  }
+
+  onCourseChange(id: string): void {
+    this.courses$.pipe(
+      map(courses => courses.find(course => course.id === id)),
+      filter(course => !!course),
+      take(1)
+    ).subscribe(selectedCourse => {
+      if (selectedCourse) {
+        this.selectedCourse = selectedCourse;
+        this.maxDate = new Date(selectedCourse.startDate);
+        this.dateControl?.setValidators([Validators.required, beforeStartDateValidator(this.maxDate)]);
+        this.studentControl?.setValidators([Validators.required, studentAlreadyEnrolledValidator(this.selectedCourse)]);
+      } else {
+        this.maxDate = null;
+        this.dateControl?.setValidators([Validators.required]);
+      }
+      this.dateControl?.updateValueAndValidity();
+      this.studentControl?.updateValueAndValidity();
+    });
+  }
+
+  onStudentChange(): void {
+    if (this.selectedCourse) {
+      this.studentControl?.setValidators([Validators.required, studentAlreadyEnrolledValidator(this.selectedCourse)]);
+    } else {
+      this.studentControl?.setValidators([Validators.required]);
+    }
+    this.studentControl?.updateValueAndValidity();
   }
 
   get studentControl() {
@@ -99,7 +129,9 @@ export class InscriptionsDialogComponent {
   }
 
   onSubmitInscription(): void {
-    this.matDialogRef.close(this.inscriptionForm.value);
-    this.onSubmitInscriptionEvent.emit(this.inscriptionForm.value);
+    if (this.inscriptionForm.valid) {
+      this.matDialogRef.close(this.inscriptionForm.value);
+      this.onSubmitInscriptionEvent.emit(this.inscriptionForm.value);
+    }
   }
 }

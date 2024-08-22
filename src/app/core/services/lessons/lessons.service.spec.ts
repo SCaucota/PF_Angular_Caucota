@@ -1,7 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { LessonsService } from './lessons.service';
-import { HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting} from '@angular/common/http/testing';
 import { Lesson } from '../../../features/dashboard/lessons/models/lesson';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('LessonsService', () => {
   let service: LessonsService;
@@ -18,8 +19,8 @@ describe('LessonsService', () => {
     mockSingleLesson = {id: 'dsekl', name: 'Lesson 1', date: new Date('2024-02-05'), courseTitle: 'Course 1', status: true}
 
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [LessonsService]
+      imports: [],
+      providers: [LessonsService, provideHttpClient(), provideHttpClientTesting()]
     });
     service = TestBed.inject(LessonsService);
     httpMock = TestBed.inject(HttpTestingController)
@@ -79,13 +80,13 @@ describe('LessonsService', () => {
     const id = 'dsekl';
 
     service.deleteLesson(id).subscribe(response => {
-      expect(response).toEqual({});
+      expect(response).toEqual(mockSingleLesson);
     })
     
     httpMock.expectOne({
       url: `${service.URL_BASE}/${id}`,
       method: 'DELETE'
-    }).flush({})
+    }).flush(mockSingleLesson)
   })
 
   it('Se debe editar una clase existente', () => {

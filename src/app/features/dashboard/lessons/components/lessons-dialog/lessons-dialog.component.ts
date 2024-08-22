@@ -5,7 +5,7 @@ import { Course } from '../../../courses/models/course';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { noLeadingSpacesValidator, noOnlySpacesValidator, dateRangeValidator } from '../../../../../shared/utils/custom.validators';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { filter, map, Observable, take } from 'rxjs';
 import { selectSingleCourse } from '../../../courses/store/course.selectors';
 import { selectCoursesForm } from '../../store/lesson.selectors';
 import { LessonActions } from '../../store/lesson.actions';
@@ -17,7 +17,6 @@ import { LessonActions } from '../../store/lesson.actions';
 })
 export class LessonsDialogComponent implements OnInit{
   lessonForm: FormGroup;
-  courses: Course[] = [];
   minDate: Date | null = null;
   maxDate: Date | null = null;
   courses$: Observable<Course[]>;
@@ -61,17 +60,22 @@ export class LessonsDialogComponent implements OnInit{
   }
 
   onCourseTitleChange(courseTitle: string): void {
-    const selectedCourse = this.courses.find(course => course.name === courseTitle);
-    if (selectedCourse) {
-      this.minDate = new Date(selectedCourse.startDate);
-      this.maxDate = new Date(selectedCourse.endDate);
-      this.dateControl?.setValidators([Validators.required, dateRangeValidator(this.minDate, this.maxDate)]);
-    } else {
-      this.minDate = null;
-      this.maxDate = null;
-      this.dateControl?.setValidators([Validators.required]);
-    }
-    this.dateControl?.updateValueAndValidity();
+    this.courses$.pipe(
+      map(courses => courses.find(course => course.name === courseTitle)),
+      filter(course => !!course),
+      take(1)
+    ).subscribe(selectedCourse => {
+      if (selectedCourse) {
+        this.minDate = new Date(selectedCourse.startDate);
+        this.maxDate = new Date(selectedCourse.endDate);
+        this.dateControl?.setValidators([Validators.required, dateRangeValidator(this.minDate, this.maxDate)]);
+      } else {
+        this.minDate = null;
+        this.maxDate = null;
+        this.dateControl?.setValidators([Validators.required]);
+      }
+      this.dateControl?.updateValueAndValidity();
+    })
   }
 
   get nameControl() {

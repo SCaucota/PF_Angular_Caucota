@@ -1,89 +1,82 @@
 <h2 appTitle mat-dialog-title>{{
     editingInscription ? 'Editando ' + (editingInscription.id) : 'Agregando Inscripción'
-}}</h2>
+    }}</h2>
 
 <form (ngSubmit)="onSubmitInscription()" class="form-add-inscription" [formGroup]="inscriptionForm">
     <mat-form-field class="form-student" appearance="fill">
         <mat-label>Id de Estudiante</mat-label>
-        <mat-select 
-            formControlName="studentId"
-            matInput
-            [ngClass]="{
+        <mat-select formControlName="studentId" matInput [ngClass]="{
                 'is-invalid': studentControlInvalid,
                 'is-valid': !studentControlInvalid
             }"
+            (selectionChange)="onStudentChange()"
         >
             <mat-option *ngFor="let student of students$ | async" [value]="student.id">
                 {{ student.id + ' - ' + student.name + ' ' + student.surname }}
             </mat-option>
         </mat-select>
-        
+
         <mat-error *ngIf="studentControl?.invalid && studentControl?.touched">
             <div *ngIf="studentControl?.hasError('required')">
                 El Id de estudiante es <strong>requerido</strong>
+            </div>
+            <div *ngIf="studentControl?.hasError('studentAlreadyEnrolled')">
+                El estudiante ya está inscrito en este curso
             </div>
         </mat-error>
     </mat-form-field>
     <mat-form-field class="form-course" appearance="fill">
         <mat-label>Id del Curso</mat-label>
-        <mat-select 
-            formControlName="courseId"
-            matInput
-            [ngClass]="{
+        <mat-select formControlName="courseId" matInput [ngClass]="{
                 'is-invalid': courseControlInvalid,
                 'is-valid': !courseControlInvalid
             }"
+            (selectionChange)="onCourseChange($event.value)"
         >
             <mat-option *ngFor="let course of courses$ | async" [value]="course.id">
                 {{ course.id + ' - ' + course.name }}
             </mat-option>
         </mat-select>
-        
+
         <mat-error *ngIf="courseControl?.invalid && courseControl?.touched">
             <div *ngIf="courseControl?.hasError('required')">
                 El Id de curso es <strong>requerido</strong>
+            </div>
+            <div *ngIf="courseControl?.hasError('studentAlreadyEnrolled')">
+                El estudiante ya está inscrito en este curso
             </div>
         </mat-error>
     </mat-form-field>
     <mat-form-field class="form-date" appearance="fill">
         <mat-label>Fecha</mat-label>
-        <input
-            matInput
-            [matDatepicker]="picker"
-            formControlName="date"
-            [ngClass]="{
+        <input matInput [matDatepicker]="picker" formControlName="date" [ngClass]="{
                 'is-invalid': dateControlInvalid,
                 'is-valid': !dateControlInvalid
-            }"
-        >
+            }" [max]="maxDate">
         <mat-hint>DD/MM/YYYY</mat-hint>
-        <mat-datepicker-toggle
-            matIconSuffix
-            [for]="picker"
-        ></mat-datepicker-toggle>
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
 
         <mat-error *ngIf="dateControl?.invalid && dateControl?.touched">
             <div *ngIf="dateControl?.hasError('required')">
                 La fecha es <strong>requerida</strong>
             </div>
+            <div *ngIf="dateControl?.hasError('beforeStartDate')">
+                La fecha debe ser posterior al {{ maxDate | date:'dd/MM/yyyy' }}
+            </div>
         </mat-error>
     </mat-form-field>
-    
+
     <mat-form-field class="form-status" appearance="fill">
         <mat-label>Estado</mat-label>
-        <mat-select 
-            formControlName="status"
-            matInput
-            [ngClass]="{
+        <mat-select formControlName="status" matInput [ngClass]="{
                 'is-invalid': statusControlInvalid,
                 'is-valid': !statusControlInvalid
-            }"
-        >
+            }">
             <mat-option [value]="true">Activa</mat-option>
             <mat-option [value]="false">Cancelar</mat-option>
         </mat-select>
-        
+
         <mat-error *ngIf="statusControl?.invalid && statusControl?.touched">
             <div *ngIf="statusControl?.hasError('required')">
                 El estado es <strong>requerida</strong>

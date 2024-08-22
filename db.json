@@ -333,13 +333,6 @@
       "date": "2024-10-10T00:00:00.000Z",
       "courseTitle": "RUBY ON RAILS",
       "status": true
-    },
-    {
-      "id": "15",
-      "name": "DJANGO TEMPLATES",
-      "date": "2025-01-05T00:00:00.000Z",
-      "courseTitle": "DJANGO",
-      "status": true
     }
   ],
   "inscriptions": [
@@ -524,8 +517,8 @@
       "viewValue": "22:00 - 00:00"
     },
     {
-      "id": "21",
-      "viewValue": "22:30 - 00:30"
+      "id": "3740",
+      "viewValue": "22:30 - 00: 30"
     }
   ]
 }

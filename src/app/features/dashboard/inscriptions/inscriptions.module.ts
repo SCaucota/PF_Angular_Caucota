@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 
 import { InscriptionsRoutingModule } from './inscriptions-routing.module';
 import { InscriptionsComponent } from './inscriptions.component';
-import { CrudInscriptionsComponent } from './components/crud-inscriptions/crud-inscriptions/crud-inscriptions.component';
-import { InscriptionsDialogComponent } from './components/inscriptions-dialog/inscriptions-dialog/inscriptions-dialog.component';
+import { CrudInscriptionsComponent } from './components/crud-inscriptions/crud-inscriptions.component';
+import { InscriptionsDialogComponent } from './components/inscriptions-dialog/inscriptions-dialog.component';
 import { SharedModule } from '../../../shared/shared.module';
 import { EffectsModule } from '@ngrx/effects';
 import { InscriptionEffects } from './store/inscription.effects';

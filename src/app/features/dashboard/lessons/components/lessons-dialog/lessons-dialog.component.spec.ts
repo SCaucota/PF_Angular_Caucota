@@ -2,22 +2,22 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LessonsDialogComponent } from './lessons-dialog.component';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { LessonsService } from '../../../../../core/services/lessons/lessons.service';
-import { HttpClientTestingModule} from '@angular/common/http/testing';
 import { SharedModule } from '../../../../../shared/shared.module';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { Lesson } from '../../models/lesson';
-import { of, throwError } from 'rxjs';
-import { CoursesService } from '../../../../../core/services/courses/courses.service';
+import { of } from 'rxjs';
 import { Course } from '../../../courses/models/course';
 import { FormBuilder, Validators } from '@angular/forms';
 import { noLeadingSpacesValidator, noOnlySpacesValidator } from '../../../../../shared/utils/custom.validators';
+import { provideMockStore, MockStore } from '@ngrx/store/testing';
+import { LessonActions } from '../../store/lesson.actions';
 
 describe('LessonsDialogComponent', () => {
   let component: LessonsDialogComponent;
   let fixture: ComponentFixture<LessonsDialogComponent>;
-  let coursesService: CoursesService;
   let mockCourses: Course[];
   let mockDialogRef: jasmine.SpyObj<MatDialogRef<LessonsDialogComponent>>;
+  let store: MockStore;
+  let dispatchSpy: jasmine.Spy;
 
   beforeEach(async () => {
     mockDialogRef = jasmine.createSpyObj('MatDialogRef', ['close']);
@@ -28,20 +28,25 @@ describe('LessonsDialogComponent', () => {
     ];
     await TestBed.configureTestingModule({
       declarations: [LessonsDialogComponent],
-      imports: [MatDialogModule, SharedModule, HttpClientTestingModule],
-      providers:[
+      imports: [
+        MatDialogModule,
+        SharedModule,
+      ],
+      providers: [
         LessonsService,
         provideAnimationsAsync(),
-        {provide: MatDialogRef, useValue: mockDialogRef},
-        {provide: MAT_DIALOG_DATA, useValue: {}}
+        { provide: MatDialogRef, useValue: mockDialogRef },
+        { provide: MAT_DIALOG_DATA, useValue: {} },
+        provideMockStore({ initialState: {} })
       ]
     })
-    .compileComponents();
+      .compileComponents();
+
+    store = TestBed.inject(MockStore);
 
     fixture = TestBed.createComponent(LessonsDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    coursesService = TestBed.inject(CoursesService);
     component.lessonForm = TestBed.inject(FormBuilder).group({
       name: ['',
         {
@@ -57,8 +62,10 @@ describe('LessonsDialogComponent', () => {
       courseTitle: ['', Validators.required],
       status: [true, Validators.required]
     })
-    component.courses = mockCourses
+    component.courses$ = of(mockCourses)
     fixture.detectChanges();
+
+    dispatchSpy = spyOn(store, 'dispatch').and.callThrough();
   });
 
   it('should create', () => {
@@ -72,24 +79,12 @@ describe('LessonsDialogComponent', () => {
   })
 
   it('Debe cargar los cursos al iniciarse', () => {
-    spyOn(coursesService, 'getCourses').and.returnValue(of(mockCourses));
     component.ngOnInit();
-    expect(coursesService.getCourses).toHaveBeenCalled();
-    expect(component.courses).toEqual(mockCourses)
-  })
-
-  it('Debe devolver por consola un error', () => {
-    const consoleSpy = spyOn(console, 'log');
-    spyOn(coursesService, 'getCourses').and.returnValue(throwError('Error al cargar los cursos'));
-
-    component.loadCourses();
-
-    expect(coursesService.getCourses).toHaveBeenCalled();
-    expect(consoleSpy).toHaveBeenCalledOnceWith('Error al cargar los cursos en Lesson: ', 'Error al cargar los cursos')
+    expect(dispatchSpy).toHaveBeenCalledWith(LessonActions.loadCoursesForm());
   })
 
   it('Setea la fecha mínima y máxima. Valida la fecha', () => {
-    const courseTitle = 'Course 1';
+    const courseTitle = 'Course 2';
     const selectedCourse = mockCourses.find(course => course.name === courseTitle);
 
     component.onCourseTitleChange(courseTitle);
@@ -98,11 +93,12 @@ describe('LessonsDialogComponent', () => {
     expect(component.maxDate).toEqual(new Date(selectedCourse!.endDate));
 
     const dateControl = component.lessonForm.get('date');
-    if(dateControl) {
-      const validators = dateControl.validator ? dateControl.validator({} as any) : {};
+    if (dateControl) {
+      const validators = dateControl.validator ? dateControl.validator({} as any) : null;
+
       expect(validators).toBeTruthy();
     }
-  })
+  });
 
   it('Debe resetear la fecha mínima y máxima, y actualizar el dateControl cuando es inválido', () => {
     const courseTitle = 'Curso inválido';
@@ -112,7 +108,7 @@ describe('LessonsDialogComponent', () => {
     expect(component.minDate).toBeNull();
     expect(component.maxDate).toBeNull();
     const dateControl = component.lessonForm.get('date');
-    if(dateControl) {
+    if (dateControl) {
       const validators = dateControl.validator ? dateControl.validator({} as any) : {}
       expect(validators).toEqual(Validators.required({} as any));
     }
@@ -121,7 +117,7 @@ describe('LessonsDialogComponent', () => {
   it('Actualiza el valor del date control y lo valida', () => {
     const dateControl = component.lessonForm.get('date');
 
-    if(dateControl) {
+    if (dateControl) {
       spyOn(dateControl, 'updateValueAndValidity');
 
       const courseTitle = 'Course 1';
@@ -132,7 +128,7 @@ describe('LessonsDialogComponent', () => {
   })
 
   it('Cierra el dialog y emite los datos del formulario', () => {
-    const formValue = {name: 'Test Lesson', date: new Date('2024-12-15'), courseTitle: 'Course 1', status: true};
+    const formValue = { name: 'Test Lesson', date: new Date('2024-12-15'), courseTitle: 'Course 1', status: true };
     component.lessonForm.setValue(formValue);
 
     spyOn(component.onSubmitLessonEvent, 'emit');
@@ -142,4 +138,4 @@ describe('LessonsDialogComponent', () => {
     expect(mockDialogRef.close).toHaveBeenCalledWith(formValue);
     expect(component.onSubmitLessonEvent.emit).toHaveBeenCalledWith(formValue)
   })
-});
+})

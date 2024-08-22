@@ -5,7 +5,7 @@ import { LessonsDialogComponent } from '../lessons-dialog/lessons-dialog.compone
 import { DeleteDialogComponent } from '../../../../../shared/components/delete-dialog/delete-dialog.component';
 import { DetailDialogComponent } from '../../../../../shared/components/detail-dialog/detail-dialog.component';
 import { AuthService } from '../../../../../core/services/auth/auth.service';
-import { filter, Observable, Subject, switchMap, take, takeUntil, throwError } from 'rxjs';
+import { filter, Observable, Subject, take, takeUntil } from 'rxjs';
 import { User } from '../../../users/models/user';
 import { Store } from '@ngrx/store';
 import { LessonActions } from '../../store/lesson.actions';
@@ -61,7 +61,7 @@ export class CrudLessonsComponent implements OnInit, OnDestroy {
       next: (lesson: Lesson) => {
         this.onSubmitLesson(lesson);
       },
-      error: () => this.alertsService.sendError('Error al abrir el form add de las leccióens')
+      error: () => this.alertsService.sendError('Error al abrir el form add de las lecciones')
       
     })
   }
@@ -90,7 +90,7 @@ export class CrudLessonsComponent implements OnInit, OnDestroy {
           this.store.dispatch(LessonActions.deleteLesson({ id }))
         })
       },
-      error: () => this.alertsService.sendError("Error al eliminar la clase: ")
+      error: () => this.alertsService.sendError("Error al eliminar la clase")
     })
 
   }

@@ -1,18 +1,18 @@
 import { Component, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Inscription } from '../../../models/inscription';
-import { DeleteDialogComponent } from '../../../../../../shared/components/delete-dialog/delete-dialog.component';
-import { InscriptionsDialogComponent } from '../../inscriptions-dialog/inscriptions-dialog/inscriptions-dialog.component';
-import { DetailDialogComponent } from '../../../../../../shared/components/detail-dialog/detail-dialog.component';
-import { AuthService } from '../../../../../../core/services/auth/auth.service';
+import { Inscription } from '../../models/inscription';
+import { DeleteDialogComponent } from '../../../../../shared/components/delete-dialog/delete-dialog.component';
+import { InscriptionsDialogComponent } from '../inscriptions-dialog/inscriptions-dialog.component';
+import { DetailDialogComponent } from '../../../../../shared/components/detail-dialog/detail-dialog.component';
+import { AuthService } from '../../../../../core/services/auth/auth.service';
 import { combineLatest, filter, Observable, Subject, take, takeUntil } from 'rxjs';
-import { User } from '../../../../users/models/user';
+import { User } from '../../../users/models/user';
 import { Store } from '@ngrx/store';
-import { selectCourseInscription, selectInscriptions, selectInscriptionsError, selectIsLoadingInscriptions, selectSingleInscription, selectStudentInscription } from '../../../store/inscription.selectors';
-import { InscriptionActions } from '../../../store/inscription.actions';
-import { AlertsService } from '../../../../../../core/services/sweetalert/alerts.service';
-import { Course } from '../../../../courses/models/course';
-import { Student } from '../../../../students/models/student';
+import { selectCourseInscription, selectInscriptions, selectInscriptionsError, selectIsLoadingInscriptions, selectSingleInscription, selectStudentInscription } from '../../store/inscription.selectors';
+import { InscriptionActions } from '../../store/inscription.actions';
+import { AlertsService } from '../../../../../core/services/sweetalert/alerts.service';
+import { Course } from '../../../courses/models/course';
+import { Student } from '../../../students/models/student';
 
 @Component({
   selector: 'app-crud-inscriptions',

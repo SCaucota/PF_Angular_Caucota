@@ -5,7 +5,7 @@ import { DeleteDialogComponent } from '../../../../../shared/components/delete-d
 import { InscriptionsDialogComponent } from '../inscriptions-dialog/inscriptions-dialog.component';
 import { DetailDialogComponent } from '../../../../../shared/components/detail-dialog/detail-dialog.component';
 import { AuthService } from '../../../../../core/services/auth/auth.service';
-import { combineLatest, filter, Observable, Subject, take, takeUntil } from 'rxjs';
+import { combineLatest, filter, forkJoin, map, Observable, of, Subject, take, takeUntil, tap } from 'rxjs';
 import { User } from '../../../users/models/user';
 import { Store } from '@ngrx/store';
 import { selectCourseInscription, selectInscriptions, selectInscriptionsError, selectIsLoadingInscriptions, selectSingleInscription, selectStudentInscription } from '../../store/inscription.selectors';
@@ -13,6 +13,9 @@ import { InscriptionActions } from '../../store/inscription.actions';
 import { AlertsService } from '../../../../../core/services/sweetalert/alerts.service';
 import { Course } from '../../../courses/models/course';
 import { Student } from '../../../students/models/student';
+import { CoursesService } from '../../../../../core/services/courses/courses.service';
+import { StudentsService } from '../../../../../core/services/students/students.service';
+import { InscriptionsService } from '../../../../../core/services/inscriptions/inscriptions.service';
 
 @Component({
   selector: 'app-crud-inscriptions',
@@ -34,7 +37,10 @@ export class CrudInscriptionsComponent implements OnDestroy{
     private matDialog: MatDialog,
     private store: Store,
     private alertsService: AlertsService,
-    private authService: AuthService
+    private authService: AuthService,
+    private coursesService: CoursesService,
+    private studentsService: StudentsService,
+    private inscriptionsService: InscriptionsService
   ) {
     this.authUser$ = this.authService.authUser$;
     this.inscriptions$ = this.store.select(selectInscriptions);
@@ -116,25 +122,19 @@ export class CrudInscriptionsComponent implements OnDestroy{
   }
 
   openDetail(id: string): void {
-    this.store.dispatch(InscriptionActions.clearInscriptionDetails());
-    this.store.dispatch(InscriptionActions.inscriptionById({ id }));
-  
+    this.store.dispatch(InscriptionActions.clearInscriptionState());
+    this.store.dispatch(InscriptionActions.inscriptionById({id}));
+
     this.singleInscription$.pipe(
       filter(inscription => !!inscription && inscription.id === id),
       take(1)
     ).subscribe(inscription => {
-      if (inscription) {
-        this.store.dispatch(
-          InscriptionActions.loadInscriptionDetails({
-            courseId: inscription.courseId,
-            studentId: inscription.studentId
-          })
-        );
-  
-        combineLatest([this.student$, this.course$]).pipe(
-          filter(([student, course]) => !!student?.id && !!course?.id),
-          take(1)
-        ).subscribe(([student, course]) => {
+      if(inscription) {
+        const studentid = inscription.studentId
+        const courseid = inscription.courseId;
+        const student$ = studentid ? this.studentsService.getStudentById(studentid) : of(null);
+        const course$ = courseid ? this.coursesService.getCourseById(courseid) : of(null);
+        forkJoin([student$, course$]).subscribe(([student, course]) => {
           this.matDialog.open(DetailDialogComponent, {
             data: {
               title: 'Detalles de la inscripción',
@@ -144,10 +144,10 @@ export class CrudInscriptionsComponent implements OnDestroy{
                 course: course
               }
             }
-          });
-        });
+          })
+        })
       }
-    });
+    })
   }
 
   ngOnDestroy(): void {

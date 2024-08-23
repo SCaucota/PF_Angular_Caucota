@@ -1,5 +1,15 @@
 # PF1Caucota
 
+## Información para hacer el login
+
+- Administrador: 
+    email: adminLucia@gmail.com
+    contraseña: 1234
+
+- Usuario:
+    email: mariamoreno@gmail.com
+    contraseña: 5678
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.0.7.
 
 ## Development server

@@ -10,6 +10,7 @@ import { AlertsService } from '../../../core/services/sweetalert/alerts.service'
 })
 export class LoginComponent {
   loginForm: FormGroup;
+  hide: boolean = true;
 
   constructor(
     private authService: AuthService,
@@ -33,5 +34,9 @@ export class LoginComponent {
 
       this.authService.login(data)
     }
+  }
+
+  togglePasswordVisibility() {
+    this.hide = !this.hide;
   }
 }

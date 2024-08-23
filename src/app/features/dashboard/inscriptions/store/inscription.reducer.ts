@@ -51,24 +51,9 @@ export const reducer = createReducer(
     error: action.error
   })),
 
-  on(InscriptionActions.loadInscriptionDetailsSuccess, (state, action) => ({
+  on(InscriptionActions.clearInscriptionState, (state, action) => ({
     ...state,
-    student: action.student,
-    course: action.course,
-    error: null
-  })),
-
-  on(InscriptionActions.loadInscriptionDetailsFailure, (state, action) => ({
-    ...state,
-    student: {} as Student,
-    course: {} as Course,
-    error: action.error
-  })),
-
-  on(InscriptionActions.clearInscriptionDetails, (state, action) => ({
-    ...state,
-    student: {} as Student,
-    course: {} as Course,
+    singleInscription: {} as Inscription,
     error: null
   })),
 

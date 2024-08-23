@@ -9,6 +9,7 @@ export class AlertsService {
 
   private info$ = new Subject<string>();
   private error$ = new Subject<string>()
+  private success$ = new Subject<string>();
 
   constructor() {
     this.info$.subscribe({
@@ -22,6 +23,12 @@ export class AlertsService {
         Swal.fire(txt, '', 'error')
       },
     })
+
+    this.success$.subscribe({
+      next:(txt) => {
+        Swal.fire(txt, '', 'success')
+      }
+    })
   }
 
   sendInfo(txt: string) {
@@ -30,5 +37,9 @@ export class AlertsService {
 
   sendError(txt: string) {
     this.error$.next(txt)
+  }
+
+  sendSuccess(txt: string) {
+    this.success$.next(txt)
   }
 }

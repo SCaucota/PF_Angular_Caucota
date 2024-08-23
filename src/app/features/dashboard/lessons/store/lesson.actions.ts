@@ -14,6 +14,7 @@ export const LessonActions = createActionGroup({
     'Lesson By Id': props<{ id: string }>(),
     'Lesson By Id Success': props<{ data: Lesson }>(),
     'Lesson By Id Failure': props<{ error: unknown}>(),
+    'Clear Lesson State': emptyProps(),
     'Add Lesson': props<{ lesson: Lesson }>(),
     'Add Lesson Success': props<{ lesson: Lesson }>(),
     'Add Lesson Failure': props<{ error: unknown }>(),

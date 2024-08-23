@@ -45,36 +45,6 @@ export class InscriptionEffects {
     );
   });
 
-  loadCoursesStudents$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(InscriptionActions.loadInscriptionDetails),
-      concatMap(({courseId, studentId}) => {
-        const course$ = this.coursesService.getCourseById(courseId);
-        const student$ = this.studentsService.getStudentById(studentId);
-  
-        return combineLatest([course$, student$]).pipe(
-          map(([course, student]) => InscriptionActions.loadInscriptionDetailsSuccess({course, student})),
-          catchError(error => of(InscriptionActions.loadInscriptionDetailsFailure({ error })))
-        );
-      })
-    );
-  });
-
-  loadInscriptionDetails$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(InscriptionActions.loadInscriptionDetails),
-      concatMap(({courseId, studentId}) => {
-        const course$ = this.coursesService.getCourseById(courseId);
-        const student$ = this.studentsService.getStudentById(studentId);
-  
-        return combineLatest([course$, student$]).pipe(
-          map(([course, student]) => InscriptionActions.loadInscriptionDetailsSuccess({course, student})),
-          catchError(error => of(InscriptionActions.loadInscriptionDetailsFailure({ error })))
-        );
-      })
-    );
-  });
-
   inscriptionsById$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(InscriptionActions.inscriptionById),

@@ -10,6 +10,7 @@ export const UserActions = createActionGroup({
     'User By Id': props<{ id: string }>(),
     'User By Id Success': props<{ data: User }>(),
     'User By Id Failure': props<{ error: unknown}>(),
+    'Clear User State': emptyProps(),
     'Add User': props<{ data: User }>(),
     'Add User Success': props<{ data: User }>(),
     'Add User Failure': props<{ error: unknown }>(),

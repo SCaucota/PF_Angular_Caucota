@@ -8,14 +8,17 @@
                 <mat-icon matSuffix>email</mat-icon>
             </mat-form-field>
             <mat-form-field>
-                <mat-label>Contaseña</mat-label>
-                <input matInput formControlName="password">
-                <mat-icon matSuffix>key</mat-icon>
+                <mat-label>Contraseña</mat-label>
+                <input matInput formControlName="password" [type]="hide ? 'password' : 'text'">
+                <mat-icon matSuffix (click)="togglePasswordVisibility()">
+                    {{ hide ? 'visibility_off' : 'visibility' }}
+                </mat-icon>
             </mat-form-field>
             <button
                 mat-flat-button
                 type="submit"
             >Iniciar Sesión</button>
+            <p>Si no tienes una cuenta puedes <a [routerLink]="['/auth/register']">registrarte</a></p>
         </form>
     </div>
 </div>

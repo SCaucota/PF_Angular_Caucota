@@ -60,6 +60,7 @@ export const reducer = createReducer(
   on(CourseActions.clearStudents, (state, action) => ({
     ...state,
     studentsForm: [],
+    singleCourse: {} as Course,
     error: null
   })),
 

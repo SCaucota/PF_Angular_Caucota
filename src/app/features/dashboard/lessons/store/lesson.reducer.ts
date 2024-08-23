@@ -102,6 +102,12 @@ export const reducer = createReducer(
     error: action.error
   })),
 
+  on(LessonActions.clearLessonState, (state, action) => ({
+    ...state,
+    singlelesson: {} as Lesson,
+    error: null
+  })),
+
   on(LessonActions.resetLessonsState, () => initialState)
 );
 

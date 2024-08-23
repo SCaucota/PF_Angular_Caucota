@@ -107,7 +107,7 @@ export class CrudLessonsComponent implements OnInit, OnDestroy {
   }
 
   openDetail(id: string): void {
-
+    this.store.dispatch(LessonActions.clearLessonState());
     this.store.dispatch(LessonActions.lessonById({ id }));
 
     this.singleLesson$.pipe(

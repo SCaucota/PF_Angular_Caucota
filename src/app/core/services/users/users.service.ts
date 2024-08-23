@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { User } from '../../../features/dashboard/users/models/user';
 
 @Injectable({
@@ -11,7 +11,7 @@ export class UsersService {
 
   constructor(private httpClient: HttpClient) { }
 
-  generateToken(longitud: number): string {
+  generateRandomNumber(longitud: number): string {
     let token = '';
     const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     for (let i = 0; i < longitud; i++) {
@@ -36,10 +36,10 @@ export class UsersService {
       ...user,
       name: user.name.toUpperCase(),
       surname: user.surname.toUpperCase(),
-      token: this.generateToken(20)
+      token: this.generateRandomNumber(20)
     }
 
-    return this.httpClient.post<User>(this.URL_BASE, modifiedUser);
+    return this.httpClient.post<User>(this.URL_BASE, modifiedUser)
   }
 
   deleteUser(id: string): Observable<User> {

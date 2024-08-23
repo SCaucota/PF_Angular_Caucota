@@ -89,6 +89,12 @@ export const reducer = createReducer(
     error: action.error
   })),
 
+  on(UserActions.clearUserState, (state, action) => ({
+    ...state,
+    singleUser: {} as User,
+    error: null
+  })),
+
   on(UserActions.resetUserState, () => initialState)
 );
 

@@ -11,6 +11,8 @@ import { UserActions } from '../../../features/dashboard/users/store/user.action
 import { CourseActions } from '../../../features/dashboard/courses/store/course.actions';
 import { StudentActions } from '../../../features/dashboard/students/store/student.actions';
 import { InscriptionActions } from '../../../features/dashboard/inscriptions/store/inscription.actions';
+import { selectUsers } from '../../../features/dashboard/users/store/user.selectors';
+import { UsersService } from '../users/users.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,13 +22,51 @@ export class AuthService {
   private _authUser$ = new BehaviorSubject<User | null>(null);
 
   authUser$ = this._authUser$.asObservable();
+  users$: Observable<User[]>
 
   constructor(
     private router: Router,
     private httpClient: HttpClient,
     private alertsService: AlertsService,
+    private usersService: UsersService,
     private store: Store
-  ) { }
+  ) {
+    this.users$ = this.store.select(selectUsers);
+   }
+
+   register(data: {name: string, surname: string, email: string, password: string}) {
+    this.httpClient.get<User[]>(`http://localhost:3000/users`).subscribe({
+      next: (users: User[]) => {
+        const userExists = users.some(user => user.email === data.email);
+  
+        if (userExists) {
+          this.alertsService.sendError('Este email ya está registrado');
+        } else {
+          const userData = {
+            ...data,
+            id: this.usersService.generateRandomNumber(7),
+            token: 'token prueba',
+            role: 'USER'
+          };
+          const authUser = userData;
+          this._authUser$.next(authUser);
+
+          this.usersService.addUser(authUser).subscribe({
+            next: () => {
+              this.alertsService.sendSuccess('Usuario registrado exitosamente');
+              this.router.navigate(['auth', 'login']);
+            },
+            error: () => {
+              this.alertsService.sendInfo('No se pudo registrar el usuario');
+            }
+          });
+        }
+      },
+      error: () => {
+        this.alertsService.sendInfo('No se pudo verificar la existencia del usuario');
+      }
+    });
+  }
   
   login(data: {email: string, password: string}) {
     this.httpClient.get<User[]>(`http://localhost:3000/users`, {

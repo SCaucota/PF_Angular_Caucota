@@ -1,0 +1,119 @@
+<div class="register-container">
+    <div class="div-register">
+        <h1>Registrarse</h1>
+        <form (ngSubmit)="onSubmit()" [formGroup]="registerForm" class="fields-container">
+            <mat-form-field>
+                <mat-label>Nombre</mat-label>
+                <input type="text"
+                formControlName="name" 
+                matInput
+                [ngClass]="{
+                    'is-invalid': nameControlInvalid,
+                    'is-valid': !nameControlInvalid
+                }"
+            >
+                <mat-error *ngIf="nameControl?.invalid && nameControl?.touched">
+                    <div *ngIf="nameControl?.hasError('required')">
+                        El nombre es <strong>requerido</strong>
+                    </div>
+                    <div *ngIf="nameControl?.hasError('minlength')">
+                        Mínimo de 3 caracteres
+                    </div>
+                    <div *ngIf="nameControl?.hasError('pattern')">
+                        Ingrese únicamente letras
+                    </div>
+                    <div *ngIf="nameControl?.hasError('noOnlySpaces')">
+                        No ingresar únicamente espacios
+                    </div>
+                    <div *ngIf="nameControl?.hasError('noLeadingSpaces')">
+                        No ingresar espacios al inicio
+                    </div>
+                </mat-error>
+
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Apellido</mat-label>
+                <input formControlName="surname"
+                matInput
+                [ngClass]="{
+                    'is-invalid': surnameControlInvalid,
+                    'is-valid': !surnameControlInvalid
+                }"
+            >
+                <mat-error *ngIf="surnameControl?.invalid && surnameControl?.touched">
+                    <div *ngIf="surnameControl?.hasError('required')">
+                        El apellido es <strong>requerido</strong>
+                    </div>
+                    <div *ngIf="surnameControl?.hasError('minlength')">
+                        Mínimo de 3 caracteres
+                    </div>
+                    <div *ngIf="surnameControl?.hasError('pattern')">
+                        Ingrese únicamente letras
+                    </div>
+                    <div *ngIf="surnameControl?.hasError('noOnlySpaces')">
+                        No ingresar únicamente espacios
+                    </div>
+                    <div *ngIf="surnameControl?.hasError('noLeadingSpaces')">
+                        No ingresar espacios al inicio
+                    </div>
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field class="form-email" appearance="fill">
+                <mat-label>Email</mat-label>
+                <input 
+                    formControlName="email"
+                    matInput
+                    [ngClass]="{
+                        'is-invalid': emailControlInvalid,
+                        'is-valid': !emailControlInvalid
+                    }"
+                >
+                
+                <mat-error *ngIf="emailControl?.invalid && emailControl?.touched">
+                    <div *ngIf="emailControl?.hasError('required')">
+                        El email es <strong>requerido</strong>
+                    </div>
+                    <div *ngIf="emailControl?.hasError('email')">
+                        Ingrese un email valido
+                    </div>
+                </mat-error>
+        
+            </mat-form-field>
+            <mat-form-field class="form-password" appearance="fill">
+                <mat-label>Contraseña</mat-label>
+                <input 
+                    formControlName="password"
+                    matInput
+                    [type]="hide ? 'password' : 'text'"
+                    [ngClass]="{
+                        'is-invalid': passwordControlInvalid,
+                        'is-valid': !passwordControlInvalid
+                    }"
+                >
+                <mat-icon matSuffix (click)="togglePasswordVisibility()">
+                    {{ hide ? 'visibility_off' : 'visibility' }}
+                </mat-icon>
+                
+                <mat-error *ngIf="passwordControl?.invalid && passwordControl?.touched">
+                    <div *ngIf="passwordControl?.hasError('required')">
+                        La contraseña es <strong>requerida</strong>
+                    </div>
+                    <div *ngIf="passwordControl?.hasError('minlength')">
+                        Mínimo de 3 caracteres
+                    </div>
+                    <div *ngIf="passwordControl?.hasError('noOnlySpaces')">
+                        No ingresar únicamente espacios
+                    </div>
+                    <div *ngIf="passwordControl?.hasError('noLeadingSpaces')">
+                        No ingresar espacios al inicio
+                    </div>
+                </mat-error>
+            </mat-form-field>
+            <button
+                mat-flat-button
+                type="submit"
+            >Registrarse</button>
+        </form>
+        <p>¿Ya tienes una cuenta? <a [routerLink]="['/auth/login']">Iniciar Sesión</a></p>
+    </div>
+</div>

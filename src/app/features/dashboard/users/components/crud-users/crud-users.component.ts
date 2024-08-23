@@ -92,6 +92,7 @@ export class CrudUsersComponent implements OnInit{
   }
 
   openDetail(id: string): void {
+    this.store.dispatch(UserActions.clearUserState());
     this.store.dispatch(UserActions.userById({ id }));
 
     this.singleUser$.pipe(

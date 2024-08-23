@@ -107,10 +107,12 @@ describe('LessonsDialogComponent', () => {
 
     expect(component.minDate).toBeNull();
     expect(component.maxDate).toBeNull();
+
     const dateControl = component.lessonForm.get('date');
     if (dateControl) {
-      const validators = dateControl.validator ? dateControl.validator({} as any) : {}
-      expect(validators).toEqual(Validators.required({} as any));
+      const validators = dateControl.validator ? dateControl.validator({} as any) : null;
+
+      expect(validators?.['required']).toBeTrue();
     }
   })
 
